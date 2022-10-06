@@ -49,8 +49,8 @@ public class Enchere {
     
     public static void creeSchema(Connection con)
             throws SQLException {
-        // je veux que le schema soit entierement créé ou pas du tout
-        // je vais donc gérer explicitement une transaction
+        // je veux que le schema soit entierement crï¿½ï¿½ ou pas du tout
+        // je vais donc gï¿½rer explicitement une transaction
         con.setAutoCommit(false);
         try ( Statement st = con.createStatement()) {
             // creation des tables
@@ -61,29 +61,29 @@ public class Enchere {
                         generated always as identity,
                     -- ceci est un exemple de commentaire SQL :
                     -- un commentaire commence par deux tirets,
-                    -- et fini à la fin de la ligne
-                    -- cela me permet de signaler que le petit mot clé
+                    -- et fini ï¿½ la fin de la ligne
+                    -- cela me permet de signaler que le petit mot clï¿½
                     -- unique ci-dessous interdit deux valeurs semblables
                     -- dans la colonne des noms.
                         nom varchar(30) not null unique,
                         pass varchar(30) not null
                     )
                     """);
-            // si j'arrive jusqu'ici, c'est que tout s'est bien passé
+            // si j'arrive jusqu'ici, c'est que tout s'est bien passï¿½
             // je confirme (commit) la transaction
             con.commit();
-            // je retourne dans le mode par défaut de gestion des transaction :
-            // chaque ordre au SGBD sera considéré comme une transaction indépendante
+            // je retourne dans le mode par dï¿½faut de gestion des transaction :
+            // chaque ordre au SGBD sera considï¿½rï¿½ comme une transaction indï¿½pendante
             con.setAutoCommit(true);
         } catch (SQLException ex) {
-            // quelque chose s'est mal passé
+            // quelque chose s'est mal passï¿½
             // j'annule la transaction
             con.rollback();
-            // puis je renvoie l'exeption pour qu'elle puisse éventuellement
-            // être gérée (message à l'utilisateur...)
+            // puis je renvoie l'exeption pour qu'elle puisse ï¿½ventuellement
+            // ï¿½tre gï¿½rï¿½e (message ï¿½ l'utilisateur...)
             throw ex;
         } finally {
-            // je reviens à la gestion par défaut : une transaction pour
+            // je reviens ï¿½ la gestion par dï¿½faut : une transaction pour
             // chaque ordre SQL
             con.setAutoCommit(true);
         }
@@ -91,7 +91,8 @@ public class Enchere {
     
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
-            System.out.println("connecté !!!");
+            System.out.println("connectï¿½ !!!");
+            creeSchema(con);
             //menu(con);
         } catch (Exception ex) {
             throw new Error(ex);
