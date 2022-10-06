@@ -15,6 +15,19 @@ import java.sql.Statement;
  * @author brenc
  */
 public class Enchere {
+    int idArticle;
+    double prixMini;
+    double dateDebut;
+    double dateFin;
+    protected static char idUtilisateur;
+    
+    public static int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public static void setIdUtilisateur(char idUtilisateur) {
+        Enchere.idUtilisateur = idUtilisateur;
+    }
     
      public static Connection connectGeneralPostGres(String host,
             int port, String database,
@@ -36,8 +49,8 @@ public class Enchere {
     
     public static void creeSchema(Connection con)
             throws SQLException {
-        // je veux que le schema soit entierement crÃ©Ã© ou pas du tout
-        // je vais donc gÃ©rer explicitement une transaction
+        // je veux que le schema soit entierement créé ou pas du tout
+        // je vais donc gérer explicitement une transaction
         con.setAutoCommit(false);
         try ( Statement st = con.createStatement()) {
             // creation des tables
@@ -48,29 +61,29 @@ public class Enchere {
                         generated always as identity,
                     -- ceci est un exemple de commentaire SQL :
                     -- un commentaire commence par deux tirets,
-                    -- et fini Ã  la fin de la ligne
-                    -- cela me permet de signaler que le petit mot clÃ©
+                    -- et fini à la fin de la ligne
+                    -- cela me permet de signaler que le petit mot clé
                     -- unique ci-dessous interdit deux valeurs semblables
                     -- dans la colonne des noms.
                         nom varchar(30) not null unique,
                         pass varchar(30) not null
                     )
                     """);
-            // si j'arrive jusqu'ici, c'est que tout s'est bien passÃ©
+            // si j'arrive jusqu'ici, c'est que tout s'est bien passé
             // je confirme (commit) la transaction
             con.commit();
-            // je retourne dans le mode par dÃ©faut de gestion des transaction :
-            // chaque ordre au SGBD sera considÃ©rÃ© comme une transaction indÃ©pendante
+            // je retourne dans le mode par défaut de gestion des transaction :
+            // chaque ordre au SGBD sera considéré comme une transaction indépendante
             con.setAutoCommit(true);
         } catch (SQLException ex) {
-            // quelque chose s'est mal passÃ©
+            // quelque chose s'est mal passé
             // j'annule la transaction
             con.rollback();
-            // puis je renvoie l'exeption pour qu'elle puisse Ã©ventuellement
-            // Ãªtre gÃ©rÃ©e (message Ã  l'utilisateur...)
+            // puis je renvoie l'exeption pour qu'elle puisse éventuellement
+            // être gérée (message à l'utilisateur...)
             throw ex;
         } finally {
-            // je reviens Ã  la gestion par dÃ©faut : une transaction pour
+            // je reviens à la gestion par défaut : une transaction pour
             // chaque ordre SQL
             con.setAutoCommit(true);
         }
@@ -78,7 +91,7 @@ public class Enchere {
     
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
-            System.out.println("connectÃ© !!!");
+            System.out.println("connecté !!!");
             //menu(con);
         } catch (Exception ex) {
             throw new Error(ex);
