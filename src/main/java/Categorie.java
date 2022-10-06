@@ -9,5 +9,6 @@
  * @author brenc
  */
 public class Categorie {
-    
+public int idcategorie;
+public char designation;
 }

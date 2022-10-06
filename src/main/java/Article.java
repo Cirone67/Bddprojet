@@ -9,5 +9,9 @@
  * @author brenc
  */
 public class Article {
-    
+  int idArticle;
+  Categorie categorie;
+  char fournisseur;
+  char descriptionCourte;
+  char descriptionLongue;
 }

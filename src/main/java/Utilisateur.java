@@ -9,5 +9,9 @@
  * @author brenc
  */
 public class Utilisateur {
-    
+    char email;
+    int mdp;
+    int codePostale;
+    char nom;
+    char prenom;
 }
