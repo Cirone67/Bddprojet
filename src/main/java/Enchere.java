@@ -92,7 +92,7 @@ public class Enchere {
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connect� !!!");
-            creeSchema(con);
+  //          creeSchema(con);
             //menu(con);
         } catch (Exception ex) {
             throw new Error(ex);
