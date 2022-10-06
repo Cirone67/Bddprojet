@@ -8,6 +8,6 @@
  *
  * @author brenc
  */
-public class NewClass {
-   je modifie 
+public class Utilisateur {
+    
 }
