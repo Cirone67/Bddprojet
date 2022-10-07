@@ -5,10 +5,12 @@
  */
 package gui;
 
+import javafx.scene.layout.BorderPane;
+
 /**
  *
  * @author drumm
  */
-public class MainPane {
+public class MainPane extends BorderPane {
     
 }
