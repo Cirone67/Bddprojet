@@ -15,19 +15,15 @@ import java.sql.Statement;
  * @author brenc
  */
 public class Enchere {
-    int idArticle;
-    double prixMini;
-    double dateDebut;
-    double dateFin;
-    protected static char idUtilisateur;
+    private int idArticle;
+    private char vendeur;
+    private double prixIni;
+    private double dateDebut;
+    private double dateFin;
+    private int etat;
+    private char acheteur;
     
-    public static int getIdUtilisateur() {
-        return idUtilisateur;
-    }
 
-    public static void setIdUtilisateur(char idUtilisateur) {
-        Enchere.idUtilisateur = idUtilisateur;
-    }
     
      public static Connection connectGeneralPostGres(String host,
             int port, String database,
@@ -88,7 +84,64 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    
+
+    public int getIdArticle() {
+        return idArticle;
+    }
+
+    public char getVendeur() {
+        return vendeur;
+    }
+
+    public double getPrixIni() {
+        return prixIni;
+    }
+
+    public double getDateDebut() {
+        return dateDebut;
+    }
+
+    public double getDateFin() {
+        return dateFin;
+    }
+
+    public int getEtat() {
+        return etat;
+    }
+
+    public char getAcheteur() {
+        return acheteur;
+    }
+
+    public void setIdArticle(int idArticle) {
+        this.idArticle = idArticle;
+    }
+
+    public void setVendeur(char vendeur) {
+        this.vendeur = vendeur;
+    }
+
+    public void setPrixIni(double prixIni) {
+        this.prixIni = prixIni;
+    }
+
+    public void setDateDebut(double dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public void setDateFin(double dateFin) {
+        this.dateFin = dateFin;
+    }
+
+    public void setEtat(int etat) {
+        this.etat = etat;
+    }
+
+    public void setAcheteur(char acheteur) {
+        this.acheteur = acheteur;
+    }
+ 
+ 
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connect� !!!");

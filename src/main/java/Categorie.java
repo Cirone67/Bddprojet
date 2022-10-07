@@ -9,6 +9,25 @@
  * @author brenc
  */
 public class Categorie {
-public int idcategorie;
-public char designation;
+
+private int idcategorie;
+private char designation;
+
+    public int getIdcategorie() {
+        return idcategorie;
+    }
+
+    public char getDesignation() {
+        return designation;
+    }
+
+    public void setIdcategorie(int idcategorie) {
+        this.idcategorie = idcategorie;
+    }
+
+    public void setDesignation(char designation) {
+        this.designation = designation;
+    }
+
+
 }
