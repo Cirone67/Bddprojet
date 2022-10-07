@@ -13,6 +13,14 @@ public class Categorie {
 private int idcategorie;
 private char designation;
 
+
+//Contructor
+    public Categorie(int idcategorie, char designation) {
+        this.idcategorie = idcategorie;
+        this.designation = designation;
+    }
+
+//Set et Get
     public int getIdcategorie() {
         return idcategorie;
     }

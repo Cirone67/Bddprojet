@@ -14,6 +14,23 @@ public class Utilisateur {
     private int codePostale;
     private char nom;
     private char prenom;
+    private int statut;
+
+    
+//Constructor
+    public Utilisateur(char email, int mdp, int codePostale, char nom, char prenom, int statut) {
+        this.email = email;
+        this.mdp = mdp;
+        this.codePostale = codePostale;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.statut = statut;
+    }
+    
+//Get et Set
+    public int getStatut() {
+        return statut;
+    }
 
     public char getEmail() {
         return email;
@@ -54,6 +71,9 @@ public class Utilisateur {
     public void setPrenom(char prenom) {
         this.prenom = prenom;
     }
-    
+
+    public void setStatut(int statut) {
+        this.statut = statut;
+    } 
     
 }

@@ -17,6 +17,17 @@ public class Article {
   private Categorie categorie;
   private char posseseur;
 
+ //Constructor  
+  public Article(int idArticle, char descriptionCourte, char descriptionLongue, int expedition, Categorie categorie, char posseseur) {
+        this.idArticle = idArticle;
+        this.descriptionCourte = descriptionCourte;
+        this.descriptionLongue = descriptionLongue;
+        this.expedition = expedition;
+        this.categorie = categorie;
+        this.posseseur = posseseur;
+    }
+
+//Get et Set
     public int getIdArticle() {
         return idArticle;
     }
