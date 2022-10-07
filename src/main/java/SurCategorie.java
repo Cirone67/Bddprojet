@@ -14,14 +14,25 @@ import java.util.ArrayList;
 public class SurCategorie {
     private int idSurCategorie;
     private ArrayList<Categorie> categorie;
+    private char designation;
     
 //Constructor    
-    public SurCategorie(int idSurCategorie, ArrayList<Categorie> categorie) {
+
+    public SurCategorie(int idSurCategorie, ArrayList<Categorie> categorie, char designation) {
         this.idSurCategorie = idSurCategorie;
         this.categorie = categorie;
+        this.designation = designation;
+    }
+//Get et Set
+
+    public char getDesignation() {
+        return designation;
     }
 
-//Get et Set    
+    public void setDesignation(char designation) {
+        this.designation = designation;
+    }
+
     public int getIdSurCategorie() {
         return idSurCategorie;
     }
