@@ -13,4 +13,18 @@ import javafx.scene.layout.BorderPane;
  */
 public class MainPane extends BorderPane {
     
+    private Controleur controleur;
+    
+    public MainPane () {
+        
+        this.controleur = new Controleur(this);
+    }
+
+    public Controleur getControleur() {
+        return controleur;
+    }
+
+    public void setControleur(Controleur controleur) {
+        this.controleur = controleur;
+    }
 }

@@ -11,4 +11,10 @@ package gui;
  */
 public class Controleur {
     
+    private MainPane vue;
+    
+    public Controleur (MainPane vue) {
+        this.vue = vue;
+    }
+    
 }
