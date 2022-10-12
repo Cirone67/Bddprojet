@@ -6,11 +6,15 @@
 package gui;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -34,6 +38,7 @@ public class PageAccueil extends BorderPane {
     private Button bReconditionne;
     
     private BorderPane bpEcranPrincipal;
+    //private BorderPane bpEntete;
     
     
     public PageAccueil (Stage inStage) {
@@ -51,6 +56,25 @@ public class PageAccueil extends BorderPane {
         this.bCultureEtLoisirs = new Button ("Culture et Loisirs");
         this.bAutoEtMoto = new Button ("Auto et Moto");
         this.bReconditionne = new Button ("Reconditionné");
+        
+        BorderPane bpEntete = new BorderPane ();
+        ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
+        bpEntete.setCenter(this.tfRechercher);
+        bpEntete.setRight(this.bSeConnecter);
+        bpEntete.setLeft(ivLogoINSA);
+        Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
+        bpEntete.setBackground(bgGrey);
+        
+        
+        VBox vbRubriques = new VBox (this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
+            this.bAutoEtMoto, this.bReconditionne);
+        vbRubriques.setSpacing(8);
+        
+        vbRubriques.setBackground(bgGrey);
+        
+        
+        this.setTop(bpEntete);
+        this.setLeft(vbRubriques);
     }
 
     public Controleur getControleur() {
