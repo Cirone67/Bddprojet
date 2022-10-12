@@ -11,9 +11,9 @@ package gui;
  */
 public class Controleur {
     
-    private MainPane vue;
+    private PageAccueil vue;
     
-    public Controleur (MainPane vue) {
+    public Controleur (PageAccueil vue) {
         this.vue = vue;
     }
     
