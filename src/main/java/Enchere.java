@@ -16,23 +16,34 @@ import java.sql.Statement;
  */
 public class Enchere {
     private int idArticle;
-    private char vendeur;
+    private String vendeur;
     private double prixIni;
+    private double prix;
     private double dateDebut;
     private double dateFin;
     private int etat;
-    private char acheteur;
-    
+    private String acheteur;
 
-    
-     public static Connection connectGeneralPostGres(String host,
-            int port, String database,
-            String user, String pass)
-            throws ClassNotFoundException, SQLException {
+//Constructors
+     public Enchere(int idArticle, String vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, String acheteur) {    
+        this.idArticle = idArticle;
+        this.vendeur = vendeur;
+        this.prixIni = prixIni;
+        this.prix = prix;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.etat = etat;
+        this.acheteur = acheteur;
+    }
+
+//Programmation Java
+
+//Lier à la connection au serveur
+    public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(
                 "jdbc:postgresql://" + host + ":" + port
-                + "/" + database,
+                        + "/" + database,
                 user, pass);
         con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
         return con;
@@ -52,7 +63,7 @@ public class Enchere {
             // creation des tables
             st.executeUpdate(
                     """
-                    create table utilisateur1 (
+                    create table Enchere (
                         id integer not null primary key
                         generated always as identity,
                     -- ceci est un exemple de commentaire SQL :
@@ -84,12 +95,65 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
+    
+       public static void deleteSchema(Connection con) throws SQLException {
+        try ( Statement st = con.createStatement()) {
+            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
+            // puis les tables
+            // suppression des liens
+            try {
+                st.executeUpdate(
+                        """
+                    alter table aime
+                        drop constraint fk_aime_u1
+                             """);
+                System.out.println("constraint fk_aime_u1 dropped");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the constraint was not created
+            }
+            try {
+                st.executeUpdate(
+                        """
+                    alter table aime
+                        drop constraint fk_aime_u2
+                    """);
+                System.out.println("constraint fk_aime_u2 dropped");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the constraint was not created
+            }
+            // je peux maintenant supprimer les tables
+            try {
+                st.executeUpdate(
+                        """
+                    drop table utilisateur1
+                    """);
+                System.out.println("dable aime dropped");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the table was not created
+            }
+            try {
+                st.executeUpdate(
+                        """
+                    drop table utilisateur
+                    """);
+                System.out.println("table utilisateur dropped");
+            } catch (SQLException ex) {
+                // nothing to do : maybe the table was not created
+            }
+        }
+    }
+
+       //Get et Set
+
+    public double getPrix() {
+        return prix;
+    }
 
     public int getIdArticle() {
         return idArticle;
     }
 
-    public char getVendeur() {
+    public String getVendeur() {
         return vendeur;
     }
 
@@ -109,7 +173,7 @@ public class Enchere {
         return etat;
     }
 
-    public char getAcheteur() {
+    public String getAcheteur() {
         return acheteur;
     }
 
@@ -117,7 +181,7 @@ public class Enchere {
         this.idArticle = idArticle;
     }
 
-    public void setVendeur(char vendeur) {
+    public void setVendeur(String vendeur) {
         this.vendeur = vendeur;
     }
 
@@ -137,15 +201,20 @@ public class Enchere {
         this.etat = etat;
     }
 
-    public void setAcheteur(char acheteur) {
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public void setAcheteur(String acheteur) {
         this.acheteur = acheteur;
     }
  
  
+    //Main
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connect� !!!");
-  //          creeSchema(con);
+            //deleteSchema(con);
             //menu(con);
         } catch (Exception ex) {
             throw new Error(ex);
