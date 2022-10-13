@@ -19,57 +19,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-/*        BorderPane root = new BorderPane();
-
-        root.setPadding(new Insets(15, 20, 10, 10));
-
-        // TOP
-        Button btnTop = new Button("Top");
-        btnTop.setPadding(new Insets(10, 10, 10, 10));
-        root.setTop(btnTop);
-        // Set margin for top area.
-        BorderPane.setMargin(btnTop, new Insets(10, 10, 10, 10));
-
-        // LEFT
-        Button btnLeft = new Button("Left");
-        btnLeft.setPadding(new Insets(5, 5, 5, 5));
-        root.setLeft(btnLeft);
-        // Set margin for left area.
-        BorderPane.setMargin(btnLeft, new Insets(10, 10, 10, 10));
-
-        // CENTER
-        Button btnCenter = new Button("Center");
-        btnCenter.setPadding(new Insets(5, 5, 5, 5));
-        root.setCenter(btnCenter);
-        // Alignment.
-        BorderPane.setAlignment(btnCenter, Pos.BOTTOM_CENTER);
-
-        // RIGHT
-        Button btnRight = new Button("Right");
-        btnRight.setPadding(new Insets(5, 5, 5, 5));
-        root.setRight(btnRight);
-        // Set margin for right area.
-        BorderPane.setMargin(btnRight, new Insets(10, 10, 10, 10));
-
-        // BOTTOM
-        Button btnBottom = new Button("Bottom");
-        btnBottom.setPadding(new Insets(5, 5, 5, 5));
-        root.setBottom(btnBottom);
-        // Alignment.
-        BorderPane.setAlignment(btnBottom, Pos.TOP_RIGHT);
-
-        // Set margin for bottom area.
-        BorderPane.setMargin(btnBottom, new Insets(10, 10, 10, 10));
-
-        Scene scene = new Scene(root, 550, 250);
-
-        primaryStage.setTitle("BorderPane Layout Demo");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-*/      
-        scene = new Scene(new PageAccueil(primaryStage));
+      
+/*        scene = new Scene(new PageAccueil(primaryStage));
         primaryStage.setScene(scene);
         primaryStage.show();  
+*/  
+        scene = new Scene(new PageConnection(primaryStage));
+        primaryStage.setScene(scene);
+        primaryStage.show(); 
     }
 
     public static void main(String[] args) {
