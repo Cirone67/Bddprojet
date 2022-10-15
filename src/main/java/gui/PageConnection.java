@@ -7,7 +7,9 @@ package gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -68,11 +70,16 @@ public class PageConnection extends BorderPane {
         this.tfPrenom = new TextField ("Prénom");
         this.lPrenom = new Label ("Prénom : ");
         
-        inStage.setResizable(false);
+        //inStage.setResizable(false);
         
+        HBox hbTitre = new HBox (this.lTitre);
+        hbTitre.setAlignment(Pos.CENTER);
+         
         HBox hbIdentifiant = new HBox (this.lIdentifiant, this.tfIdentifiant);
         HBox hbMotDePasse = new HBox (this.lMotDePasse, this.pfModDePasse);
-        VBox vbConnection = new VBox (this.lTitre, hbIdentifiant, hbMotDePasse, this.hlMDPOublie, this.hlNouvelUtilisateur);
+        VBox vbConnection = new VBox (hbTitre, hbIdentifiant, hbMotDePasse, this.hlMDPOublie, this.hlNouvelUtilisateur);
+        
+        vbConnection.setSpacing(8);
         
         this.inStage.setTitle("Site Vente aux Enchères");
         
@@ -94,6 +101,7 @@ public class PageConnection extends BorderPane {
             private PasswordField pfMDP;
             private Label lConfirmationMDP;
             private PasswordField pfConfirmationMDP;
+            private Button bValider;
             
             @Override
             public void handle(ActionEvent event) {
@@ -105,21 +113,21 @@ public class PageConnection extends BorderPane {
                 this.pfMDP = new PasswordField ();
                 this.lConfirmationMDP = new Label ("Confirmez le mot de passe : ");
                 this.pfConfirmationMDP = new PasswordField ();
+                this.bValider = new Button ("Valider");
                 
                 HBox hbNom = new HBox (this.lNom, this.tfNom);
                 HBox hbPrenom = new HBox (this.lPrenom, this.tfPrenom);
                 HBox hbMDP = new HBox (this.lMDP, this.pfMDP);
                 HBox hbConfirmationMDP = new HBox (this.lConfirmationMDP, this.pfConfirmationMDP);
-                VBox vbRecreerMDP = new VBox (hbNom, hbPrenom, hbMDP, hbConfirmationMDP);
-                //vbRecreerMDP.setPadding(new javafx.geometry.Insets(15,15,15,15));
+                VBox vbRecreerMDP = new VBox (hbNom, hbPrenom, hbMDP, hbConfirmationMDP, this.bValider);
+                vbRecreerMDP.setPadding(new javafx.geometry.Insets(15,15,15,15));
+                vbRecreerMDP.setSpacing(8);
                 Scene sTemp = new Scene(vbRecreerMDP);
                 
                 sMDPOublie = new Stage();
                 sMDPOublie.setScene(sTemp);
                 sMDPOublie.setTitle("Mot de passe oublié ?");
-                //sMDPOublie.setX(400);
-                //sMDPOublie.setY(100);
-                //sMDPOublie.setResizable(false);
+                sMDPOublie.setResizable(false);
                 sMDPOublie.show();
             }
         });
