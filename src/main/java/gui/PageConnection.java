@@ -29,7 +29,7 @@ public class PageConnection extends BorderPane {
     
     private TextField tfIdentifiant;
     private Label lIdentifiant;
-    private PasswordField pfModDePasse;
+    private PasswordField pfMotDePasse;
     private Label lMotDePasse;
     private Hyperlink hlMDPOublie;
     private Hyperlink hlNouvelUtilisateur;
@@ -46,6 +46,7 @@ public class PageConnection extends BorderPane {
     private Label lTitre;
     
     private Stage sMDPOublie;
+    private Stage sNouvelUtilisateur;
     
     public PageConnection (Stage inStage) {
         
@@ -56,7 +57,7 @@ public class PageConnection extends BorderPane {
         this.tfIdentifiant = new TextField ("Identifiant");
         this.lIdentifiant = new Label ("Identifiant : ");
         this.lMotDePasse = new Label ("Mot de Passe : ");
-        this.pfModDePasse = new PasswordField ();
+        this.pfMotDePasse = new PasswordField ();
         this.hlMDPOublie = new Hyperlink ("Mot de Passe oublié ?");
         this.hlNouvelUtilisateur = new Hyperlink ("Nouvel Utilisateur ?");
         
@@ -76,7 +77,7 @@ public class PageConnection extends BorderPane {
         hbTitre.setAlignment(Pos.CENTER);
          
         HBox hbIdentifiant = new HBox (this.lIdentifiant, this.tfIdentifiant);
-        HBox hbMotDePasse = new HBox (this.lMotDePasse, this.pfModDePasse);
+        HBox hbMotDePasse = new HBox (this.lMotDePasse, this.pfMotDePasse);
         VBox vbConnection = new VBox (hbTitre, hbIdentifiant, hbMotDePasse, this.hlMDPOublie, this.hlNouvelUtilisateur);
         
         vbConnection.setSpacing(8);
@@ -87,11 +88,6 @@ public class PageConnection extends BorderPane {
         
         
         hlMDPOublie.setOnAction(new EventHandler<ActionEvent>() {
-            private VBox vbRecreerMDP;
-            private HBox hbNom;
-            private HBox hbPrenom;
-            private HBox hbMDP;
-            private HBox hbConfirmationMDP;
             
             private Label lNom;
             private TextField tfNom;
@@ -119,7 +115,10 @@ public class PageConnection extends BorderPane {
                 HBox hbPrenom = new HBox (this.lPrenom, this.tfPrenom);
                 HBox hbMDP = new HBox (this.lMDP, this.pfMDP);
                 HBox hbConfirmationMDP = new HBox (this.lConfirmationMDP, this.pfConfirmationMDP);
-                VBox vbRecreerMDP = new VBox (hbNom, hbPrenom, hbMDP, hbConfirmationMDP, this.bValider);
+                HBox hbValider = new HBox (this.bValider);
+                hbValider.setAlignment(Pos.CENTER);
+                
+                VBox vbRecreerMDP = new VBox (hbNom, hbPrenom, hbMDP, hbConfirmationMDP, hbValider);
                 vbRecreerMDP.setPadding(new javafx.geometry.Insets(15,15,15,15));
                 vbRecreerMDP.setSpacing(8);
                 Scene sTemp = new Scene(vbRecreerMDP);
@@ -129,6 +128,66 @@ public class PageConnection extends BorderPane {
                 sMDPOublie.setTitle("Mot de passe oublié ?");
                 sMDPOublie.setResizable(false);
                 sMDPOublie.show();
+            }
+        });
+        
+        hlNouvelUtilisateur.setOnAction(new EventHandler<ActionEvent>() {
+            private Label lNouvelUtilisateur;
+            private Label lNom;
+            private TextField tfNom;
+            private Label lPrenom;
+            private TextField tfPrenom;
+            private Label lMail;
+            private TextField tfMail;
+            private Label lMDP;
+            private PasswordField pfMDP;
+            private Label lConfirmationMDP;
+            private PasswordField pfConfirmationMDP;
+            private Label lCodePostal;
+            private TextField tfCodePostal;
+            private Button bValider;
+            
+            @Override
+            public void handle(ActionEvent event) {
+                this.lNouvelUtilisateur = new Label ("Nouvel Utilisateur");
+                this.lNom = new Label ("Nom : ");
+                this.tfNom = new TextField ();
+                this.lPrenom = new Label ("Prénom : ");
+                this.tfPrenom = new TextField ();
+                this.lMail = new Label ("Mail : ");
+                this.tfMail = new TextField ();
+                this.lMDP = new Label ("Mot de Passe : ");
+                this.pfMDP = new PasswordField ();
+                this.lConfirmationMDP = new Label ("Confirmer le mot de passe : ");
+                this.pfConfirmationMDP = new PasswordField ();
+                this.lCodePostal = new Label ("Code postal : ");
+                this.tfCodePostal = new TextField ();
+                this.bValider = new Button ("Valider");
+                
+                HBox hbNouvelUtilisateur = new HBox (this.lNouvelUtilisateur);
+                hbNouvelUtilisateur.setAlignment(Pos.CENTER);
+                
+                HBox hbNom = new HBox (this.lNom, this.tfNom);
+                HBox hbPrenom = new HBox (this.lPrenom, this.tfPrenom);
+                HBox hbMail = new HBox (this.lMail, this.tfMail);
+                HBox hbMDP = new HBox (this.lMDP, this.pfMDP);
+                HBox hbConfirmationMDP = new HBox (this.lConfirmationMDP, this.pfConfirmationMDP);
+                HBox hbCodePostal = new HBox (this.lCodePostal, this.tfCodePostal);
+                
+                HBox hbValider = new HBox (this.bValider);
+                hbValider.setAlignment(Pos.CENTER);
+                
+                VBox vbNouvelUtilisateur = new VBox (hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, hbConfirmationMDP, hbCodePostal, hbValider);
+                vbNouvelUtilisateur.setPadding(new javafx.geometry.Insets(30,30,30,30));
+                vbNouvelUtilisateur.setSpacing(8);
+                
+                Scene sTemp = new Scene (vbNouvelUtilisateur);
+                
+                sNouvelUtilisateur = new Stage ();
+                sNouvelUtilisateur.setScene(sTemp);
+                sNouvelUtilisateur.setTitle("Nouvel Utilisateur");
+                sNouvelUtilisateur.setResizable(false);
+                sNouvelUtilisateur.show();
             }
         });
     }
