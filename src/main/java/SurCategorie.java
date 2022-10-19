@@ -20,21 +20,21 @@ import java.util.List;
  */
 public class SurCategorie {
     private int idSurCategorie;
-    private char designation;
+    private String designation;
     
 //Constructor------------------------------   
 
-    public SurCategorie(int idSurCategorie, ArrayList<Categorie> categorie, char designation) {
+    public SurCategorie(int idSurCategorie, String designation) {
         this.idSurCategorie = idSurCategorie;
         this.designation = designation;
     }
 //Get et Set-------------------------------
 
-    public char getDesignation() {
+    public String getDesignation() {
         return designation;
     }
 
-    public void setDesignation(char designation) {
+    public void setDesignation(String designation) {
         this.designation = designation;
     }
 
@@ -71,8 +71,16 @@ public class SurCategorie {
             st.executeUpdate(
                     """
                     create table SurCategorie (
-                        idSurCategorie integer not null unique primary key, 
+                        idSurCategorie serial primary key, 
                         designation varchar(30) not null unique,
+                    )
+                    """);
+                    try ( Statement st2 = con.createStatement()) {
+            st.executeUpdate(
+                    """
+                    create table SurCategorie_Categorie (
+                        idSurCategorie integer not null, 
+                        idCategorie integer not null,
                     )
                     """);
             con.commit();
@@ -84,28 +92,27 @@ public class SurCategorie {
             con.setAutoCommit(true);
         }
     }
-        
+        }       
   //Créer une surCategorie------------------------------------
-    public static void createCategorie(Connection con, int idSurCategorie, String designation)
+    public static void createSurCategorie(Connection con, String designation)
             throws SQLException, idCategorieExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
         try ( PreparedStatement chercheEmail = con.prepareStatement(
-                "select idSurCategorie from surCategorie where idSurCategorie = ?")) {
-            chercheEmail.setInt(1, idSurCategorie);
-            ResultSet testEmail = chercheEmail.executeQuery();
-            if (testEmail.next()) {
+               "select designation from surCategorie where designation = ?")) {
+                chercheEmail.setString(1, designation);
+                ResultSet testEmail = chercheEmail.executeQuery();
+                if (testEmail.next()) {
                 throw new idCategorieExisteDejaException();
             }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into surCategorie (idSurCategorie,designation) values (?,?)
+                insert into surCategorie (designation) values (?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pst.setInt(1, idSurCategorie);
-                pst.setString(2, designation);
+                pst.setString(1, designation);
                 pst.executeUpdate();
                 con.commit();
             }
@@ -119,8 +126,8 @@ public class SurCategorie {
         public static class idCategorieExisteDejaException extends Exception {
     }
   //Renvoie la liste des Surcatégories:
-      public static List<Categorie> tousLesUtilisateurs(Connection con) throws SQLException {
-        List<Categorie> res = new ArrayList<>();
+      public static List<SurCategorie> tousLesSurCategorie(Connection con) throws SQLException {
+        List<SurCategorie> res = new ArrayList<>();
         try ( PreparedStatement pst = con.prepareStatement(
                 """
                select idSurCategorie,designation
@@ -129,7 +136,7 @@ public class SurCategorie {
         )) {
             try ( ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Categorie(rs.getInt("idSurCategorie")
+                    res.add(new SurCategorie(rs.getInt("idSurCategorie")
                             ,rs.getString("designation")));          
                 }
                 return res;

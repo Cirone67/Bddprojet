@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,15 +20,16 @@ import java.sql.Statement;
  */
 public class Article {
   private int idArticle;
+  private String designation;
   private String descriptionCourte;
   private String descriptionLongue;
   private int expedition; //(0 = livrer,1 = a toi de le chercher)
   //private  idPhoto
   private int idCategorie;
-  private String posseseur;
+  private int posseseur;
 
  //Constructor  
-  public Article(int idArticle, String descriptionCourte, String descriptionLongue, int expedition, int categorie, String posseseur) {
+  public Article(int idArticle, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur) {
         this.idArticle = idArticle;
         this.descriptionCourte = descriptionCourte;
         this.descriptionLongue = descriptionLongue;
@@ -34,8 +37,16 @@ public class Article {
         this.idCategorie = categorie;
         this.posseseur = posseseur;
     }
+ 
+//Get et Set  
+    public String getDesignation() {
+        return designation;
+    }
 
-//Get et Set
+    public int getIdCategorie() {  
+        return idCategorie;
+    }
+
     public int getIdArticle() {
         return idArticle;
     }
@@ -56,7 +67,7 @@ public class Article {
         return idCategorie;
     }
 
-    public String getPosseseur() {
+    public int getPosseseur() {
         return posseseur;
     }
 
@@ -80,7 +91,7 @@ public class Article {
         this.idCategorie = categorie;
     }
 
-    public void setPosseseur(String posseseur) {
+    public void setPosseseur(int posseseur) {
         this.posseseur = posseseur;
     }
 //Lien avec PGSQL------------------------------------------------
@@ -99,19 +110,20 @@ public class Article {
         return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
     }
 //Creer la table Article-----------------------------------------------
-        public static void creeTableCategorie(Connection con)
+        public static void creeTableArticle(Connection con)
             throws SQLException {
         con.setAutoCommit(false);
         try ( Statement st = con.createStatement()) {
             st.executeUpdate(
                     """
                     create table Article (
-                        idArticle integer  not null unique primary key,
-                        descriptionCourte String,
-                        descriptionLongue String,
+                        idArticle serial primary key,
+                        designation varchar(30),
+                        descriptionCourte varchar(100),
+                        descriptionLongue varchar(500),
                         expedition interger not null,
                         idCategorie integer not null,
-                        posseseur String not null  
+                        posseseur integer not null
                     )
                     """);
             con.commit();
@@ -124,40 +136,77 @@ public class Article {
         }
     }
 //Créer une categorie------------------------------------
-    public static void createCategorie(Connection con, int idArticle, String descriptionCourte, String descriptionLongue, int expedition, int categorie, String posseseur )
+    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur )
             throws SQLException, idArticleExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
-        try ( PreparedStatement chercheEmail = con.prepareStatement(
-                "select idArticle from Article where idArticle = ?")) {
-            chercheEmail.setInt(1, idArticle);
-            ResultSet testEmail = chercheEmail.executeQuery();
-            if (testEmail.next()) {
-                throw new idArticleExisteDejaException();
-            }
+//        try ( PreparedStatement chercheEmail = con.prepareStatement(
+//                "select idArticle from Article where idArticle = ?")) {
+//            chercheEmail.setInt(1, idArticle);
+//            ResultSet testEmail = chercheEmail.executeQuery();
+//            if (testEmail.next()) {
+//                throw new idArticleExisteDejaException();
+//            }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into categorie (idArticle,  descriptionCourte,  descriptionLongue,  expedition,  categorie,  posseseur) values (?,?,?,?,?,?)
+                insert into categorie (designation, descriptionCourte,  descriptionLongue,  expedition,  categorie,  posseseur) values (?,?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pst.setInt(1, idArticle);
+                pst.setString(1, designation);
                 pst.setString(2, descriptionCourte);
                 pst.setString(3, descriptionCourte);
                 pst.setInt(4, expedition);
                 pst.setInt(5, categorie);
-                pst.setString(6, posseseur);
+                pst.setInt(6, posseseur);
                 pst.executeUpdate();
                 con.commit();
-            }
-        } catch (Exception ex) {
-            con.rollback();
-            throw ex;
-        } finally {
+//            }
+//        } catch (Exception ex) {
+//            con.rollback();
+//            throw ex;
+//        } finally {
             con.setAutoCommit(true);
         }
     }
+//Lecture dans PGSQL----------------------
+   public static List<Article> actulisteTousArticle(Connection con) throws SQLException {
+        List<Article> res = new ArrayList<>();
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,descriptionCourte,descriptionLongue,expedition,idCategorie,posseseur
+                 from Article
+               """
+        )) {
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                  for (int i = 0;i<=res.size();i++){
+                    if(rs.getInt("idArticle") !=res.get(i).idArticle ){
+                    res.add(new Article(rs.getInt("idArticle"),
+                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));
+                    
+                    }
+                    }
+                }
+                return res;
+            }
+        }
+    }
+   
+     //  cherche Article à afficher
+      public static List<Article> ChercheArticle (List<Article> article,List<String> chercher){
+           List<Article> res = new ArrayList<>();
+           for( int i =0;i<= article.size();i++){
+              
+              
+              
+           if()     
+           }
+          
+           return res ;
+       
+      }
         public static class idArticleExisteDejaException extends Exception {
     }  
 

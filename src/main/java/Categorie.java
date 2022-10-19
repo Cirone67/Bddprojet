@@ -26,9 +26,10 @@ private int idSurCategorie;
 
 
 //Contructor-----------------------------------------------
-    public Categorie(int idcategorie, String designation) {
+    public Categorie(int idcategorie, String designation,int idSurCategorie ) {
         this.idcategorie = idcategorie;
         this.designation = designation;
+        this.idSurCategorie = idSurCategorie;
     }
 
 //Set et Get-----------------------------------------
@@ -40,12 +41,20 @@ private int idSurCategorie;
         return designation;
     }
 
+    public int getIdSurCategorie() {
+        return idSurCategorie;
+    }
+
     public void setIdcategorie(int idcategorie) {
         this.idcategorie = idcategorie;
     }
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public void setIdSurCategorie(int idSurCategorie) {
+        this.idSurCategorie = idSurCategorie;
     }
 
 //Lien avec PGSQL------------------------------------------------
@@ -71,7 +80,7 @@ private int idSurCategorie;
             st.executeUpdate(
                     """
                     create table Categorie (
-                        idCategorie integer  not null unique primary key,
+                        idCategorie serial primary key,
                         designation varchar(30) not null unique,
                         idSurCategorie integer
                     )
@@ -86,14 +95,12 @@ private int idSurCategorie;
         }
     }
 //Créer une categorie------------------------------------
-    public static void createCategorie(Connection con, int idCategorie, String designation, int idSurCategorie )
+    public static void createCategorie(Connection con, String designation, int idSurCategorie )
             throws SQLException, idCategorieExisteDejaException {
-        // je me place dans une transaction pour m'assurer que la sÃ©quence
-        // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
         try ( PreparedStatement chercheEmail = con.prepareStatement(
-                "select idCategorie from Categorie where idCategorie = ?")) {
-            chercheEmail.setInt(1, idCategorie);
+                "select designation from Categorie where designation = ?")) {
+            chercheEmail.setString(1, designation);
             ResultSet testEmail = chercheEmail.executeQuery();
             if (testEmail.next()) {
                 throw new idCategorieExisteDejaException();
@@ -102,20 +109,19 @@ private int idSurCategorie;
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into categorie (idCategorie,designation,idSurCategorie) values (?,?,?)
+                insert into Categorie (designation,idSurCategorie) values (?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pst.setInt(1, idCategorie);
-                pst.setString(2, designation);
-                pst.setInt(3, idSurCategorie);
-                pst.executeUpdate();
-                con.commit();
-            }
+                pst.setString(1, designation);
+                pst.setInt(2, idSurCategorie);
+                pst.executeUpdate(); 
+                con.commit();      
         } catch (Exception ex) {
             con.rollback();
             throw ex;
-        } finally {
+        } finally {       
             con.setAutoCommit(true);
-        }
+       }
+    }
     }
         public static class idCategorieExisteDejaException extends Exception {
     }
@@ -124,14 +130,14 @@ private int idSurCategorie;
         List<Categorie> res = new ArrayList<>();
         try ( PreparedStatement pst = con.prepareStatement(
                 """
-               select idCategorie,designation
+               select idCategorie,designation,idSurCategorie
                  from Categorie
                """
         )) {
             try ( ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Categorie(rs.getInt("idCategorie")
-                            ,rs.getString("designation")));          
+                            ,rs.getString("designation"),rs.getInt("IdSurCategorie")));      
                 }
                 return res;
             }
@@ -142,10 +148,10 @@ private int idSurCategorie;
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
            //creeTableCategorie(con);
-           //createCategorie(con,4568,"bob",5);
-           //afficheTousLesUtilisateur(con);
+           //createCategorie(con,"chat",6);
+           //tousLesCategorie(con);
            //deleteSchemaUtilisateur(con);
-           //System.out.println(tousLesCategorie(con).get(0).getDesignation());
+           System.out.println(tousLesCategorie(con).get(1).getIdcategorie());
         } catch (Exception ex) {
             throw new Error(ex);
         }

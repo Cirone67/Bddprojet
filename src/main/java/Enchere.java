@@ -1,6 +1,8 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -16,16 +18,16 @@ import java.sql.Statement;
  */
 public class Enchere {
     private int idArticle;
-    private String vendeur;
+    private int vendeur;
     private double prixIni;
     private double prix;
     private double dateDebut;
     private double dateFin;
     private int etat;
-    private String acheteur;
+    private int acheteur;
 
 //Constructors
-     public Enchere(int idArticle, String vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, String acheteur) {    
+     public Enchere(int idArticle, int vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, int acheteur) {    
         this.idArticle = idArticle;
         this.vendeur = vendeur;
         this.prixIni = prixIni;
@@ -53,7 +55,7 @@ public class Enchere {
             throws ClassNotFoundException, SQLException {
         return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
     }
-    
+ // Creer Table Enchere   
     public static void creeSchema(Connection con)
             throws SQLException {
         // je veux que le schema soit entierement cr�� ou pas du tout
@@ -64,17 +66,21 @@ public class Enchere {
             st.executeUpdate(
                     """
                     create table Enchere (
-                        id integer not null primary key
-                        generated always as identity,
-                    -- ceci est un exemple de commentaire SQL :
-                    -- un commentaire commence par deux tirets,
-                    -- et fini � la fin de la ligne
-                    -- cela me permet de signaler que le petit mot cl�
-                    -- unique ci-dessous interdit deux valeurs semblables
-                    -- dans la colonne des noms.
-                        nom varchar(30) not null unique,
-                        pass varchar(30) not null
+                        idArticle integer not null primary key,
+                        vendeur integer not null,
+                        prixIni integer not null,
+                        prix integer,
+                        dateDebut integer not null,
+                        dateFin integer not null
+                        etat integer not null,
+                        acheteur integer,
                     )
+                    """);
+                        st.executeUpdate(
+                    """
+                    alter table Enchere(
+                        add constraint fk_enchere_idArticle,
+                        foreign key (idArticle) references Article(idArticle)
                     """);
             // si j'arrive jusqu'ici, c'est que tout s'est bien pass�
             // je confirme (commit) la transaction
@@ -95,7 +101,44 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    
+   // creer une enchère
+        public static void createEnchere(Connection con, int idArticle, int vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, int acheteur)
+            throws SQLException, Utilisateur.EmailExisteDejaException {
+        // je me place dans une transaction pour m'assurer que la sÃ©quence
+        // test du nom - crÃ©ation est bien atomique et isolÃ©e
+        con.setAutoCommit(false);
+        try ( PreparedStatement chercheEmail = con.prepareStatement(
+                "select idArticle from Enchere where idArticle = ?")) {
+            chercheEmail.setInt(1, idArticle);
+            ResultSet testEmail = chercheEmail.executeQuery();
+            if (testEmail.next()) {
+                throw new Utilisateur.EmailExisteDejaException();
+            }
+            // lors de la creation du PreparedStatement, il faut que je prÃ©cise
+            // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
+            try ( PreparedStatement pst = con.prepareStatement(
+                    """
+                insert into utilisateur (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur) values (?,?,?,?,?,?,?,?)
+                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                pst.setInt(1,idArticle);
+                pst.setInt(2, vendeur);
+                pst.setDouble(3, prixIni);
+                pst.setDouble(4, prix);
+                pst.setDouble(5, dateDebut);
+                pst.setDouble(6, dateFin);
+                pst.setInt(7, etat);
+                 pst.setInt(8, acheteur);
+                pst.executeUpdate();
+                con.commit();
+            }
+        } catch (Exception ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+   //Supprimer une enchère
        public static void deleteSchema(Connection con) throws SQLException {
         try ( Statement st = con.createStatement()) {
             // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
@@ -104,7 +147,7 @@ public class Enchere {
             try {
                 st.executeUpdate(
                         """
-                    alter table aime
+                    alter table Enchere
                         drop constraint fk_aime_u1
                              """);
                 System.out.println("constraint fk_aime_u1 dropped");
@@ -153,7 +196,7 @@ public class Enchere {
         return idArticle;
     }
 
-    public String getVendeur() {
+    public int getVendeur() {
         return vendeur;
     }
 
@@ -173,7 +216,7 @@ public class Enchere {
         return etat;
     }
 
-    public String getAcheteur() {
+    public int getAcheteur() {
         return acheteur;
     }
 
@@ -181,7 +224,7 @@ public class Enchere {
         this.idArticle = idArticle;
     }
 
-    public void setVendeur(String vendeur) {
+    public void setVendeur(int vendeur) {
         this.vendeur = vendeur;
     }
 
@@ -205,7 +248,7 @@ public class Enchere {
         this.prix = prix;
     }
 
-    public void setAcheteur(String acheteur) {
+    public void setAcheteur(int acheteur) {
         this.acheteur = acheteur;
     }
  
@@ -214,8 +257,8 @@ public class Enchere {
     public static void main (String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connect� !!!");
+            
             //deleteSchema(con);
-            //menu(con);
         } catch (Exception ex) {
             throw new Error(ex);
         }

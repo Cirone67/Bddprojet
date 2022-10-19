@@ -144,7 +144,7 @@ public class Utilisateur {
             try ( PreparedStatement pst = con.prepareStatement(
                     """
                 insert into utilisateur (email, mdp, codePostal, nom, prenom, statut) values (?,?,?,?,?,?)
-                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                """)) {
                 pst.setString(1, email);
                 pst.setString(2, mdp);
                 pst.setString(3, codePostal);
@@ -288,6 +288,8 @@ public static void afficheTousLesUtilisateur(Connection con) throws SQLException
         public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
+            Article.creeTableArticle(con);
+            Article.createArticle(con, "descriptionCourte", "descriptionLongue", 0, 0, 0);
            //creeTableUtilisateur(con);
            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
            //afficheTousLesUtilisateur(con);
