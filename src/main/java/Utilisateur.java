@@ -289,7 +289,7 @@ public static void afficheTousLesUtilisateur(Connection con) throws SQLException
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
             Article.creeTableArticle(con);
-            Article.createArticle(con, "descriptionCourte", "descriptionLongue", 0, 0, 0);
+            Article.createArticle(con,"deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
            //creeTableUtilisateur(con);
            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
            //afficheTousLesUtilisateur(con);

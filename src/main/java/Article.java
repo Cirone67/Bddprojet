@@ -29,8 +29,9 @@ public class Article {
   private int posseseur;
 
  //Constructor  
-  public Article(int idArticle, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur) {
+  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur) {
         this.idArticle = idArticle;
+        this.designation = designation;
         this.descriptionCourte = descriptionCourte;
         this.descriptionLongue = descriptionLongue;
         this.expedition = expedition;
@@ -175,7 +176,7 @@ public class Article {
         List<Article> res = new ArrayList<>();
         try ( PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,descriptionCourte,descriptionLongue,expedition,idCategorie,posseseur
+               select idArticle,designation,descriptionCourte,descriptionLongue,expedition,idCategorie,posseseur
                  from Article
                """
         )) {
@@ -183,7 +184,7 @@ public class Article {
                 while (rs.next()) {
                   for (int i = 0;i<=res.size();i++){
                     if(rs.getInt("idArticle") !=res.get(i).idArticle ){
-                    res.add(new Article(rs.getInt("idArticle"),
+                    res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
                             rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));
                     
                     }
@@ -198,12 +199,21 @@ public class Article {
       public static List<Article> ChercheArticle (List<Article> article,List<String> chercher){
            List<Article> res = new ArrayList<>();
            for( int i =0;i<= article.size();i++){
-              
-              
-              
-           if()     
+               int compteur = 0;
+               for( int j = 0; j<=chercher.size();j++){
+            int index1 = article.get(i).designation.indexOf(chercher.get(j));   
+            int index2 = article.get(i).descriptionCourte.indexOf(chercher.get(j));       
+            int index3 = article.get(i).descriptionLongue.indexOf(chercher.get(j)); 
+            
            }
-          
+           
+           
+               
+               if (compteur == -1){
+                   res.add(article.get(i));
+               }
+           }
+           
            return res ;
        
       }
