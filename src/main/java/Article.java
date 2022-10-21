@@ -26,10 +26,10 @@ public class Article {
   private int expedition; //(0 = livrer,1 = a toi de le chercher)
   //private  idPhoto
   private int idCategorie;
-  private int posseseur;
+  private String posseseur;
 
  //Constructor  
-  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur) {
+  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, String posseseur) {
         this.idArticle = idArticle;
         this.designation = designation;
         this.descriptionCourte = descriptionCourte;
@@ -68,7 +68,7 @@ public class Article {
         return idCategorie;
     }
 
-    public int getPosseseur() {
+    public String getPosseseur() {
         return posseseur;
     }
 
@@ -92,7 +92,7 @@ public class Article {
         this.idCategorie = categorie;
     }
 
-    public void setPosseseur(int posseseur) {
+    public void setPosseseur(String posseseur) {
         this.posseseur = posseseur;
     }
 //Lien avec PGSQL------------------------------------------------
@@ -128,7 +128,7 @@ public class Article {
                         descriptionLongue varchar(500),
                         expedition integer not null,
                         idCategorie integer not null,
-                        posseseur integer not null
+                        posseseur varchar(30) not null
                     )
                     """);
             con.commit();
@@ -141,7 +141,7 @@ public class Article {
         }
     }
 //Créer une categorie------------------------------------
-    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int idCategorie, int posseseur )
+    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int idCategorie, String posseseur )
             throws SQLException, idArticleExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -164,7 +164,7 @@ public class Article {
                 pst.setString(3, descriptionLongue);
                 pst.setInt(4, expedition);
                 pst.setInt(5, idCategorie);
-                pst.setInt(6, posseseur);
+                pst.setString(6, posseseur);
                 pst.executeUpdate();
                 con.commit();
 //            }
@@ -191,7 +191,7 @@ public class Article {
 //                    if(i!= 0){
 //                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
-                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));
+                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getString("posseseur")));
 //                    }
 //                    }
 //                    if(i==0){

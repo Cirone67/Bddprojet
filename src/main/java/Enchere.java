@@ -1,10 +1,12 @@
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,13 +23,13 @@ public class Enchere {
     private int vendeur;
     private double prixIni;
     private double prix;
-    private double dateDebut;
-    private double dateFin;
+    private Date dateDebut;
+    private Date dateFin;
     private int etat; // open =0, closed =1; 
     private int acheteur;
 
 //Constructors
-     public Enchere(int idArticle, int vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, int acheteur) {    
+     public Enchere(int idArticle, int vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, int acheteur) {    
         this.idArticle = idArticle;
         this.vendeur = vendeur;
         this.prixIni = prixIni;
@@ -74,8 +76,8 @@ public class Enchere {
                         vendeur integer not null,
                         prixIni integer not null,
                         prix integer,
-                        dateDebut integer not null,
-                        dateFin integer not null
+                        dateDebut date not null,
+                        dateFin date not null
                         etat integer not null,
                         acheteur integer,
                     )
@@ -106,7 +108,7 @@ public class Enchere {
         }
     }
    // creer une enchère
-        public static void createEnchere(Connection con, int idArticle, int vendeur, double prixIni,double prix, double dateDebut, double dateFin, int etat, int acheteur)
+        public static void createEnchere(Connection con, int idArticle, int vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, int acheteur)
             throws SQLException, Utilisateur.EmailExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -128,8 +130,8 @@ public class Enchere {
                 pst.setInt(2, vendeur);
                 pst.setDouble(3, prixIni);
                 pst.setDouble(4, prix);
-                pst.setDouble(5, dateDebut);
-                pst.setDouble(6, dateFin);
+                pst.setDate(5, dateDebut);
+                pst.setDate(6, dateFin);
                 pst.setInt(7, etat);
                  pst.setInt(8, acheteur);
                 pst.executeUpdate();
@@ -208,11 +210,11 @@ public class Enchere {
         return prixIni;
     }
 
-    public double getDateDebut() {
+    public Date getDateDebut() {
         return dateDebut;
     }
 
-    public double getDateFin() {
+    public Date getDateFin() {
         return dateFin;
     }
 
@@ -236,11 +238,11 @@ public class Enchere {
         this.prixIni = prixIni;
     }
 
-    public void setDateDebut(double dateDebut) {
+    public void setDateDebut(Date dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public void setDateFin(double dateFin) {
+    public void setDateFin(Date dateFin) {
         this.dateFin = dateFin;
     }
 
@@ -267,16 +269,18 @@ public class Enchere {
             throw new Error(ex);
         }
     }
+ //Permet au vendeur de modifier l'etat de l'enchère.  
     
-    public Enchere encherir(Enchere actuel,Utilisateur encherreur,double prixPropose){
+    public void encherir(Connection con,Enchere actuel,Utilisateur encherreur,double prixPropose){
         Enchere nouvelle = new Enchere(actuel.getIdArticle(),actuel.getVendeur(),actuel.getPrixIni(),actuel.getPrix(),actuel.getDateDebut(),actuel.getDateFin(),actuel.getEtat(),actuel.getAcheteur());
-        
+        if (java.sql.Date.valueOf(LocalDate.MAX).before(actuel.getDateFin()) && java.sql.Date.valueOf(LocalDate.MAX).after(actuel.getDateDebut())){
         if(prixPropose>nouvelle.prix){
             nouvelle.prix = prixPropose;
             nouvelle.acheteur = encherreur.getEmail();
         }
-        return nouvelle;
+        }
+        
+        }
     }
-}
     
 
