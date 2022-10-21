@@ -99,7 +99,11 @@ public class Utilisateur {
    
     public static Connection defautConnect()
             throws ClassNotFoundException, SQLException {
+        try{
         return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
+        }catch(SQLException ex){
+        return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass"); 
+        }
     }
     //Creer la table Utilisateur-----------------------------------------------
         public static void creeTableUtilisateur(Connection con)
