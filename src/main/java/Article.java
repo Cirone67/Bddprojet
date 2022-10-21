@@ -122,7 +122,7 @@ public class Article {
                         designation varchar(30),
                         descriptionCourte varchar(100),
                         descriptionLongue varchar(500),
-                        expedition interger not null,
+                        expedition integer not null,
                         idCategorie integer not null,
                         posseseur integer not null
                     )
@@ -137,7 +137,7 @@ public class Article {
         }
     }
 //Créer une categorie------------------------------------
-    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, int posseseur )
+    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int idCategorie, int posseseur )
             throws SQLException, idArticleExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -153,13 +153,13 @@ public class Article {
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into categorie (designation, descriptionCourte,  descriptionLongue,  expedition,  categorie,  posseseur) values (?,?,?,?,?,?,?)
+                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  idCategorie,  posseseur) values (?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setString(1, designation);
                 pst.setString(2, descriptionCourte);
-                pst.setString(3, descriptionCourte);
+                pst.setString(3, descriptionLongue);
                 pst.setInt(4, expedition);
-                pst.setInt(5, categorie);
+                pst.setInt(5, idCategorie);
                 pst.setInt(6, posseseur);
                 pst.executeUpdate();
                 con.commit();
@@ -172,8 +172,8 @@ public class Article {
         }
     }
 //Lecture dans PGSQL----------------------
-   public static List<Article> actulisteTousArticle(Connection con) throws SQLException {
-        List<Article> res = new ArrayList<>();
+   public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {
+        ArrayList<Article> res = new ArrayList<>();
         try ( PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,designation,descriptionCourte,descriptionLongue,expedition,idCategorie,posseseur
@@ -182,13 +182,19 @@ public class Article {
         )) {
             try ( ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                  for (int i = 0;i<=res.size();i++){
-                    if(rs.getInt("idArticle") !=res.get(i).idArticle ){
+//                  for (int i = 0;i<=res.size();i++){
+//                      for(int j = 0; j<=i;j++)
+//                    if(i!= 0){
+//                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
                             rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));
-                    
-                    }
-                    }
+//                    }
+//                    }
+//                    if(i==0){
+//                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
+//                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));   
+//                    }
+//                    }
                 }
                 return res;
             }
@@ -196,26 +202,23 @@ public class Article {
     }
    
      //  cherche Article à afficher
-      public static List<Article> ChercheArticle (List<Article> article,List<String> chercher){
-           List<Article> res = new ArrayList<>();
-           for( int i =0;i<= article.size();i++){
+      public static ArrayList<Article> ChercheArticle (List<Article> article,List<String> chercher){
+           ArrayList<Article> res = new ArrayList<>();
+           for( int i =0;i< article.size();i++){
                int compteur = 0;
-               for( int j = 0; j<=chercher.size();j++){
-            int index1 = article.get(i).designation.indexOf(chercher.get(j));   
+               for( int j = 0; j<chercher.size();j++){
+            int index1 = article.get(i).designation.indexOf(chercher.get(j));      
             int index2 = article.get(i).descriptionCourte.indexOf(chercher.get(j));       
-            int index3 = article.get(i).descriptionLongue.indexOf(chercher.get(j)); 
-            
-           }
-           
-           
-               
-               if (compteur == -1){
+            int index3 = article.get(i).descriptionLongue.indexOf(chercher.get(j));
+            if (index1 != -1 || index1 != -1 ||  index1 != -1 ){
+                compteur = compteur +1;
+            }  
+           }     
+               if (compteur == chercher.size()){
                    res.add(article.get(i));
                }
            }
-           
-           return res ;
-       
+           return res ;  
       }
         public static class idArticleExisteDejaException extends Exception {
     }  

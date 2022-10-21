@@ -23,7 +23,7 @@ public class Enchere {
     private double prix;
     private double dateDebut;
     private double dateFin;
-    private int etat;
+    private int etat; // open =0, closed =1; 
     private int acheteur;
 
 //Constructors
@@ -263,7 +263,16 @@ public class Enchere {
             throw new Error(ex);
         }
     }
-            
+    
+    public Enchere encherir(Enchere actuel,Utilisateur encherreur,double prixPropose){
+        Enchere nouvelle = new Enchere(actuel.getIdArticle(),actuel.getVendeur(),actuel.getPrixIni(),actuel.getPrix(),actuel.getDateDebut(),actuel.getDateFin(),actuel.getEtat(),actuel.getAcheteur());
+        
+        if(prixPropose>nouvelle.prix){
+            nouvelle.prix = prixPropose;
+            nouvelle.acheteur = encherreur.getEmail();
+        }
+        return nouvelle;
+    }
 }
     
 

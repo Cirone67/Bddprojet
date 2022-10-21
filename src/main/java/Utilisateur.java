@@ -288,8 +288,17 @@ public static void afficheTousLesUtilisateur(Connection con) throws SQLException
         public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
-            Article.creeTableArticle(con);
-            Article.createArticle(con,"deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+            //Article.creeTableArticle(con);
+            //Article.createArticle(con,"deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+//            Article.createArticle(con,"ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
+//            Article.createArticle(con,"ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+//            Article.createArticle(con,"Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
+            ArrayList<String> chercher = new ArrayList<String>();
+            chercher.add( "ticket");
+            ArrayList<Article> res = Article.ChercheArticle(Article.actulisteTousArticle(con),chercher);
+            System.out.println(res.get(0).getDesignation());
+            System.out.println(res.get(1).getDesignation());
+            System.out.println(res.get(2).getDesignation());
            //creeTableUtilisateur(con);
            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
            //afficheTousLesUtilisateur(con);
