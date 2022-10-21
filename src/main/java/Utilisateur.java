@@ -6,29 +6,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author brenc
  */
 public class Utilisateur {
-    private char email;
+
+    private String email;
     private int mdp;
     private int codePostale;
     private char nom;
     private char prenom;
     private int statut; //statut 0= administrateur/1 = utilisateur;
 
-    
 //Constructor-------------------------------------------------
-    public Utilisateur(char email, int mdp, int codePostale, char nom, char prenom, int statut) {
+    public Utilisateur(String email, int mdp, int codePostale, char nom, char prenom, int statut) {
         this.email = email;
         this.mdp = mdp;
         this.codePostale = codePostale;
@@ -36,13 +34,13 @@ public class Utilisateur {
         this.prenom = prenom;
         this.statut = statut;
     }
-    
+
 //Get et Set---------------------------------------------------
     public int getStatut() {
         return statut;
     }
 
-    public char getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -62,7 +60,7 @@ public class Utilisateur {
         return prenom;
     }
 
-    public void setEmail(char email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -85,28 +83,29 @@ public class Utilisateur {
     public void setStatut(int statut) {
         this.statut = statut;
     }
-    
+
     //Lien avec PGSQL------------------------------------------------
-        public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
+    public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(
                 "jdbc:postgresql://" + host + ":" + port
-                        + "/" + database,
+                + "/" + database,
                 user, pass);
         con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
         return con;
     }
-   
+
     public static Connection defautConnect()
             throws ClassNotFoundException, SQLException {
-        try{
-        return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
-        }catch(SQLException ex){
-        return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass"); 
+        try {
+            return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
+        } catch (SQLException ex) {
+            return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass");
         }
     }
+
     //Creer la table Utilisateur-----------------------------------------------
-        public static void creeTableUtilisateur(Connection con)
+    public static void creeTableUtilisateur(Connection con)
             throws SQLException {
         con.setAutoCommit(false);
         try ( Statement st = con.createStatement()) {
@@ -130,8 +129,9 @@ public class Utilisateur {
             con.setAutoCommit(true);
         }
     }
+
     //Créer un utilisateur-------------------------------------------------------  
-    public static void createUtilisateur(Connection con, String email, String mdp, String codePostal,String nom,String prenom, int statut)
+    public static void createUtilisateur(Connection con, String email, String mdp, String codePostal, String nom, String prenom, int statut)
             throws SQLException, EmailExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -176,10 +176,11 @@ public class Utilisateur {
             con.setAutoCommit(true);
         }
     }
-        public static class EmailExisteDejaException extends Exception {
+
+    public static class EmailExisteDejaException extends Exception {
     }
-        
-        public static void demandeNouvelUtilisateur(Connection con) throws SQLException {
+
+    public static void demandeNouvelUtilisateur(Connection con) throws SQLException {
         boolean existe = true;
         while (existe) {
             System.out.println("--- creation nouvel utilisateur");
@@ -190,15 +191,16 @@ public class Utilisateur {
             String prenom = Lire.S();
             int statut = Lire.i();
             try {
-                createUtilisateur(con, email,mdp, codePostal, nom, prenom, statut);
+                createUtilisateur(con, email, mdp, codePostal, nom, prenom, statut);
                 existe = false;
             } catch (EmailExisteDejaException ex) {
                 System.out.println("cette email existe deja, choisissez en un autre");
             }
         }
     }
-     //Lecture dans PGSQL----------------------
-public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
+    //Lecture dans PGSQL----------------------
+
+    public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
         try ( Statement st = con.createStatement()) {
             // pour effectuer une recherche, il faut utiliser un "executeQuery"
             // et non un "executeUpdate".
@@ -240,9 +242,8 @@ public static void afficheTousLesUtilisateur(Connection con) throws SQLException
 
     }
 
-    
-     //Effacer dans PGSQL-----------------------   
-       public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
+    //Effacer dans PGSQL-----------------------   
+    public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
         try ( Statement st = con.createStatement()) {
             // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
             // puis les tables
@@ -288,25 +289,48 @@ public static void afficheTousLesUtilisateur(Connection con) throws SQLException
             }
         }
     }
-  
-        public static void main(String[] args) {
+
+    public static ArrayList<Utilisateur> afficheInfoEnchères(Connection con, String email) throws SQLException {
+        ArrayList<Utilisateur> res = new ArrayList<>();
+
+        try ( PreparedStatement pst = con.prepareStatement(
+               """
+               select designation, posseseur
+                 from Article
+               """
+        )) {
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    if (rs.getString("posseseur") instanceof email) {
+                    
+                }
+                }
+            }
+
+        }
+
+        return res;
+
+    }
+
+    public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
-            //Article.creeTableArticle(con);
-            //Article.createArticle(con,"deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
-//            Article.createArticle(con,"ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
-//            Article.createArticle(con,"ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
-//            Article.createArticle(con,"Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
+            Article.creeTableArticle(con);
+            Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+            Article.createArticle(con, "ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
+            Article.createArticle(con, "ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+            Article.createArticle(con, "Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
             ArrayList<String> chercher = new ArrayList<String>();
-            chercher.add( "ticket");
-            ArrayList<Article> res = Article.ChercheArticle(Article.actulisteTousArticle(con),chercher);
+            chercher.add("ticket");
+            ArrayList<Article> res = Article.ChercheArticle(Article.actulisteTousArticle(con), chercher);
             System.out.println(res.get(0).getDesignation());
             System.out.println(res.get(1).getDesignation());
             System.out.println(res.get(2).getDesignation());
-           //creeTableUtilisateur(con);
-           //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
-           //afficheTousLesUtilisateur(con);
-           //deleteSchemaUtilisateur(con);
+            //creeTableUtilisateur(con);
+            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
+            //afficheTousLesUtilisateur(con);
+            //deleteSchemaUtilisateur(con);
         } catch (Exception ex) {
             throw new Error(ex);
         }
