@@ -20,16 +20,16 @@ import java.time.LocalDate;
  */
 public class Enchere {
     private int idArticle;
-    private int vendeur;
+    private String vendeur;
     private double prixIni;
     private double prix;
     private Date dateDebut;
     private Date dateFin;
     private int etat; // open =0, closed =1; 
-    private int acheteur;
+    private String acheteur;
 
 //Constructors
-     public Enchere(int idArticle, int vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, int acheteur) {    
+     public Enchere(int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur) {    
         this.idArticle = idArticle;
         this.vendeur = vendeur;
         this.prixIni = prixIni;
@@ -62,7 +62,7 @@ public class Enchere {
         }
     }
  // Creer Table Enchere   
-    public static void creeSchema(Connection con)
+    public static void creeEnchere(Connection con)
             throws SQLException {
         // je veux que le schema soit entierement cr�� ou pas du tout
         // je vais donc g�rer explicitement une transaction
@@ -108,7 +108,7 @@ public class Enchere {
         }
     }
    // creer une enchère
-        public static void createEnchere(Connection con, int idArticle, int vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, int acheteur)
+        public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
             throws SQLException, Utilisateur.EmailExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -124,16 +124,16 @@ public class Enchere {
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into utilisateur (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur) values (?,?,?,?,?,?,?,?)
+                insert into Enchere (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur) values (?,?,?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setInt(1,idArticle);
-                pst.setInt(2, vendeur);
+                pst.setString(2, vendeur);
                 pst.setDouble(3, prixIni);
                 pst.setDouble(4, prix);
                 pst.setDate(5, dateDebut);
                 pst.setDate(6, dateFin);
                 pst.setInt(7, etat);
-                 pst.setInt(8, acheteur);
+                 pst.setString(8, acheteur);
                 pst.executeUpdate();
                 con.commit();
             }
@@ -202,7 +202,7 @@ public class Enchere {
         return idArticle;
     }
 
-    public int getVendeur() {
+    public String getVendeur() {
         return vendeur;
     }
 
@@ -222,7 +222,7 @@ public class Enchere {
         return etat;
     }
 
-    public int getAcheteur() {
+    public String getAcheteur() {
         return acheteur;
     }
 
@@ -230,7 +230,7 @@ public class Enchere {
         this.idArticle = idArticle;
     }
 
-    public void setVendeur(int vendeur) {
+    public void setVendeur(String vendeur) {
         this.vendeur = vendeur;
     }
 
@@ -254,7 +254,7 @@ public class Enchere {
         this.prix = prix;
     }
 
-    public void setAcheteur(int acheteur) {
+    public void setAcheteur(String acheteur) {
         this.acheteur = acheteur;
     }
  
@@ -271,16 +271,45 @@ public class Enchere {
     }
  //Permet au vendeur de modifier l'etat de l'enchère.  
     
-    public void encherir(Connection con,Enchere actuel,Utilisateur encherreur,double prixPropose){
+    public void encherir(Connection con,Enchere actuel,Utilisateur encherreur,double prixPropose) throws SQLException,Utilisateur.EmailExisteDejaException{
         Enchere nouvelle = new Enchere(actuel.getIdArticle(),actuel.getVendeur(),actuel.getPrixIni(),actuel.getPrix(),actuel.getDateDebut(),actuel.getDateFin(),actuel.getEtat(),actuel.getAcheteur());
-        if (java.sql.Date.valueOf(LocalDate.MAX).before(actuel.getDateFin()) && java.sql.Date.valueOf(LocalDate.MAX).after(actuel.getDateDebut())){
-        if(prixPropose>nouvelle.prix){
+        if (java.sql.Date.valueOf(LocalDate.MAX).before(actuel.getDateFin()) && java.sql.Date.valueOf(LocalDate.MAX).after(actuel.getDateDebut())){      
+            if(prixPropose>nouvelle.prix && prixPropose>nouvelle.prixIni){
             nouvelle.prix = prixPropose;
             nouvelle.acheteur = encherreur.getEmail();
+        con.setAutoCommit(false);
+        try ( PreparedStatement chercheEmail = con.prepareStatement(
+                "select idArticle from Enchere where idArticle = ?")) {
+            chercheEmail.setInt(1, idArticle);
+            ResultSet testEmail = chercheEmail.executeQuery();
+            if (testEmail.next()) {
+                throw new Utilisateur.EmailExisteDejaException();
+            }
+            // lors de la creation du PreparedStatement, il faut que je prÃ©cise
+            // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
+            try ( PreparedStatement pst = con.prepareStatement(
+                    """
+                update Enchere (prix,acheteur) values (?,?) where idArticle = ?
+                """)) {
+                pst.setDouble(1, prix);
+                pst.setString(2, acheteur);
+                pst.setInt(3, idArticle);
+                pst.executeUpdate();
+                con.commit();
+            }
+        } catch (Exception ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+        }        
         }
         }
-        
-        }
-    }
+
+    
+    
+    
+        } 
     
 
