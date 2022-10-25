@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /*
@@ -291,35 +292,39 @@ public class Utilisateur {
         }
     }
 
-    public static ArrayList<Utilisateur> afficheInfoEnchères(Connection con, String email) throws SQLException {
-        ArrayList<Utilisateur> res = new ArrayList<>();
-
-        try ( PreparedStatement pst = con.prepareStatement(
-               """
-               select designation, posseseur
-                 from Article
-               """
-        )) {
-            try ( ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    if (rs.getString("posseseur") instanceof email) {
-                    
-                }
-                }
-            }
-
-        }
-
-        return res;
-
-    }
+//    public static ArrayList<Utilisateur> afficheInfoEnchères(Connection con, String email) throws SQLException {
+//        ArrayList<Utilisateur> res = new ArrayList<>();
+//
+//        try ( PreparedStatement pst = con.prepareStatement(
+//               """
+//               select designation, posseseur
+//                 from Article
+//               """
+//        )) {
+//            try ( ResultSet rs = pst.executeQuery()) {
+//                while (rs.next()) {
+//                    if (rs.getString("posseseur") instanceof email) {
+//                    
+//                }
+//                }
+//            }
+//
+//        }
+//
+//        return res;
+//
+//    }
 
     public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
-            //Enchere.creeSchema(con);
+            Enchere.creeEnchere(con);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
+            Date dateFin = new java.sql.Date(simpleDateFormat.parse("26/10/2022").getTime());
+            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
             
-            
+            System.out.println(dateDebut);
             
 //            Article.creeTableArticle(con);
 //            Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
