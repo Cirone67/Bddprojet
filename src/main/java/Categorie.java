@@ -147,6 +147,24 @@ private int idSurCategorie;
             }
         }
     }
+//Renvoie la liste des enchères dans une catégorie
+       public static ArrayList<Integer> articleParCategorie(Connection con,Categorie categorie) throws SQLException {
+        ArrayList<Integer> res = new ArrayList<>();
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle from Article where categorie = ?
+               """
+        )) {
+            pst.setInt(1, categorie.idcategorie);
+            pst.executeUpdate();
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res.add(rs.getInt("idArticle") );               
+                }
+                return res;
+            }
+        }
+    }       
       
           public static void main(String[] args) {
         try ( Connection con = defautConnect()) {

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /*
@@ -21,14 +22,14 @@ import java.util.ArrayList;
 public class Utilisateur {
 
     private String email;
-    private int mdp;
-    private int codePostale;
-    private char nom;
-    private char prenom;
+    private String mdp;
+    private String codePostale;
+    private String nom;
+    private String prenom;
     private int statut; //statut 0= administrateur/1 = utilisateur;
 
 //Constructor-------------------------------------------------
-    public Utilisateur(String email, int mdp, int codePostale, char nom, char prenom, int statut) {
+    public Utilisateur(String email, String mdp, String codePostale, String nom, String prenom, int statut) {
         this.email = email;
         this.mdp = mdp;
         this.codePostale = codePostale;
@@ -46,19 +47,19 @@ public class Utilisateur {
         return email;
     }
 
-    public int getMdp() {
+    public String getMdp() {
         return mdp;
     }
 
-    public int getCodePostale() {
+    public String getCodePostale() {
         return codePostale;
     }
 
-    public char getNom() {
+    public String getNom() {
         return nom;
     }
 
-    public char getPrenom() {
+    public String getPrenom() {
         return prenom;
     }
 
@@ -66,19 +67,19 @@ public class Utilisateur {
         this.email = email;
     }
 
-    public void setMdp(int mdp) {
+    public void setMdp(String mdp) {
         this.mdp = mdp;
     }
 
-    public void setCodePostale(int codePostale) {
+    public void setCodePostale(String codePostale) {
         this.codePostale = codePostale;
     }
 
-    public void setNom(char nom) {
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
-    public void setPrenom(char prenom) {
+    public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
 
@@ -318,16 +319,19 @@ public class Utilisateur {
     public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
-            Enchere.creeEnchere(con);
+//            Enchere.creeEnchere(con);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
-            Date dateFin = new java.sql.Date(simpleDateFormat.parse("26/10/2022").getTime());
-            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
+            Date dateFin = new java.sql.Date(simpleDateFormat.parse("30/10/2022").getTime());
+//            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
             
-            System.out.println(dateDebut);
-            
+            //System.out.println(dateDebut);
+            Enchere enche =  new Enchere(0,"vendeur",0,0,dateDebut,dateFin,0,"acheteur");
+            Utilisateur utilisateur = new Utilisateur("loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
+            System.out.println(java.sql.Date.valueOf(LocalDate.now()));   
+            enche.encherir(con,utilisateur,400);
 //            Article.creeTableArticle(con);
-//            Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+            //Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
 //            Article.createArticle(con, "ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
 //            Article.createArticle(con, "ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
 //            Article.createArticle(con, "Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
