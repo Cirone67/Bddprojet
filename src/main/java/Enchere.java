@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 /*
@@ -27,7 +28,7 @@ public class Enchere {
     private Date dateFin;
     private int etat; // open =0, closed =1; 
     private String acheteur;
-
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 //Constructors
      public Enchere(int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur) {    
         this.idArticle = idArticle;
@@ -73,21 +74,22 @@ public class Enchere {
                     """
                     create table Enchere (
                         idArticle integer not null primary key,
-                        vendeur integer not null,
+                        vendeur varchar(30) not null,
                         prixIni integer not null,
                         prix integer,
                         dateDebut date not null,
-                        dateFin date not null
+                        dateFin date not null,
                         etat integer not null,
-                        acheteur integer,
+                        acheteur varchar(30)
                     )
                     """);
-                        st.executeUpdate(
-                    """
-                    alter table Enchere(
-                        add constraint fk_enchere_idArticle,
-                        foreign key (idArticle) references Article(idArticle)
-                    """);
+//                        st.executeUpdate(
+//                    """
+//                    alter table Enchere(
+//                        add constraint fk_enchere_idArticle,
+//                        foreign key (idArticle) references Article(idArticle)
+//                    )
+//                    """);
             // si j'arrive jusqu'ici, c'est que tout s'est bien pass�
             // je confirme (commit) la transaction
             con.commit();
@@ -142,6 +144,24 @@ public class Enchere {
             throw ex;
         } finally {
             con.setAutoCommit(true);
+        }
+    }
+    public static void demandeNouvelUtilisateur(Connection con) throws SQLException {
+        boolean existe = true;
+        while (existe) {
+            System.out.println("--- creation nouvel utilisateur");
+            String email = Lire.S();
+            String mdp = Lire.S();
+            String codePostal = Lire.S();
+            String nom = Lire.S();
+            String prenom = Lire.S();
+            int statut = Lire.i();
+            try {
+                createUtilisateur(con, email, mdp, codePostal, nom, prenom, statut);
+                existe = false;
+            } catch (EmailExisteDejaException ex) {
+                System.out.println("cette email existe deja, choisissez en un autre");
+            }
         }
     }
    //Supprimer une enchère
@@ -269,38 +289,27 @@ public class Enchere {
             throw new Error(ex);
         }
     }
+  
  //Permet au vendeur de modifier l'etat de l'enchère.  
     
-    public void encherir(Connection con,Enchere actuel,Utilisateur encherreur,double prixPropose) throws SQLException,Utilisateur.EmailExisteDejaException{
-        Enchere nouvelle = new Enchere(actuel.getIdArticle(),actuel.getVendeur(),actuel.getPrixIni(),actuel.getPrix(),actuel.getDateDebut(),actuel.getDateFin(),actuel.getEtat(),actuel.getAcheteur());
-        if (java.sql.Date.valueOf(LocalDate.MAX).before(actuel.getDateFin()) && java.sql.Date.valueOf(LocalDate.MAX).after(actuel.getDateDebut())){      
+    public void encherir(Connection con,Utilisateur encherreur,double prixPropose) throws SQLException,Utilisateur.EmailExisteDejaException{
+        Enchere nouvelle = new Enchere(this.getIdArticle(),this.getVendeur(),this.getPrixIni(),this.getPrix(),this.getDateDebut(),this.getDateFin(),this.getEtat(),this.getAcheteur());
+        if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())){      
             if(prixPropose>nouvelle.prix && prixPropose>nouvelle.prixIni){
+                System.out.println(0);
             nouvelle.prix = prixPropose;
             nouvelle.acheteur = encherreur.getEmail();
         con.setAutoCommit(false);
-        try ( PreparedStatement chercheEmail = con.prepareStatement(
-                "select idArticle from Enchere where idArticle = ?")) {
-            chercheEmail.setInt(1, idArticle);
-            ResultSet testEmail = chercheEmail.executeQuery();
-            if (testEmail.next()) {
-                throw new Utilisateur.EmailExisteDejaException();
-            }
-            // lors de la creation du PreparedStatement, il faut que je prÃ©cise
-            // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                update Enchere (prix,acheteur) values (?,?) where idArticle = ?
+                update Enchere set prix = ?, acheteur = ? where idArticle = ?
                 """)) {
-                pst.setDouble(1, prix);
-                pst.setString(2, acheteur);
-                pst.setInt(3, idArticle);
+                pst.setDouble(1, nouvelle.prix);
+                pst.setString(2, nouvelle.acheteur);
+                pst.setInt(3, nouvelle.idArticle);
                 pst.executeUpdate();
                 con.commit();
             }
-        } catch (Exception ex) {
-            con.rollback();
-            throw ex;
-        } finally {
             con.setAutoCommit(true);
         }
         }        
@@ -310,6 +319,6 @@ public class Enchere {
     
     
     
-        } 
+        
     
 
