@@ -1,3 +1,5 @@
+package ProjetBdD.gui;
+
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -156,12 +158,12 @@ public class Enchere {
             String nom = Lire.S();
             String prenom = Lire.S();
             int statut = Lire.i();
-            try {
-                createUtilisateur(con, email, mdp, codePostal, nom, prenom, statut);
-                existe = false;
-            } catch (EmailExisteDejaException ex) {
-                System.out.println("cette email existe deja, choisissez en un autre");
-            }
+//            try {
+//                createUtilisateur(con, email, mdp, codePostal, nom, prenom, statut);
+//                existe = false;
+//            } catch (EmailExisteDejaException ex) {
+//                System.out.println("cette email existe deja, choisissez en un autre");
+//            }
         }
     }
    //Supprimer une enchère

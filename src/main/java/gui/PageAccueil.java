@@ -6,6 +6,7 @@
 package gui;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,12 +31,12 @@ public class PageAccueil extends BorderPane {
     
     private Button bSeConnecter;
     private Button bAccueil;
-    private Button bMultimedia;
-    private Button bMaisonEtJardin;
-    private Button bJouetsEtJeux;
-    private Button bCultureEtLoisirs;
-    private Button bAutoEtMoto;
-    private Button bReconditionne;
+    private MenuButton bMultimedia;
+    private MenuButton bMaisonEtJardin;
+    private MenuButton bJouetsEtJeux;
+    private MenuButton bCultureEtLoisirs;
+    private MenuButton bAutoEtMoto;
+    private MenuButton bReconditionne;
     
     private BorderPane bpEcranPrincipal;
     //private BorderPane bpEntete;
@@ -50,12 +51,12 @@ public class PageAccueil extends BorderPane {
         
         this.bSeConnecter = new Button ("Se connecter");
         this.bAccueil = new Button ("Accueil");
-        this.bMultimedia = new Button ("Multimédia");
-        this.bMaisonEtJardin = new Button ("Maison et Jardin");
-        this.bJouetsEtJeux = new Button ("Jouets et Jeux");
-        this.bCultureEtLoisirs = new Button ("Culture et Loisirs");
-        this.bAutoEtMoto = new Button ("Auto et Moto");
-        this.bReconditionne = new Button ("Reconditionné");
+        this.bMultimedia = new MenuButton ("Multimédia");
+        this.bMaisonEtJardin = new MenuButton ("Maison et Jardin");
+        this.bJouetsEtJeux = new MenuButton ("Jouets et Jeux");
+        this.bCultureEtLoisirs = new MenuButton ("Culture et Loisirs");
+        this.bAutoEtMoto = new MenuButton ("Auto et Moto");
+        this.bReconditionne = new MenuButton ("Reconditionné");
         
         BorderPane bpEntete = new BorderPane ();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));

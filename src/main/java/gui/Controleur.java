@@ -12,6 +12,7 @@ package gui;
 public class Controleur {
     
     private PageAccueil vue;
+    private int etat;
     
     public Controleur (PageAccueil vue) {
         this.vue = vue;

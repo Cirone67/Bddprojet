@@ -5,6 +5,7 @@
  */
 package gui;
 
+import ProjetBdD.gui.SessionInfo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -44,9 +45,13 @@ public class PageConnection extends BorderPane {
     private Label lPrenom;
     private TextField tfPrenom;
     private Label lTitre;
+    private Button bValiderConnection;
 
     private Stage sMDPOublie;
     private Stage sNouvelUtilisateur;
+    private Scene sPageAccueil;
+    
+    private SessionInfo sessionInfo;
 
     public PageConnection(Stage inStage) {
 
@@ -70,6 +75,11 @@ public class PageConnection extends BorderPane {
         this.lNom = new Label("Nom : ");
         this.tfPrenom = new TextField("Prénom");
         this.lPrenom = new Label("Prénom : ");
+        this.bValiderConnection = new Button("Valider");
+        
+
+        HBox hbValider = new HBox(this.bValiderConnection);
+        hbValider.setAlignment(Pos.CENTER);
 
         //inStage.setResizable(false);
         HBox hbTitre = new HBox(this.lTitre);
@@ -77,7 +87,7 @@ public class PageConnection extends BorderPane {
 
         HBox hbIdentifiant = new HBox(this.lIdentifiant, this.tfIdentifiant);
         HBox hbMotDePasse = new HBox(this.lMotDePasse, this.pfMotDePasse);
-        VBox vbConnection = new VBox(hbTitre, hbIdentifiant, hbMotDePasse, this.hlMDPOublie, this.hlNouvelUtilisateur);
+        VBox vbConnection = new VBox(hbTitre, hbIdentifiant, hbMotDePasse, hbValider, this.hlMDPOublie, this.hlNouvelUtilisateur);
 
         vbConnection.setSpacing(8);
 
@@ -154,7 +164,7 @@ public class PageConnection extends BorderPane {
             private PasswordField pfConfirmationMDP;
             private Label lCodePostal;
             private TextField tfCodePostal;
-            private Button bValider;
+            private Button bValiderNU;
 
             @Override
             public void handle(ActionEvent event) {
@@ -171,7 +181,7 @@ public class PageConnection extends BorderPane {
                 this.pfConfirmationMDP = new PasswordField();
                 this.lCodePostal = new Label("Code postal : ");
                 this.tfCodePostal = new TextField();
-                this.bValider = new Button("Valider");
+                this.bValiderNU = new Button("Valider");
 
                 HBox hbNouvelUtilisateur = new HBox(this.lNouvelUtilisateur);
                 hbNouvelUtilisateur.setAlignment(Pos.CENTER);
@@ -183,7 +193,7 @@ public class PageConnection extends BorderPane {
                 HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
                 HBox hbCodePostal = new HBox(this.lCodePostal, this.tfCodePostal);
 
-                HBox hbValider = new HBox(this.bValider);
+                HBox hbValider = new HBox(this.bValiderNU);
                 hbValider.setAlignment(Pos.CENTER);
 
                 VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, hbConfirmationMDP, hbCodePostal, hbValider);
@@ -197,8 +207,8 @@ public class PageConnection extends BorderPane {
                 sNouvelUtilisateur.setTitle("Nouvel Utilisateur");
                 sNouvelUtilisateur.setResizable(false);
                 sNouvelUtilisateur.show();
-                
-                bValider.setOnAction(new EventHandler<ActionEvent>() {
+
+                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
                         sNouvelUtilisateur.close();
@@ -206,6 +216,24 @@ public class PageConnection extends BorderPane {
                 });
             }
         });
+
+        bValiderConnection.setOnAction((t) -> {
+            this.inStage.close();
+            sPageAccueil = new Scene (new PageAccueil(inStage));
+            inStage.setScene(sPageAccueil);
+            inStage.show();
+        });
     }
 
+    /**
+     * @return the inStage
+     */
+    public Stage getInStage() {
+        return inStage;
+    }
+    
+    public SessionInfo getSessionInfo() {
+        return sessionInfo;
+    }
+    
 }

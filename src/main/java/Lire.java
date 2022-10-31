@@ -1,3 +1,5 @@
+package ProjetBdD.gui;
+
 
 
 import java.io.*;
