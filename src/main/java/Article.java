@@ -1,4 +1,4 @@
-package ProjetBdD.gui;
+//package ProjetBdD.gui;
 
 
 import java.sql.Connection;
@@ -206,7 +206,24 @@ public class Article {
             }
         }
     }
-   
+      //Fonction qui associe nom et désignation d'un article
+    public static int nomconnecttodeisgnation(Connection con, String designation)throws SQLException{
+        int res;
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle from Article where designation = ?
+               """
+        )) {
+            pst.setString(1, designation);
+            pst.executeUpdate();
+          try ( ResultSet rs = pst.executeQuery()) {
+                //while (rs.next()) {
+                    res = rs.getInt("idArticle");               
+                //}   
+        return res;
+    }
+    }
+    }
      //  cherche Article à afficher
       public static ArrayList<Article> ChercheArticle (List<Article> article,List<String> chercher){
            ArrayList<Article> res = new ArrayList<>();

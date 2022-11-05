@@ -148,23 +148,91 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    public static void demandeNouvelUtilisateur(Connection con) throws SQLException {
+    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
         boolean existe = true;
         while (existe) {
-            System.out.println("--- creation nouvel utilisateur");
-            String email = Lire.S();
-            String mdp = Lire.S();
-            String codePostal = Lire.S();
-            String nom = Lire.S();
-            String prenom = Lire.S();
-            int statut = Lire.i();
-//            try {
-//                createUtilisateur(con, email, mdp, codePostal, nom, prenom, statut);
-//                existe = false;
-//            } catch (EmailExisteDejaException ex) {
-//                System.out.println("cette email existe deja, choisissez en un autre");
-//            }
+            System.out.println("--- creation nouvel Enchere");
+            int idArticle = Article.nomconnecttodeisgnation(con,desititre);
+            String vendeur = Lire.S();
+            int prixIni = Lire.i(); //Donner par l'utilisateur
+            int prix = prixIni;// auto
+            Date dateDebut = ;//Donner par l'utilisateur (format à transformer si nécessaire)
+            Date dateFin = ; //Donner par l'utilisateur
+            int etat = idStatuConnectToDesignation(con, desietat);
+            String acheteur = vendeur; //auto
+            try {
+                createEnchere(con, idArticle,  vendeur,  prixIni, prix,  dateDebut,  dateFin,  etat, acheteur );
+                existe = false;
+            } catch (EnchereExisteDejaException ex) {
+                System.out.println("Enchere existe deja");
+            }
         }
+    }
+    
+    //Table qui permet d'associer l'etat et sa désignation et (((faire la statistique du nombre d'enchère ouverte ( restreinit à l'admin).))))
+        public static void creeAssocEtat(Connection con)
+            throws SQLException {
+        // je veux que le schema soit entierement cr�� ou pas du tout
+        // je vais donc g�rer explicitement une transaction
+        con.setAutoCommit(false);
+        try ( Statement st = con.createStatement()) {
+            // creation des tables
+            st.executeUpdate(
+                    """
+                    create table Etat (
+                        idEtat interger not null,
+                        designation varchar(30)
+                    )
+                    """);
+            con.commit();
+            con.setAutoCommit(true);
+        } catch (SQLException ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+    
+            public static void createEtat(Connection con)throws SQLException {     
+        con.setAutoCommit(false);
+            try ( PreparedStatement pst = con.prepareStatement(
+                    """
+                insert into Etat (idEtat,designation) values (0,ouverte),
+                insert into Etat (idEtat,designation) values (1,ferme)   
+                """ )) {
+                pst.executeUpdate();
+                con.commit();
+            }
+         catch (Exception ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+           
+    // Fonction qui associe le statut 
+    public static int idStatuConnectToDesignation(Connection con, String designation)throws SQLException{
+        int res;
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idEtat from Etat where designation = ?
+               """
+        )) {
+            pst.setString(1, designation);
+            pst.executeUpdate();
+          try ( ResultSet rs = pst.executeQuery()) {
+                //while (rs.next()) {
+                    res = rs.getInt("idEtat");               
+                //} 
+        return res;
+    }
+    }
+    }
+    
+    
+            public static class EnchereExisteDejaException extends Exception {
     }
    //Supprimer une enchère
        public static void deleteSchema(Connection con) throws SQLException {

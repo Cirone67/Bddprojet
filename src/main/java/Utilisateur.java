@@ -294,30 +294,95 @@ public class Utilisateur {
             }
         }
     }
+//Envoie la liste des enchère à Affiche ses enchères en cours
+    public static ArrayList<Enchere> afficheSesEnchères(Connection con, String email) throws SQLException {
+        ArrayList<Enchere> res = new ArrayList<>();
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur
+                 from Enchere where vendeur = ?
+               """
+        )) {
+           pst.setString(1,email);
+            pst.executeUpdate();
+        
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res.add(new Enchere(rs.getInt("idArticle"),rs.getString("vendeur"),
+                            rs.getInt("prixIni"),rs.getInt("prix"), rs.getDate("dateDebut"),rs.getDate("dateFin"),rs.getInt("etat"),rs.getString("acheteur")));
+                }
+                return res;
+            }
+        }
+    }
+////Affiche les enchères terminées et remportées
+    public static ArrayList<Enchere> afficheEnchereRemporte(Connection con, String email) throws SQLException {
+        ArrayList<Enchere> res = new ArrayList<>();
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin < ?
+               """
+        )) {
+           pst.setString(1,email);
+           pst.setDate(2,java.sql.Date.valueOf(LocalDate.now()));
+           pst.executeUpdate();
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res.add(new Enchere(rs.getInt("idArticle"),rs.getString("vendeur"),
+                            rs.getInt("prixIni"),rs.getInt("prix"), rs.getDate("dateDebut"),rs.getDate("dateFin"),rs.getInt("etat"),rs.getString("acheteur")));
+                }
+                return res;
+            }
+        }
+    }
 
-//    public static ArrayList<Utilisateur> afficheInfoEnchères(Connection con, String email) throws SQLException {
-//        ArrayList<Utilisateur> res = new ArrayList<>();
-//
-//        try ( PreparedStatement pst = con.prepareStatement(
-//               """
-//               select designation, posseseur
-//                 from Article
-//               """
-//        )) {
-//            try ( ResultSet rs = pst.executeQuery()) {
-//                while (rs.next()) {
-//                    if (rs.getString("posseseur") instanceof email) {
-//                    
-//                }
-//                }
-//            }
-//
-//        }
-//
-//        return res;
-//
-//    }
-
+    
+//Affiche le gain de l'utilisateur
+    public static int afficheGain(Connection con, String email) throws SQLException {
+        int gain = 0;
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select prix,dateFin
+                 from Enchere where vendeur = ? and dateFin > ?
+               """
+        )) {
+           pst.setString(1,email);
+           pst.setDate(2,java.sql.Date.valueOf(LocalDate.now()));
+            pst.executeUpdate();
+        
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    //if(java.sql.Date.valueOf(LocalDate.now()).after(rs.getDate("dateFin"))){
+                    gain =  rs.getInt("prix")+ gain;
+                    //} //Si jamais ca marche pas dans sql
+                    }
+                return gain;
+            }
+        }
+    }
+ //Affiche les enchères en cours que possède l'utilisateur/pour lequel il a fait la meilleur offre
+      public static ArrayList<Enchere> afficheEnchereRemporteEnCours(Connection con, String email) throws SQLException {
+        ArrayList<Enchere> res = new ArrayList<>();
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin > ?
+               """
+        )) {
+           pst.setString(1,email);
+           pst.setDate(2,java.sql.Date.valueOf(LocalDate.now()));
+           pst.executeUpdate();
+            try ( ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res.add(new Enchere(rs.getInt("idArticle"),rs.getString("vendeur"),
+                            rs.getInt("prixIni"),rs.getInt("prix"), rs.getDate("dateDebut"),rs.getDate("dateFin"),rs.getInt("etat"),rs.getString("acheteur")));
+                }
+                return res;
+            }
+        }
+    }  
+    
+    
+    
     public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
