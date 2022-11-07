@@ -1,7 +1,6 @@
-package ProjetBdD.gui;
+//package ProjetBdD.gui;
 
 
-import Article;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -123,7 +122,7 @@ public class Enchere {
             chercheEmail.setInt(1, idArticle);
             ResultSet testEmail = chercheEmail.executeQuery();
             if (testEmail.next()) {
-                throw new Utilisateur.EmailExisteDejaException();
+                throw new EnchereExisteDejaException();
             }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es

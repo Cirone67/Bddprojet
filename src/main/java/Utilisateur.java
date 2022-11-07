@@ -1,4 +1,4 @@
-package ProjetBdD.gui;
+//package ProjetBdD.gui;
 
 
 import java.sql.Connection;
@@ -202,6 +202,28 @@ public class Utilisateur {
                 System.out.println("cette email existe deja, choisissez en un autre");
             }
         }
+    }
+    
+    public static boolean demandeConnection(Connection con, String email, String pass)throws SQLException{
+        boolean res;
+        try ( PreparedStatement pst = con.prepareStatement(
+                """
+               select email,mdp from Utilisateur where email = ? and mdp = ?
+               """
+        )) {
+            pst.setString(1, email);
+            pst.setString(2, pass);
+            pst.executeUpdate();
+          try ( ResultSet rs = pst.executeQuery()) {
+                //while (rs.next()) {
+                    res = true ;           
+                //}   
+        return res;
+    }catch(SQLException ex) {
+       res = false; 
+    }
+    }
+        return res;
     }
     //Lecture dans PGSQL----------------------
 
