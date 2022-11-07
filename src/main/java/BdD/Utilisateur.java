@@ -1,3 +1,5 @@
+package BdD;
+
 //package ProjetBdD.gui;
 
 

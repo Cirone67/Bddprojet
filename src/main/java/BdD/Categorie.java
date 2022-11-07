@@ -1,4 +1,4 @@
-package ProjetBdD.gui;
+package BdD;
 
 
 import java.sql.Connection;
