@@ -5,7 +5,7 @@
  */
 package gui;
 
-import ProjetBdD.gui.SessionInfo;
+//import ProjetBdD.gui.SessionInfo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -46,12 +46,14 @@ public class PageConnection extends BorderPane {
     private TextField tfPrenom;
     private Label lTitre;
     private Button bValiderConnection;
+    private Label lProblemMDP;
 
     private Stage sMDPOublie;
     private Stage sNouvelUtilisateur;
     private Scene sPageAccueil;
-    
-    private SessionInfo sessionInfo;
+    private Stage sErreur;
+
+    //private SessionInfo sessionInfo;
 
     public PageConnection(Stage inStage) {
 
@@ -77,6 +79,7 @@ public class PageConnection extends BorderPane {
         this.lPrenom = new Label("Prénom : ");
         this.bValiderConnection = new Button("Valider");
         
+        this.lProblemMDP = new Label ("Connexion impossible - Erreur MDP ou identifiant");
 
         HBox hbValider = new HBox(this.bValiderConnection);
         hbValider.setAlignment(Pos.CENTER);
@@ -218,10 +221,22 @@ public class PageConnection extends BorderPane {
         });
 
         bValiderConnection.setOnAction((t) -> {
-            this.inStage.close();
-            sPageAccueil = new Scene (new PageAccueil(inStage));
-            inStage.setScene(sPageAccueil);
-            inStage.show();
+            
+            if (pfMotDePasse.getText().equals("pass")) {
+                this.inStage.close();
+                sPageAccueil = new Scene(new PageAccueil(inStage));
+                inStage.setScene(sPageAccueil);
+                inStage.show();
+            } else {
+                HBox hbErreur = new HBox (this.lProblemMDP);
+                hbErreur.setAlignment(Pos.CENTER);
+                
+                Scene sTemp = new Scene (hbErreur);
+                sErreur = new Stage ();
+                sErreur.setScene(sTemp);
+                sErreur.show();
+            }
+
         });
     }
 
@@ -231,9 +246,9 @@ public class PageConnection extends BorderPane {
     public Stage getInStage() {
         return inStage;
     }
-    
-    public SessionInfo getSessionInfo() {
-        return sessionInfo;
-    }
-    
+
+//    public SessionInfo getSessionInfo() {
+//        return sessionInfo;
+//    }
+
 }

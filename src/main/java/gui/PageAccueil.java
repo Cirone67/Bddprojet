@@ -29,7 +29,6 @@ public class PageAccueil extends BorderPane {
     
     private TextField tfRechercher;
     
-    private Button bSeConnecter;
     private Button bAccueil;
     private MenuButton bMultimedia;
     private MenuButton bMaisonEtJardin;
@@ -49,7 +48,6 @@ public class PageAccueil extends BorderPane {
         
         this.tfRechercher = new TextField ("Rechercher");
         
-        this.bSeConnecter = new Button ("Se connecter");
         this.bAccueil = new Button ("Accueil");
         this.bMultimedia = new MenuButton ("Multimédia");
         this.bMaisonEtJardin = new MenuButton ("Maison et Jardin");
@@ -61,7 +59,6 @@ public class PageAccueil extends BorderPane {
         BorderPane bpEntete = new BorderPane ();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
-        bpEntete.setRight(this.bSeConnecter);
         bpEntete.setLeft(ivLogoINSA);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
