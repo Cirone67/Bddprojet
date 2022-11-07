@@ -3,6 +3,7 @@ package BdD;
 //package ProjetBdD.gui;
 
 
+import gui.PageConnection;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -31,6 +32,7 @@ public class Utilisateur {
     private String nom;
     private String prenom;
     private int statut; //statut 0= administrateur/1 = utilisateur;
+    private PageConnection pcConnection;
 
 //Constructor-------------------------------------------------
     public Utilisateur(String email, String mdp, String codePostale, String nom, String prenom, int statut) {

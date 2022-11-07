@@ -6,6 +6,9 @@
 package gui;
 
 //import ProjetBdD.gui.SessionInfo;
+import BdD.Utilisateur;
+import static BdD.Utilisateur.defautConnect;
+import java.sql.Connection;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -53,8 +56,9 @@ public class PageConnection extends BorderPane {
     private Scene sPageAccueil;
     private Stage sErreur;
 
-    //private SessionInfo sessionInfo;
+    private Utilisateur user;
 
+    //private SessionInfo sessionInfo;
     public PageConnection(Stage inStage) {
 
         this.inStage = inStage;
@@ -78,8 +82,8 @@ public class PageConnection extends BorderPane {
         this.tfPrenom = new TextField("Prénom");
         this.lPrenom = new Label("Prénom : ");
         this.bValiderConnection = new Button("Valider");
-        
-        this.lProblemMDP = new Label ("Connexion impossible - Erreur MDP ou identifiant");
+
+        this.lProblemMDP = new Label("Connexion impossible - Erreur MDP ou identifiant");
 
         HBox hbValider = new HBox(this.bValiderConnection);
         hbValider.setAlignment(Pos.CENTER);
@@ -88,8 +92,8 @@ public class PageConnection extends BorderPane {
         HBox hbTitre = new HBox(this.lTitre);
         hbTitre.setAlignment(Pos.CENTER);
 
-        HBox hbIdentifiant = new HBox(this.lIdentifiant, this.tfIdentifiant);
-        HBox hbMotDePasse = new HBox(this.lMotDePasse, this.pfMotDePasse);
+        HBox hbIdentifiant = new HBox(this.lIdentifiant, this.getTfIdentifiant());
+        HBox hbMotDePasse = new HBox(this.lMotDePasse, this.getPfMotDePasse());
         VBox vbConnection = new VBox(hbTitre, hbIdentifiant, hbMotDePasse, hbValider, this.hlMDPOublie, this.hlNouvelUtilisateur);
 
         vbConnection.setSpacing(8);
@@ -221,20 +225,25 @@ public class PageConnection extends BorderPane {
         });
 
         bValiderConnection.setOnAction((t) -> {
-            
-            if (pfMotDePasse.getText().equals("pass")) {
-                this.inStage.close();
-                sPageAccueil = new Scene(new PageAccueil(inStage));
-                inStage.setScene(sPageAccueil);
-                inStage.show();
-            } else {
-                HBox hbErreur = new HBox (this.lProblemMDP);
-                hbErreur.setAlignment(Pos.CENTER);
-                
-                Scene sTemp = new Scene (hbErreur);
-                sErreur = new Stage ();
-                sErreur.setScene(sTemp);
-                sErreur.show();
+            try ( Connection con = defautConnect()) {
+                boolean res;
+                res = user.demandeConnection(tfIdentifiant.getText(), pfMotDePasse.getText());
+                if (res == true) {
+                    this.inStage.close();
+                    sPageAccueil = new Scene(new PageAccueil(inStage));
+                    inStage.setScene(sPageAccueil);
+                    inStage.show();
+                } else {
+                    HBox hbErreur = new HBox(this.lProblemMDP);
+                    hbErreur.setAlignment(Pos.CENTER);
+
+                    Scene sTemp = new Scene(hbErreur);
+                    sErreur = new Stage();
+                    sErreur.setScene(sTemp);
+                    sErreur.show();
+                }
+            } catch (Exception ex) {
+                throw new Error(ex);
             }
 
         });
@@ -250,5 +259,25 @@ public class PageConnection extends BorderPane {
 //    public SessionInfo getSessionInfo() {
 //        return sessionInfo;
 //    }
+    /**
+     * @return the tfIdentifiant
+     */
+    public TextField getTfIdentifiant() {
+        return tfIdentifiant;
+    }
+
+    /**
+     * @param tfIdentifiant the tfIdentifiant to set
+     */
+    public void setTfIdentifiant(TextField tfIdentifiant) {
+        this.tfIdentifiant = tfIdentifiant;
+    }
+
+    /**
+     * @return the pfMotDePasse
+     */
+    public PasswordField getPfMotDePasse() {
+        return pfMotDePasse;
+    }
 
 }

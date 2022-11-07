@@ -150,25 +150,25 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
-        boolean existe = true;
-        while (existe) {
-            int idArticle1 = Article.nomconnecttodesignation(con, desititre);
-            String vendeur = Lire.S();
-            int prixIni = Lire.i(); //Donner par l'utilisateur
-            int prix = prixIni;// auto
-            Date dateDebut = ;//Donner par l'utilisateur (format à transformer si nécessaire)
-            Date dateFin = ; //Donner par l'utilisateur
-            int etat = idStatuConnectToDesignation(con, desietat);
-            String acheteur = vendeur; //auto
-            try {
-                createEnchere(con, idArticle1,  vendeur,  prixIni, prix,  dateDebut,  dateFin,  etat, acheteur );
-                existe = false;
-            } catch (EnchereExisteDejaException ex) {
-                System.out.println("Enchere existe deja");
-            }
-        }
-    }
+//    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
+//        boolean existe = true;
+//        while (existe) {
+//            int idArticle1 = Article.nomconnecttodesignation(con, desititre);
+//            String vendeur = Lire.S();
+//            int prixIni = Lire.i(); //Donner par l'utilisateur
+//            int prix = prixIni;// auto
+//            Date dateDebut = ;//Donner par l'utilisateur (format à transformer si nécessaire)
+//            Date dateFin = ; //Donner par l'utilisateur
+//            int etat = idStatuConnectToDesignation(con, desietat);
+//            String acheteur = vendeur; //auto
+//            try {
+//                createEnchere(con, idArticle1,  vendeur,  prixIni, prix,  dateDebut,  dateFin,  etat, acheteur );
+//                existe = false;
+//            } catch (EnchereExisteDejaException ex) {
+//                System.out.println("Enchere existe deja");
+//            }
+//        }
+//    }
     
     //Table qui permet d'associer l'etat et sa désignation et (((faire la statistique du nombre d'enchère ouverte ( restreinit à l'admin).))))
         public static void creeAssocEtat(Connection con)
