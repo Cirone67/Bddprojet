@@ -207,7 +207,7 @@ public class Article {
         }
     }
       //Fonction qui associe nom et désignation d'un article
-    public static int nomconnecttodeisgnation(Connection con, String designation)throws SQLException{
+    public static int nomconnecttodesignation(Connection con, String designation)throws SQLException{
         int res;
         try ( PreparedStatement pst = con.prepareStatement(
                 """

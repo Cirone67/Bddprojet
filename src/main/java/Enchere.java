@@ -1,6 +1,7 @@
 package ProjetBdD.gui;
 
 
+import Article;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -113,7 +114,7 @@ public class Enchere {
     }
    // creer une enchère
         public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
-            throws SQLException, Utilisateur.EmailExisteDejaException {
+            throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
@@ -151,8 +152,7 @@ public class Enchere {
     public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
         boolean existe = true;
         while (existe) {
-            System.out.println("--- creation nouvel Enchere");
-            int idArticle = Article.nomconnecttodeisgnation(con,desititre);
+            int idArticle1 = Article.nomconnecttodesignation(con, desititre);
             String vendeur = Lire.S();
             int prixIni = Lire.i(); //Donner par l'utilisateur
             int prix = prixIni;// auto
@@ -161,7 +161,7 @@ public class Enchere {
             int etat = idStatuConnectToDesignation(con, desietat);
             String acheteur = vendeur; //auto
             try {
-                createEnchere(con, idArticle,  vendeur,  prixIni, prix,  dateDebut,  dateFin,  etat, acheteur );
+                createEnchere(con, idArticle1,  vendeur,  prixIni, prix,  dateDebut,  dateFin,  etat, acheteur );
                 existe = false;
             } catch (EnchereExisteDejaException ex) {
                 System.out.println("Enchere existe deja");
