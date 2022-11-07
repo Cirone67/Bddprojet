@@ -1,8 +1,6 @@
 package BdD;
 
 //package ProjetBdD.gui;
-
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -18,12 +16,12 @@ import java.time.LocalDate;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author brenc
  */
 public class Enchere {
+
     private int idArticle;
     private String vendeur;
     private double prixIni;
@@ -34,7 +32,8 @@ public class Enchere {
     private String acheteur;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 //Constructors
-     public Enchere(int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur) {    
+
+    public Enchere(int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int etat, String acheteur) {
         this.idArticle = idArticle;
         this.vendeur = vendeur;
         this.prixIni = prixIni;
@@ -46,13 +45,12 @@ public class Enchere {
     }
 
 //Programmation Java
-
 //Lier à la connection au serveur
     public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(
                 "jdbc:postgresql://" + host + ":" + port
-                        + "/" + database,
+                + "/" + database,
                 user, pass);
         con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
         return con;
@@ -60,19 +58,20 @@ public class Enchere {
 
     public static Connection defautConnect()
             throws ClassNotFoundException, SQLException {
-       try{
-        return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
-        }catch(SQLException ex){
-        return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass"); 
+        try {
+            return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
+        } catch (SQLException ex) {
+            return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass");
         }
     }
- // Creer Table Enchere   
+    // Creer Table Enchere   
+
     public static void creeEnchere(Connection con)
             throws SQLException {
         // je veux que le schema soit entierement cr�� ou pas du tout
         // je vais donc g�rer explicitement une transaction
         con.setAutoCommit(false);
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             // creation des tables
             st.executeUpdate(
                     """
@@ -113,13 +112,14 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-   // creer une enchère
-        public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni,double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
+    // creer une enchère
+
+    public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
-        try ( PreparedStatement chercheEmail = con.prepareStatement(
+        try (PreparedStatement chercheEmail = con.prepareStatement(
                 "select idArticle from Enchere where idArticle = ?")) {
             chercheEmail.setInt(1, idArticle);
             ResultSet testEmail = chercheEmail.executeQuery();
@@ -128,18 +128,18 @@ public class Enchere {
             }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
-            try ( PreparedStatement pst = con.prepareStatement(
+            try (PreparedStatement pst = con.prepareStatement(
                     """
                 insert into Enchere (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur) values (?,?,?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pst.setInt(1,idArticle);
+                pst.setInt(1, idArticle);
                 pst.setString(2, vendeur);
                 pst.setDouble(3, prixIni);
                 pst.setDouble(4, prix);
                 pst.setDate(5, dateDebut);
                 pst.setDate(6, dateFin);
                 pst.setInt(7, etat);
-                 pst.setString(8, acheteur);
+                pst.setString(8, acheteur);
                 pst.executeUpdate();
                 con.commit();
             }
@@ -169,14 +169,14 @@ public class Enchere {
 //            }
 //        }
 //    }
-    
+
     //Table qui permet d'associer l'etat et sa désignation et (((faire la statistique du nombre d'enchère ouverte ( restreinit à l'admin).))))
-        public static void creeAssocEtat(Connection con)
+    public static void creeAssocEtat(Connection con)
             throws SQLException {
         // je veux que le schema soit entierement cr�� ou pas du tout
         // je vais donc g�rer explicitement une transaction
         con.setAutoCommit(false);
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             // creation des tables
             st.executeUpdate(
                     """
@@ -194,50 +194,49 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    
-            public static void createEtat(Connection con)throws SQLException {     
+
+    public static void createEtat(Connection con) throws SQLException {
         con.setAutoCommit(false);
-            try ( PreparedStatement pst = con.prepareStatement(
-                    """
+        try (PreparedStatement pst = con.prepareStatement(
+                """
                 insert into Etat (idEtat,designation) values (0,ouverte),
                 insert into Etat (idEtat,designation) values (1,ferme)   
-                """ )) {
-                pst.executeUpdate();
-                con.commit();
-            }
-         catch (Exception ex) {
+                """)) {
+            pst.executeUpdate();
+            con.commit();
+        } catch (Exception ex) {
             con.rollback();
             throw ex;
         } finally {
             con.setAutoCommit(true);
         }
     }
-           
+
     // Fonction qui associe le statut 
-    public static int idStatuConnectToDesignation(Connection con, String designation)throws SQLException{
+    public static int idStatuConnectToDesignation(Connection con, String designation) throws SQLException {
         int res;
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idEtat from Etat where designation = ?
                """
         )) {
             pst.setString(1, designation);
             pst.executeUpdate();
-          try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 //while (rs.next()) {
-                    res = rs.getInt("idEtat");               
+                res = rs.getInt("idEtat");
                 //} 
-        return res;
+                return res;
+            }
+        }
     }
+
+    public static class EnchereExisteDejaException extends Exception {
     }
-    }
-    
-    
-            public static class EnchereExisteDejaException extends Exception {
-    }
-   //Supprimer une enchère
-       public static void deleteSchema(Connection con) throws SQLException {
-        try ( Statement st = con.createStatement()) {
+    //Supprimer une enchère
+
+    public static void deleteSchema(Connection con) throws SQLException {
+        try (Statement st = con.createStatement()) {
             // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
             // puis les tables
             // suppression des liens
@@ -283,8 +282,7 @@ public class Enchere {
         }
     }
 
-       //Get et Set
-
+    //Get et Set
     public double getPrix() {
         return prix;
     }
@@ -348,48 +346,39 @@ public class Enchere {
     public void setAcheteur(String acheteur) {
         this.acheteur = acheteur;
     }
- 
- 
+
     //Main
-    public static void main (String[] args) {
-        try ( Connection con = defautConnect()) {
+    public static void main(String[] args) {
+        try (Connection con = defautConnect()) {
             System.out.println("connect� !!!");
-            
+
             //deleteSchema(con);
         } catch (Exception ex) {
             throw new Error(ex);
         }
     }
-  
- //Permet au vendeur de modifier l'etat de l'enchère.  
-    
-    public void encherir(Connection con,Utilisateur encherreur,double prixPropose) throws SQLException,Utilisateur.EmailExisteDejaException{
-        Enchere nouvelle = new Enchere(this.getIdArticle(),this.getVendeur(),this.getPrixIni(),this.getPrix(),this.getDateDebut(),this.getDateFin(),this.getEtat(),this.getAcheteur());
-        if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())){      
-            if(prixPropose>nouvelle.prix && prixPropose>nouvelle.prixIni){
+
+    //Permet au vendeur de modifier l'etat de l'enchère.  
+    public void encherir(Connection con, Utilisateur encherreur, double prixPropose) throws SQLException, Utilisateur.EmailExisteDejaException {
+        Enchere nouvelle = new Enchere(this.getIdArticle(), this.getVendeur(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getEtat(), this.getAcheteur());
+        if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())) {
+            if (prixPropose > nouvelle.prix && prixPropose > nouvelle.prixIni) {
                 System.out.println(0);
-            nouvelle.prix = prixPropose;
-            nouvelle.acheteur = encherreur.getEmail();
-        con.setAutoCommit(false);
-            try ( PreparedStatement pst = con.prepareStatement(
-                    """
+                nouvelle.prix = prixPropose;
+                nouvelle.acheteur = encherreur.getEmail();
+                con.setAutoCommit(false);
+                try (PreparedStatement pst = con.prepareStatement(
+                        """
                 update Enchere set prix = ?, acheteur = ? where idArticle = ?
                 """)) {
-                pst.setDouble(1, nouvelle.prix);
-                pst.setString(2, nouvelle.acheteur);
-                pst.setInt(3, nouvelle.idArticle);
-                pst.executeUpdate();
-                con.commit();
+                    pst.setDouble(1, nouvelle.prix);
+                    pst.setString(2, nouvelle.acheteur);
+                    pst.setInt(3, nouvelle.idArticle);
+                    pst.executeUpdate();
+                    con.commit();
+                }
+                con.setAutoCommit(true);
             }
-            con.setAutoCommit(true);
         }
-        }        
-        }
-        }
-
-    
-    
-    
-        
-    
-
+    }
+}
