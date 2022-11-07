@@ -206,8 +206,9 @@ public class Utilisateur {
         }
     }
     
-    public static boolean demandeConnection(Connection con, String email, String pass)throws SQLException{
+    public static boolean demandeConnection( String email, String pass)throws SQLException{ 
         boolean res;
+        try ( Connection con = defautConnect()) {
         try ( PreparedStatement pst = con.prepareStatement(
                 """
                select email,mdp from Utilisateur where email = ? and mdp = ?
@@ -226,7 +227,11 @@ public class Utilisateur {
     }
     }
         return res;
+    } catch (Exception ex) {
+            throw new Error(ex);
     }
+    }
+    
     //Lecture dans PGSQL----------------------
 
     public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
