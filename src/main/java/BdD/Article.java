@@ -208,6 +208,8 @@ public class Article {
             }
         }
     }
+   
+   //Liste des Articles par 
       //Fonction qui associe nom et désignation d'un article
     public static int nomconnecttodesignation(Connection con, String designation)throws SQLException{
         int res;
@@ -226,9 +228,20 @@ public class Article {
     }
     }
     }
+    
+    //Décompose une phrase en liste de mot
+    public static ArrayList<String> decomposeRecherche(String recherche){
+        ArrayList<String> res = new ArrayList<>();
+        String[] resint = recherche.split(" ");
+        for(int i=0; i < resint.length;i++){
+            res.add(resint[i]);
+        }
+      return res;   
+    }
      //  cherche Article à afficher
-      public static ArrayList<Article> ChercheArticle (List<Article> article,List<String> chercher){
-           ArrayList<Article> res = new ArrayList<>();
+      public static ArrayList<Article> ChercheArticle (ArrayList<Article> article,ArrayList<String> chercher){
+ 
+          ArrayList<Article> res = new ArrayList<>();
            for( int i =0;i< article.size();i++){
                int compteur = 0;
                for( int j = 0; j<chercher.size();j++){
@@ -238,7 +251,7 @@ public class Article {
             if (index1 != -1 || index1 != -1 ||  index1 != -1 ){
                 compteur = compteur +1;
             }  
-           }     
+           }
                if (compteur == chercher.size()){
                    res.add(article.get(i));
                }

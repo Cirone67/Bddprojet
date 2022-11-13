@@ -441,9 +441,9 @@ public class Utilisateur {
         }
     }
     
-    //Si l'utilisateur est un admin, il peut faire des stats:
+    //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.
     //-% d'Enchere active
-    public static double stat(Connection con) throws SQLException {
+    public static double statEnchereActive(Connection con) throws SQLException {
         double i =0;
         double j =0;
         try (PreparedStatement pst = con.prepareStatement(
@@ -503,7 +503,7 @@ public class Utilisateur {
                 return res/(i-1); //Je pense -1 car il ne faut pas retenir la 1ere ligne du tableau qui est le nom des colonnes
             }
         }
-    } 
+    }
 
     public static void main(String[] args) {
         try (Connection con = defautConnect()) {
