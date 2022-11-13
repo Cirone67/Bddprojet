@@ -234,7 +234,7 @@ public class Utilisateur {
         } catch (Exception ex) {
             throw new Error(ex);
         }
-     return res;
+        return res;
     }
 
     //Lecture dans PGSQL----------------------
@@ -327,8 +327,9 @@ public class Utilisateur {
             }
         }
     }
-//Envoie la liste des enchère à Affiche ses enchères en cours
 
+//Affichage__________________________________________________________________________________________
+//Envoie la liste des enchère à Affiche ses enchères en cours
     public static ArrayList<Enchere> afficheSesEnchères(Connection con, String email) throws SQLException {
         ArrayList<Enchere> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
@@ -415,6 +416,94 @@ public class Utilisateur {
             }
         }
     }
+
+    //Affiche les enchères pour lesquelles il a enchéri mais qu'il ne possède plus
+    public static ArrayList<Enchere> afficheEnchereNonRemporteEnCours(Connection con, String email) throws SQLException {
+        ArrayList<Enchere> res = new ArrayList<>();
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
+               join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
+               where acheteur != ? and dateFin < ? and encherreur = ?
+               """
+        )) {
+            pst.setString(1, email);
+            pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+            pst.setString(3, email);
+            pst.executeUpdate();
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res.add(new Enchere(rs.getInt("idArticle"), rs.getString("vendeur"),
+                            rs.getInt("prixIni"), rs.getInt("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("etat"), rs.getString("acheteur")));
+                }
+                return res;
+            }
+        }
+    }
+    
+    //Si l'utilisateur est un admin, il peut faire des stats:
+    //-% d'Enchere active
+    public static double stat(Connection con) throws SQLException {
+        double i =0;
+        double j =0;
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select dateDebut,dateFin from Enchere
+               where dateFin > ? and dateDebut < ?
+               """
+        )) {
+            pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+            pst.executeUpdate();
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                   i = i+1; 
+                } 
+            }
+        }
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select dateDebut,dateFin from Enchere
+               """
+        )) {
+            pst.executeUpdate();
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                   j = j+1; 
+                } 
+            }
+        }
+        if (j != 0){
+          return (i/j)*100;
+        }else{
+            return 0;
+        }  
+    }
+    
+    //Prix moyen de l'augmentation des enchères ( moyenne des écarts relatifs)
+       public static double statPrix(Connection con) throws SQLException {
+        double res = 0;
+        int i =0;
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select prixIni,prix from Enchere
+               where dateFin < ?
+               """
+        )) {
+            pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            pst.executeUpdate();
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    i=i+1;
+                }
+                rs.first();
+                while (rs.next()) {
+                    res = ((rs.getInt("prixIni")- rs.getInt("prix"))/rs.getInt("prixIni"))+res;
+                }
+                return res/(i-1); //Je pense -1 car il ne faut pas retenir la 1ere ligne du tableau qui est le nom des colonnes
+            }
+        }
+    } 
 
     public static void main(String[] args) {
         try (Connection con = defautConnect()) {

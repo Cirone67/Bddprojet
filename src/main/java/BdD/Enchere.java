@@ -112,8 +112,63 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
-    // creer une enchère
 
+    //Créer la table des listes de posseseurs sucessif pour une enchère donnée.
+    public static void creeTableListPosseseur(Connection con, int idArticle) throws SQLException {
+        con.setAutoCommit(false);
+        try (Statement st = con.createStatement()) {
+            st.executeUpdate(
+                    """
+                    create ListPosseseur (
+                        idArticle integer not null,
+                        encherreur varchar(30)
+                    )
+                    """);
+            con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+    //Permet de vider cette table de facon à alléger
+
+    public static void UpdateDeleteListPosseseur(Connection con, int idArticle) throws SQLException {
+        con.setAutoCommit(false);
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                delete from ListPosseseur
+                join Enchere on enchere.idArticle = ListPosseseur.idArticle
+                where dateFin < ?
+                """)) {
+            pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            pst.executeUpdate();
+            con.commit();
+        }
+        con.setAutoCommit(true);
+    }
+
+    //Pour se souvenir de l'enchérissement (Affichage)
+    public static void UpdateListPosseseur(Connection con, int idArticle, String acheteur) throws SQLException {
+        con.setAutoCommit(false);
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                insert into ListPosseseur (idArticle,encherreur) values (?,?)
+                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pst.setInt(1, idArticle);
+            pst.setString(2, acheteur);
+            pst.executeUpdate();
+            con.commit();
+        } catch (Exception ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+
+    // creer une enchère
     public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
@@ -235,53 +290,52 @@ public class Enchere {
     }
     //Supprimer une enchère
 
-    public static void deleteSchema(Connection con) throws SQLException {
-        try (Statement st = con.createStatement()) {
-            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
-            // puis les tables
-            // suppression des liens
-            try {
-                st.executeUpdate(
-                        """
-                    alter table Enchere
-                        drop constraint fk_aime_u1
-                             """);
-                System.out.println("constraint fk_aime_u1 dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the constraint was not created
-            }
-            try {
-                st.executeUpdate(
-                        """
-                    alter table aime
-                        drop constraint fk_aime_u2
-                    """);
-                System.out.println("constraint fk_aime_u2 dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the constraint was not created
-            }
-            // je peux maintenant supprimer les tables
-            try {
-                st.executeUpdate(
-                        """
-                    drop table utilisateur1
-                    """);
-                System.out.println("dable aime dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the table was not created
-            }
-            try {
-                st.executeUpdate(
-                        """
-                    drop table utilisateur
-                    """);
-                System.out.println("table utilisateur dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the table was not created
-            }
-        }
-    }
-
+//    public static void deleteSchema(Connection con) throws SQLException {
+//        try (Statement st = con.createStatement()) {
+//            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
+//            // puis les tables
+//            // suppression des liens
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    alter table Enchere
+//                        drop constraint fk_aime_u1
+//                             """);
+//                System.out.println("constraint fk_aime_u1 dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the constraint was not created
+//            }
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    alter table aime
+//                        drop constraint fk_aime_u2
+//                    """);
+//                System.out.println("constraint fk_aime_u2 dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the constraint was not created
+//            }
+//            // je peux maintenant supprimer les tables
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    drop table utilisateur1
+//                    """);
+//                System.out.println("dable aime dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the table was not created
+//            }
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    drop table utilisateur
+//                    """);
+//                System.out.println("table utilisateur dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the table was not created
+//            }
+//        }
+//    }
     //Get et Set
     public double getPrix() {
         return prix;
@@ -359,7 +413,7 @@ public class Enchere {
     }
 
     //Permet au vendeur de modifier l'etat de l'enchère.  
-    public void encherir(Connection con, Utilisateur encherreur, double prixPropose) throws SQLException, Utilisateur.EmailExisteDejaException {
+    public void encherir(Connection con, Utilisateur encherreur, double prixPropose) throws SQLException {
         Enchere nouvelle = new Enchere(this.getIdArticle(), this.getVendeur(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getEtat(), this.getAcheteur());
         if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())) {
             if (prixPropose > nouvelle.prix && prixPropose > nouvelle.prixIni) {
@@ -378,6 +432,7 @@ public class Enchere {
                     con.commit();
                 }
                 con.setAutoCommit(true);
+                UpdateListPosseseur(con, nouvelle.idArticle, nouvelle.acheteur);
             }
         }
     }
