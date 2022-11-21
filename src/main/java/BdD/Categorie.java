@@ -100,6 +100,28 @@ private int idSurCategorie;
             con.setAutoCommit(true);
         }
     }
+//Creer Table JoinCategorieArticle
+     public static void creeTableJoinCategorieArticle(Connection con)
+            throws SQLException {
+        con.setAutoCommit(false);
+        try ( Statement st = con.createStatement()) {
+            st.executeUpdate(
+                    """
+                    create table JoinCategorieArticle (
+                        idCategorie integer,
+                        idArticle integer
+                    )
+                    """);
+            con.commit();
+            con.setAutoCommit(true);
+        } catch (SQLException ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }   
+        
 //Créer une categorie------------------------------------
     public static void createCategorie(Connection con, String designation, int idSurCategorie )
             throws SQLException, idCategorieExisteDejaException {
@@ -130,6 +152,27 @@ private int idSurCategorie;
     }
     }
         public static class idCategorieExisteDejaException extends Exception {
+    }
+  //Créer un JoinCategorieArticle
+        public static void createJoinCategorieArticle(Connection con,int idArticle, int idCategorie )
+            throws SQLException {
+        con.setAutoCommit(false);
+            try ( PreparedStatement pst = con.prepareStatement(
+                    """
+                insert into JoinCategorieArticle (idArticle, idCategorie) values (?,?)
+                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                pst.setInt(1, idArticle);
+                pst.setInt(2, idCategorie);
+
+                pst.executeUpdate();
+                con.commit();
+//            }
+//        } catch (Exception ex) {
+//            con.rollback();
+//            throw ex;
+//        } finally {
+            con.setAutoCommit(true);
+        }
     }
   //Renvoie la liste des catégories:
       public static List<Categorie> tousLesCategorie(Connection con) throws SQLException {

@@ -164,17 +164,6 @@ public class Utilisateur {
                 pst.setInt(6, statut);
                 pst.executeUpdate();
                 con.commit();
-
-                // je peux alors rÃ©cupÃ©rer les clÃ©s crÃ©Ã©es comme un result set :
-//                try ( ResultSet rid = pst.getGeneratedKeys()) {
-//                    // et comme ici je suis sur qu'il y a une et une seule clÃ©, je
-//                    // fait un simple next 
-//                    rid.next();
-//                    // puis je rÃ©cupÃ¨re la valeur de la clÃ© crÃ©Ã© qui est dans la
-//                    // premiÃ¨re colonne du ResultSet
-//                    int id = rid.getInt(1);
-//                    return id;
-//                }
             }
         } catch (Exception ex) {
             con.rollback();
@@ -334,8 +323,9 @@ public class Utilisateur {
         ArrayList<Enchere> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur
-                 from Enchere where vendeur = ?
+               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere 
+               join Enchere.idArticle = Article.idArticle
+               where Article.posseseur = ?
                """
         )) {
             pst.setString(1, email);
@@ -343,8 +333,8 @@ public class Utilisateur {
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"), rs.getString("vendeur"),
-                            rs.getInt("prixIni"), rs.getInt("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("etat"), rs.getString("acheteur")));
+                    res.add(new Enchere(rs.getInt("idArticle"),
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
                 }
                 return res;
             }
@@ -356,7 +346,7 @@ public class Utilisateur {
         ArrayList<Enchere> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin < ?
+               select idArticle,prixIni,prix,dateDebut,dateFin,acheteur from Enchere where acheteur = ? and dateFin < ?
                """
         )) {
             pst.setString(1, email);
@@ -364,8 +354,8 @@ public class Utilisateur {
             pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"), rs.getString("vendeur"),
-                            rs.getInt("prixIni"), rs.getInt("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("etat"), rs.getString("acheteur")));
+                    res.add(new Enchere(rs.getInt("idArticle"),
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
                 }
                 return res;
             }
@@ -377,8 +367,9 @@ public class Utilisateur {
         int gain = 0;
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select prix,dateFin
-                 from Enchere where vendeur = ? and dateFin > ?
+               select prix,dateFin from Enchere 
+               join Enchere.idArticle = Article.idArticle
+                where Article.posseseur = ? and Enchere.dateFin > ?
                """
         )) {
             pst.setString(1, email);
@@ -401,7 +392,7 @@ public class Utilisateur {
         ArrayList<Enchere> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin > ?
+               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin > ?
                """
         )) {
             pst.setString(1, email);
@@ -409,8 +400,8 @@ public class Utilisateur {
             pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"), rs.getString("vendeur"),
-                            rs.getInt("prixIni"), rs.getInt("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("etat"), rs.getString("acheteur")));
+                    res.add(new Enchere(rs.getInt("idArticle"),
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
                 }
                 return res;
             }
@@ -433,8 +424,8 @@ public class Utilisateur {
             pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"), rs.getString("vendeur"),
-                            rs.getInt("prixIni"), rs.getInt("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("etat"), rs.getString("acheteur")));
+                    res.add(new Enchere(rs.getInt("idArticle"),
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
                 }
                 return res;
             }

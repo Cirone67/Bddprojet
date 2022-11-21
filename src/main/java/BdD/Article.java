@@ -28,19 +28,20 @@ public class Article {
   private String descriptionCourte;
   private String descriptionLongue;
   private int expedition; //(0 = livrer,1 = a toi de le chercher)
-  //private  idPhoto
-  private int idCategorie;
+  private  String URLPhoto;
+//  private int idCategorie;
   private String posseseur;
 
  //Constructor  
-  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, int categorie, String posseseur) {
+  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, String URLPhoto, String posseseur) {
         this.idArticle = idArticle;
         this.designation = designation;
         this.descriptionCourte = descriptionCourte;
         this.descriptionLongue = descriptionLongue;
         this.expedition = expedition;
-        this.idCategorie = categorie;
+//        this.idCategorie = categorie;
         this.posseseur = posseseur;
+        this.URLPhoto = URLPhoto;
     }
  
 //Get et Set  
@@ -48,9 +49,9 @@ public class Article {
         return designation;
     }
 
-    public int getIdCategorie() {  
-        return idCategorie;
-    }
+//    public int getIdCategorie() {  
+//        return idCategorie;
+//    }
 
     public int getIdArticle() {
         return idArticle;
@@ -58,6 +59,10 @@ public class Article {
 
     public String getDescriptionCourte() {
         return descriptionCourte;
+    }
+
+    public String getURLPhoto() {
+        return URLPhoto;
     }
 
     public String getDescriptionLongue() {
@@ -68,12 +73,16 @@ public class Article {
         return expedition;
     }
 
-    public int getCategorie() {
-        return idCategorie;
-    }
+//    public int getCategorie() {
+//        return idCategorie;
+//    }
 
     public String getPosseseur() {
         return posseseur;
+    }
+
+    public void setURLPhoto(String URLPhoto) {
+        this.URLPhoto = URLPhoto;
     }
 
     public void setIdArticle(int idArticle) {
@@ -92,9 +101,9 @@ public class Article {
         this.expedition = expedition;
     }
 
-    public void setCategorie(int categorie) {
-        this.idCategorie = categorie;
-    }
+//    public void setCategorie(int categorie) {
+//        this.idCategorie = categorie;
+//    }
 
     public void setPosseseur(String posseseur) {
         this.posseseur = posseseur;
@@ -131,7 +140,7 @@ public class Article {
                         descriptionCourte varchar(100),
                         descriptionLongue varchar(500),
                         expedition integer not null,
-                        idCategorie integer not null,
+                        URLPhoto varchar(80),
                         posseseur varchar(30) not null
                     )
                     """);
@@ -145,30 +154,30 @@ public class Article {
         }
     }
 //Créer une categorie------------------------------------
-    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, int idCategorie, String posseseur )
+    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , String posseseur )
             throws SQLException, idArticleExisteDejaException {
-        // je me place dans une transaction pour m'assurer que la sÃ©quence
-        // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
-//        try ( PreparedStatement chercheEmail = con.prepareStatement(
-//                "select idArticle from Article where idArticle = ?")) {
-//            chercheEmail.setInt(1, idArticle);
-//            ResultSet testEmail = chercheEmail.executeQuery();
-//            if (testEmail.next()) {
-//                throw new idArticleExisteDejaException();
-//            }
-            // lors de la creation du PreparedStatement, il faut que je prÃ©cise
-            // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  idCategorie,  posseseur) values (?,?,?,?,?,?)
+                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur) values (?,?,?,?,?)
+                while (@i< ?)
+                    begin
+                    @i = @i+1  
+                    insert into JoinCategorieArticle (idCategorie,idArticle) values (select idCategorie from Categorie where designation = ? ,?)
+                    end
+                
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setString(1, designation);
                 pst.setString(2, descriptionCourte);
                 pst.setString(3, descriptionLongue);
                 pst.setInt(4, expedition);
-                pst.setInt(5, idCategorie);
-                pst.setString(6, posseseur);
+                pst.setString(5, posseseur);
+                pst.setInt(6,desiCategorie.size());
+                int i=0;
+                while (i< desiCategorie.size()){
+                pst.setString(7, desiCategorie.get(i));
+                }
+                pst.setInt(8,PreparedStatement.RETURN_GENERATED_KEYS);
                 pst.executeUpdate();
                 con.commit();
 //            }
@@ -184,7 +193,7 @@ public class Article {
         ArrayList<Article> res = new ArrayList<>();
         try ( PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,designation,descriptionCourte,descriptionLongue,expedition,idCategorie,posseseur
+               select idArticle,designation,descriptionCourte,descriptionLongue,expedition,URLPhoto,posseseur
                  from Article
                """
         )) {
@@ -195,7 +204,7 @@ public class Article {
 //                    if(i!= 0){
 //                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
-                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getString("posseseur")));
+                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getString("URLPhoto"),rs.getString("posseseur")));
 //                    }
 //                    }
 //                    if(i==0){

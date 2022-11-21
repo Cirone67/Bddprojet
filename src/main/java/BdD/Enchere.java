@@ -1,6 +1,5 @@
 package BdD;
 
-//package ProjetBdD.gui;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -23,24 +22,20 @@ import java.time.LocalDate;
 public class Enchere {
 
     private int idArticle;
-    private String vendeur;
     private double prixIni;
     private double prix;
     private Date dateDebut;
-    private Date dateFin;
-    private int etat; // open =0, closed =1; 
+    private Date dateFin; 
     private String acheteur;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 //Constructors
 
-    public Enchere(int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int etat, String acheteur) {
+    public Enchere(int idArticle, double prixIni, double prix, Date dateDebut, Date dateFin, String acheteur) {
         this.idArticle = idArticle;
-        this.vendeur = vendeur;
         this.prixIni = prixIni;
         this.prix = prix;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
-        this.etat = etat;
         this.acheteur = acheteur;
     }
 
@@ -82,7 +77,6 @@ public class Enchere {
                         prix integer,
                         dateDebut date not null,
                         dateFin date not null,
-                        etat integer not null,
                         acheteur varchar(30)
                     )
                     """);
@@ -169,7 +163,7 @@ public class Enchere {
     }
 
     // creer une enchère
-    public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int etat, String acheteur)
+    public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, String acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -185,7 +179,7 @@ public class Enchere {
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try (PreparedStatement pst = con.prepareStatement(
                     """
-                insert into Enchere (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur) values (?,?,?,?,?,?,?,?)
+                insert into Enchere (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,acheteur) values (?,?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setInt(1, idArticle);
                 pst.setString(2, vendeur);
@@ -193,8 +187,7 @@ public class Enchere {
                 pst.setDouble(4, prix);
                 pst.setDate(5, dateDebut);
                 pst.setDate(6, dateFin);
-                pst.setInt(7, etat);
-                pst.setString(8, acheteur);
+                pst.setString(7, acheteur);
                 pst.executeUpdate();
                 con.commit();
             }
@@ -345,10 +338,6 @@ public class Enchere {
         return idArticle;
     }
 
-    public String getVendeur() {
-        return vendeur;
-    }
-
     public double getPrixIni() {
         return prixIni;
     }
@@ -361,20 +350,12 @@ public class Enchere {
         return dateFin;
     }
 
-    public int getEtat() {
-        return etat;
-    }
-
     public String getAcheteur() {
         return acheteur;
     }
 
     public void setIdArticle(int idArticle) {
         this.idArticle = idArticle;
-    }
-
-    public void setVendeur(String vendeur) {
-        this.vendeur = vendeur;
     }
 
     public void setPrixIni(double prixIni) {
@@ -389,9 +370,6 @@ public class Enchere {
         this.dateFin = dateFin;
     }
 
-    public void setEtat(int etat) {
-        this.etat = etat;
-    }
 
     public void setPrix(double prix) {
         this.prix = prix;
@@ -414,7 +392,7 @@ public class Enchere {
 
     //Permet au vendeur de modifier l'etat de l'enchère.  
     public void encherir(Connection con, Utilisateur encherreur, double prixPropose) throws SQLException {
-        Enchere nouvelle = new Enchere(this.getIdArticle(), this.getVendeur(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getEtat(), this.getAcheteur());
+        Enchere nouvelle = new Enchere(this.getIdArticle(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getAcheteur());
         if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())) {
             if (prixPropose > nouvelle.prix && prixPropose > nouvelle.prixIni) {
                 System.out.println(0);
