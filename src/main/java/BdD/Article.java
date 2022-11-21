@@ -267,6 +267,16 @@ public class Article {
            }
            return res ;  
       }
+     
+      //chercher en spécifiant les catégories des articles.
+     public static ArrayList<Article> ChercheArticleparCategories (ArrayList<Article> article,ArrayList<String> chercher){
+         ArrayList<Article> res = new ArrayList<>();
+         
+         return res;
+     }
+  
+      
+      
         public static class idArticleExisteDejaException extends Exception {
     }  
 

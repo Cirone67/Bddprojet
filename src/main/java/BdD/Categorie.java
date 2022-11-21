@@ -192,24 +192,37 @@ private int idSurCategorie;
             }
         }
     }
-//Renvoie la liste des enchères dans une catégorie
-       public static ArrayList<Integer> articleParCategorie(Connection con,Categorie categorie) throws SQLException {
-        ArrayList<Integer> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+//Renvoie la liste des enchères dans un groupe de catégorie
+       public static ArrayList<Article> articleParCategorie(Connection con, ArrayList<String> desiCategorie) throws SQLException {
+        ArrayList<Article> res = new ArrayList<>();
+        for(int i=0;i<desiCategorie.size();i++){
+          try ( PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle from Article where categorie = ?
+               select distinct idArticle,designation,descriptionCourte,descriptionLongue,expedition,URLPhoto,posseseur from Article
+               join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
+               join JoinCategorieArticle on JoinCategorieArticle.idCategorie = Categorie.idCategorie
+               where Categorie.designation = ?
                """
         )) {
-            pst.setInt(1, categorie.idcategorie);
+            pst.setString(1, desiCategorie.get(i));
             pst.executeUpdate();
             try ( ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(rs.getInt("idArticle") );               
-                }
-                return res;
-            }
+//                    if(res.size()!= 0){
+//                       int m=0;
+//                    for(int j=0;j<res.size();j++){
+//                      if(res.get(j)){
+                       res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
+                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getString("URLPhoto"),rs.getString("posseseur")));
+                      }
+                    }  
+//                    }else{
+//                      res.add(rs.getInt("idArticle") );  
+//                    }                 
+                }          
         }
-    }       
+                return res;
+            }       
       
           public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
