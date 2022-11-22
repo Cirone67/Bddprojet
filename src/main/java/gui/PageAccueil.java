@@ -27,6 +27,8 @@ public class PageAccueil extends BorderPane {
     private Controleur controleur;
     private Stage inStage;
     
+    private int utilisateurCourant;
+    
     private TextField tfRechercher;
     
     private Button bAccueil;
@@ -41,8 +43,8 @@ public class PageAccueil extends BorderPane {
     //private BorderPane bpEntete;
     
     
-    public PageAccueil (Stage inStage) {
-        
+    public PageAccueil (Stage inStage,int utilisateurCourant) {
+        this.utilisateurCourant = utilisateurCourant;
         this.inStage = inStage;
         this.controleur = new Controleur(this);
         
@@ -81,5 +83,12 @@ public class PageAccueil extends BorderPane {
 
     public void setControleur(Controleur controleur) {
         this.controleur = controleur;
+    }
+
+    /**
+     * @return the utilisateurCourant
+     */
+    public int getUtilisateurCourant() {
+        return utilisateurCourant;
     }
 }

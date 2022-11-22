@@ -207,7 +207,6 @@ public class Utilisateur {
             )) {
                 pst.setString(1, email);
                 //pst.setString(2, pass);
-                pst.executeUpdate();
                 System.out.println(12);
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
@@ -525,9 +524,10 @@ public class Utilisateur {
             //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
             //afficheTousLesUtilisateur(con);
             //deleteSchemaUtilisateur(con);
-            creeTableUtilisateur(con);
-            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
-            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+//            creeTableUtilisateur(con);
+//            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
+//            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+demandeConnection("loic.lol@wanadoo.fr", "blabla");
         } catch (Exception ex) {
             throw new Error(ex);
         }

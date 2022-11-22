@@ -225,26 +225,27 @@ public class PageConnection extends BorderPane {
         });
 
         bValiderConnection.setOnAction((t) -> {
-//            try ( Connection con = defautConnect()) {
-//                boolean res;
-//                res = user.demandeConnection(tfIdentifiant.getText(), pfMotDePasse.getText());
-//                if (res == true) {
-//                    this.inStage.close();
-//                    sPageAccueil = new Scene(new PageAccueil(inStage));
-//                    inStage.setScene(sPageAccueil);
-//                    inStage.show();
-//                } else {
-//                    HBox hbErreur = new HBox(this.lProblemMDP);
-//                    hbErreur.setAlignment(Pos.CENTER);
-//
-//                    Scene sTemp = new Scene(hbErreur);
-//                    sErreur = new Stage();
-//                    sErreur.setScene(sTemp);
-//                    sErreur.show();
-//                }
-//            } catch (Exception ex) {
-//                throw new Error(ex);
-//            }
+            try ( Connection con = defautConnect()) {
+                boolean res;
+                res = user.demandeConnection(tfIdentifiant.getText(), pfMotDePasse.getText());
+                int id = 3; // TODO : demandeConnection renvoie l'id ou -1
+                if (res == true) {
+                    this.inStage.close();
+                    sPageAccueil = new Scene(new PageAccueil(inStage,id));
+                    inStage.setScene(sPageAccueil);
+                    inStage.show();
+                } else {
+                    HBox hbErreur = new HBox(this.lProblemMDP);
+                    hbErreur.setAlignment(Pos.CENTER);
+
+                    Scene sTemp = new Scene(hbErreur);
+                    sErreur = new Stage();
+                    sErreur.setScene(sTemp);
+                    sErreur.show();
+                }
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
 
             this.inStage.close();
             sPageAccueil = new Scene(new PageAccueil(inStage));
