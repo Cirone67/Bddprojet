@@ -23,7 +23,8 @@ import java.util.ArrayList;
  * @author brenc
  */
 public class Utilisateur {
-
+    
+    private int idUtilisateur;
     private String email;
     private String mdp;
     private String codePostale;
@@ -119,6 +120,7 @@ public class Utilisateur {
             st.executeUpdate(
                     """
                     create table utilisateur (
+                        idUtilisateur serial not null unique primary key,
                         email varchar(30) not null unique primary key, 
                         mdp varchar(30) not null,
                         codePostal varchar(30) not null,
@@ -155,7 +157,7 @@ public class Utilisateur {
             try (PreparedStatement pst = con.prepareStatement(
                     """
                 insert into utilisateur (email, mdp, codePostal, nom, prenom, statut) values (?,?,?,?,?,?)
-                """)) {
+                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setString(1, email);
                 pst.setString(2, mdp);
                 pst.setString(3, codePostal);
@@ -195,35 +197,31 @@ public class Utilisateur {
         }
     }
 
-    public static boolean demandeConnection(String email, String pass) throws SQLException {
-        boolean res;
-        res = false;
-        try (Connection con = defautConnect()) {
-            System.out.println(11);
+    public static int demandeConnection(Connection con,String email, String pass) throws SQLException {
+        int res;
+        res = -1;
+//        try (Connection con = defautConnect()) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select mdp from Utilisateur where email = ?
+               select mdp, idUtillisateur from Utilisateur where email = ?
                """
             )) {
                 pst.setString(1, email);
-                //pst.setString(2, pass);
-                System.out.println(12);
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
-                        System.out.println(13);
                         if (rs.getString("mdp").equals(pass)) {
-                            res = true;
+                            res = rs.getInt("idUtiliateur");
                         }
                     }
                 } catch (SQLException ex) {
-                    return res;
+                    
                 }
             }
-        } catch (Exception ex) {
-            throw new Error(ex);
-        }
+//        } catch (Exception ex) {
+//            throw new Error(ex);
         return res;
     }
+    //    return res;
 
     //Lecture dans PGSQL----------------------
     public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
@@ -328,7 +326,6 @@ public class Utilisateur {
                """
         )) {
             pst.setString(1, email);
-            pst.executeUpdate();
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -350,7 +347,6 @@ public class Utilisateur {
         )) {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
@@ -373,7 +369,6 @@ public class Utilisateur {
         )) {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            pst.executeUpdate();
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -396,7 +391,6 @@ public class Utilisateur {
         )) {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
@@ -420,7 +414,6 @@ public class Utilisateur {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             pst.setString(3, email);
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
@@ -444,7 +437,6 @@ public class Utilisateur {
         )) {
             pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                    i = i+1; 
@@ -456,7 +448,6 @@ public class Utilisateur {
                select dateDebut,dateFin from Enchere
                """
         )) {
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                    j = j+1; 
@@ -481,7 +472,6 @@ public class Utilisateur {
                """
         )) {
             pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     i=i+1;
@@ -527,7 +517,7 @@ public class Utilisateur {
 //            creeTableUtilisateur(con);
 //            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
 //            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
-demandeConnection("loic.lol@wanadoo.fr", "blabla");
+demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
         } catch (Exception ex) {
             throw new Error(ex);
         }

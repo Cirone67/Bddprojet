@@ -268,7 +268,6 @@ public class Enchere {
                """
         )) {
             pst.setString(1, designation);
-            pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 //while (rs.next()) {
                 res = rs.getInt("idEtat");
