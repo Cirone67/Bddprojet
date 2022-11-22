@@ -227,11 +227,12 @@ private int idSurCategorie;
           public static void main(String[] args) {
         try ( Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
-           //creeTableCategorie(con);
+            
+           //Enchere.creeEnchere(con);
            //createCategorie(con,"chat",6);
            //tousLesCategorie(con);
            //deleteSchemaUtilisateur(con);
-           System.out.println(tousLesCategorie(con).get(1).getIdcategorie());
+           //System.out.println(tousLesCategorie(con).get(1).getIdcategorie());
         } catch (Exception ex) {
             throw new Error(ex);
         }

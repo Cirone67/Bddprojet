@@ -72,7 +72,6 @@ public class Enchere {
                     """
                     create table Enchere (
                         idArticle integer not null primary key,
-                        vendeur varchar(30) not null,
                         prixIni integer not null,
                         prix integer,
                         dateDebut date not null,
@@ -377,17 +376,6 @@ public class Enchere {
 
     public void setAcheteur(String acheteur) {
         this.acheteur = acheteur;
-    }
-
-    //Main
-    public static void main(String[] args) {
-        try (Connection con = defautConnect()) {
-            System.out.println("connect� !!!");
-
-            //deleteSchema(con);
-        } catch (Exception ex) {
-            throw new Error(ex);
-        }
     }
 
     //Permet au vendeur de modifier l'etat de l'enchère.  
