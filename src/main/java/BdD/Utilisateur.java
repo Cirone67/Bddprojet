@@ -121,7 +121,7 @@ public class Utilisateur {
                     """
                     create table utilisateur (
                         idUtilisateur serial not null unique primary key,
-                        email varchar(30) not null unique primary key, 
+                        email varchar(30) not null unique, 
                         mdp varchar(30) not null,
                         codePostal varchar(30) not null,
                         nom varchar(30) not null,
@@ -203,7 +203,7 @@ public class Utilisateur {
 //        try (Connection con = defautConnect()) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select mdp, idUtillisateur from Utilisateur where email = ?
+               select mdp, idUtilisateur from Utilisateur where email = ?
                """
             )) {
                 pst.setString(1, email);
@@ -320,7 +320,7 @@ public class Utilisateur {
         ArrayList<Enchere> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere 
+               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
                join Enchere.idArticle = Article.idArticle
                where Article.posseseur = ?
                """
@@ -514,10 +514,10 @@ public class Utilisateur {
             //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
             //afficheTousLesUtilisateur(con);
             //deleteSchemaUtilisateur(con);
-//            creeTableUtilisateur(con);
-//            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
-//            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
-demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
+            creeTableUtilisateur(con);
+            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
+            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+            //demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
         } catch (Exception ex) {
             throw new Error(ex);
         }
