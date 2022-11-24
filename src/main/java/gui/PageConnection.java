@@ -17,7 +17,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -172,6 +174,8 @@ public class PageConnection extends BorderPane {
             private Label lCodePostal;
             private TextField tfCodePostal;
             private Button bValiderNU;
+            private RadioButton rbAdmin;
+            private RadioButton rbUtilisateur;
 
             @Override
             public void handle(ActionEvent event) {
@@ -189,6 +193,9 @@ public class PageConnection extends BorderPane {
                 this.lCodePostal = new Label("Code postal : ");
                 this.tfCodePostal = new TextField();
                 this.bValiderNU = new Button("Valider");
+                this.rbAdmin = new RadioButton("Administrateur");
+                this.rbUtilisateur = new RadioButton("Utilisateur");
+
 
                 HBox hbNouvelUtilisateur = new HBox(this.lNouvelUtilisateur);
                 hbNouvelUtilisateur.setAlignment(Pos.CENTER);
@@ -203,7 +210,14 @@ public class PageConnection extends BorderPane {
                 HBox hbValider = new HBox(this.bValiderNU);
                 hbValider.setAlignment(Pos.CENTER);
 
-                VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, hbConfirmationMDP, hbCodePostal, hbValider);
+                ToggleGroup tgStatut = new ToggleGroup();
+                this.rbAdmin.setToggleGroup(tgStatut);
+                this.rbUtilisateur.setToggleGroup(tgStatut);
+                HBox hbStatut = new HBox(this.rbAdmin, this.rbUtilisateur);
+                hbStatut.setAlignment(Pos.CENTER);
+                hbStatut.setSpacing(8);
+
+                VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, hbConfirmationMDP, hbCodePostal, hbStatut, hbValider);
                 vbNouvelUtilisateur.setPadding(new javafx.geometry.Insets(30, 30, 30, 30));
                 vbNouvelUtilisateur.setSpacing(8);
 
@@ -215,6 +229,41 @@ public class PageConnection extends BorderPane {
                 sNouvelUtilisateur.setResizable(false);
                 sNouvelUtilisateur.show();
 
+                String nom = tfNom.getText();
+                String prenom = tfPrenom.getText();
+                String mail = tfMail.getText();
+                String mdp = pfMotDePasse.getText();
+                String confMDP = pfConfirmationMDP.getText();
+                String codePostal = tfCodePostal.getText();
+                int statut;
+
+                if (tgStatut.getSelectedToggle() != null) {
+                    RadioButton button = (RadioButton) tgStatut.getSelectedToggle();
+                    if (button.getText().equals("Administrateur")) {
+                        statut = 0;
+                    } else {
+                        statut = 1;
+                    }
+                }
+
+                try ( Connection con = defautConnect()) {
+                    int res;
+                    if (mdp.equals(confMDP)) {
+                        res = user.createUtilisateur(con, mail, mdp, codePostal, nom, prenom, statut);
+                        if (res == 1) {
+                        bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent t) {
+                                sNouvelUtilisateur.close();
+                            } 
+                        });
+                    }
+                    }
+                    
+                } catch (Exception ex) {
+                    throw new Error(ex);
+                }
+
                 bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
@@ -222,37 +271,39 @@ public class PageConnection extends BorderPane {
                     }
                 });
             }
-        });
+        }
+        );
 
-        bValiderConnection.setOnAction((t) -> {
-            try ( Connection con = defautConnect()) {
-                int res;
-                res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
-                //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
-                if (res == -1) {
-                    HBox hbErreur = new HBox(this.lProblemMDP);
-                    hbErreur.setAlignment(Pos.CENTER);
+        bValiderConnection.setOnAction(
+                (t) -> {
+                    try ( Connection con = defautConnect()) {
+                        int res;
+                        res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
+                        //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
+                        if (res == -1) {
+                            HBox hbErreur = new HBox(this.lProblemMDP);
+                            hbErreur.setAlignment(Pos.CENTER);
 
-                    Scene sTemp = new Scene(hbErreur);
-                    sErreur = new Stage();
-                    sErreur.setScene(sTemp);
-                    sErreur.show();
-                } else {
-                    this.inStage.close();
-                    sPageAccueil = new Scene(new PageAccueil(inStage,res));
-                    inStage.setScene(sPageAccueil);
-                    inStage.show();
-                }
-            } catch (Exception ex) {
-                throw new Error(ex);
-            }
+                            Scene sTemp = new Scene(hbErreur);
+                            sErreur = new Stage();
+                            sErreur.setScene(sTemp);
+                            sErreur.show();
+                        } else {
+                            this.inStage.close();
+                            sPageAccueil = new Scene(new PageAccueil(inStage, res));
+                            inStage.setScene(sPageAccueil);
+                            inStage.show();
+                        }
+                    } catch (Exception ex) {
+                        throw new Error(ex);
+                    }
 
 //            this.inStage.close();
 //            sPageAccueil = new Scene(new PageAccueil(inStage));
 //            inStage.setScene(sPageAccueil);
 //            inStage.show();
-
-        });
+                }
+        );
     }
 
     /**
