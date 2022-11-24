@@ -169,13 +169,14 @@ public class PageConnection extends BorderPane {
             private TextField tfMail;
             private Label lMDP;
             private PasswordField pfMDP;
-            private Label lConfirmationMDP;
-            private PasswordField pfConfirmationMDP;
+//            private Label lConfirmationMDP;
+//            private PasswordField pfConfirmationMDP;
             private Label lCodePostal;
             private TextField tfCodePostal;
             private Button bValiderNU;
             private RadioButton rbAdmin;
             private RadioButton rbUtilisateur;
+            private Label lErreur;
 
             @Override
             public void handle(ActionEvent event) {
@@ -188,14 +189,14 @@ public class PageConnection extends BorderPane {
                 this.tfMail = new TextField();
                 this.lMDP = new Label("Mot de Passe : ");
                 this.pfMDP = new PasswordField();
-                this.lConfirmationMDP = new Label("Confirmer le mot de passe : ");
-                this.pfConfirmationMDP = new PasswordField();
+//                this.lConfirmationMDP = new Label("Confirmer le mot de passe : ");
+//                this.pfConfirmationMDP = new PasswordField();
                 this.lCodePostal = new Label("Code postal : ");
                 this.tfCodePostal = new TextField();
                 this.bValiderNU = new Button("Valider");
                 this.rbAdmin = new RadioButton("Administrateur");
                 this.rbUtilisateur = new RadioButton("Utilisateur");
-
+                this.lErreur = new Label("Le mail est déjà utilisé");
 
                 HBox hbNouvelUtilisateur = new HBox(this.lNouvelUtilisateur);
                 hbNouvelUtilisateur.setAlignment(Pos.CENTER);
@@ -204,7 +205,7 @@ public class PageConnection extends BorderPane {
                 HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
                 HBox hbMail = new HBox(this.lMail, this.tfMail);
                 HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
-                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
+//                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
                 HBox hbCodePostal = new HBox(this.lCodePostal, this.tfCodePostal);
 
                 HBox hbValider = new HBox(this.bValiderNU);
@@ -217,7 +218,7 @@ public class PageConnection extends BorderPane {
                 hbStatut.setAlignment(Pos.CENTER);
                 hbStatut.setSpacing(8);
 
-                VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, hbConfirmationMDP, hbCodePostal, hbStatut, hbValider);
+                VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, /*hbConfirmationMDP,*/ hbCodePostal, hbStatut, hbValider);
                 vbNouvelUtilisateur.setPadding(new javafx.geometry.Insets(30, 30, 30, 30));
                 vbNouvelUtilisateur.setSpacing(8);
 
@@ -229,80 +230,87 @@ public class PageConnection extends BorderPane {
                 sNouvelUtilisateur.setResizable(false);
                 sNouvelUtilisateur.show();
 
-                String nom = tfNom.getText();
-                String prenom = tfPrenom.getText();
-                String mail = tfMail.getText();
-                String mdp = pfMotDePasse.getText();
-                String confMDP = pfConfirmationMDP.getText();
-                String codePostal = tfCodePostal.getText();
-                int statut;
+                bValiderNU.setOnAction((t) -> {
+                    System.out.println("oui");
+                    try ( Connection con = defautConnect()) {
+                        int res;
 
-                if (tgStatut.getSelectedToggle() != null) {
-                    RadioButton button = (RadioButton) tgStatut.getSelectedToggle();
-                    if (button.getText().equals("Administrateur")) {
-                        statut = 0;
-                    } else {
-                        statut = 1;
-                    }
-                }
+                        String nom = tfNom.getText();
+                        String prenom = tfPrenom.getText();
+                        String mail = tfMail.getText();
+                        String mdp = pfMDP.getText();
+//                        String confMDP = pfConfirmationMDP.getText();
+                        String codePostal = tfCodePostal.getText();
 
-                try ( Connection con = defautConnect()) {
-                    int res;
-                    if (mdp.equals(confMDP)) {
+                        int statut = 1;
+
+                        if (tgStatut.getSelectedToggle() != null) {
+                            RadioButton button = (RadioButton) tgStatut.getSelectedToggle();
+                            if (button.getText().equals("Administrateur")) {
+                                statut = 0;
+                            } else {
+                                statut = 1;
+                            }
+                        }
+
+                        System.out.println("je suis dedans");
                         res = user.createUtilisateur(con, mail, mdp, codePostal, nom, prenom, statut);
                         if (res == 1) {
-                        bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent t) {
-                                sNouvelUtilisateur.close();
-                            } 
-                        });
-                    }
-                    }
-                    
-                } catch (Exception ex) {
-                    throw new Error(ex);
-                }
+//                                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
+//                                    @Override
+//                                    public void handle(ActionEvent t) {
+//                                        sNouvelUtilisateur.close();
+//                                    }
+//                                });
+                            sNouvelUtilisateur.close();
+                        } else {
+                            HBox hbErreur = new HBox(this.lErreur);
+                            hbErreur.setAlignment(Pos.CENTER);
 
-                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        sNouvelUtilisateur.close();
+                            Scene sTempErreur = new Scene(hbErreur);
+                            sErreur = new Stage();
+                            sErreur.setScene(sTemp);
+                            sErreur.show();
+                        }
+
+                    } catch (Exception ex) {
+                        throw new Error(ex);
                     }
                 });
+
+                //sNouvelUtilisateur.close();
             }
         }
         );
 
-        bValiderConnection.setOnAction(
-                (t) -> {
-                    try ( Connection con = defautConnect()) {
-                        int res;
-                        res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
-                        //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
-                        if (res == -1) {
-                            HBox hbErreur = new HBox(this.lProblemMDP);
-                            hbErreur.setAlignment(Pos.CENTER);
+        bValiderConnection.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                int res;
+                res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
+                //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
+                if (res == -1) {
+                    HBox hbErreur = new HBox(this.lProblemMDP);
+                    hbErreur.setAlignment(Pos.CENTER);
 
-                            Scene sTemp = new Scene(hbErreur);
-                            sErreur = new Stage();
-                            sErreur.setScene(sTemp);
-                            sErreur.show();
-                        } else {
-                            this.inStage.close();
-                            sPageAccueil = new Scene(new PageAccueil(inStage, res));
-                            inStage.setScene(sPageAccueil);
-                            inStage.show();
-                        }
-                    } catch (Exception ex) {
-                        throw new Error(ex);
-                    }
+                    Scene sTemp = new Scene(hbErreur);
+                    sErreur = new Stage();
+                    sErreur.setScene(sTemp);
+                    sErreur.show();
+                } else {
+                    this.inStage.close();
+                    sPageAccueil = new Scene(new PageAccueil(inStage, res));
+                    inStage.setScene(sPageAccueil);
+                    inStage.show();
+                }
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
 
 //            this.inStage.close();
 //            sPageAccueil = new Scene(new PageAccueil(inStage));
 //            inStage.setScene(sPageAccueil);
 //            inStage.show();
-                }
+        }
         );
     }
 
