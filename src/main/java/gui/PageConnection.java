@@ -226,15 +226,10 @@ public class PageConnection extends BorderPane {
 
         bValiderConnection.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
-                boolean res;
-                res = user.demandeConnection(tfIdentifiant.getText(), pfMotDePasse.getText());
+                int res;
+                res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
                 int id = 3; // TODO : demandeConnection renvoie l'id ou -1
-                if (res == true) {
-                    this.inStage.close();
-                    sPageAccueil = new Scene(new PageAccueil(inStage,id));
-                    inStage.setScene(sPageAccueil);
-                    inStage.show();
-                } else {
+                if (res == -1) {
                     HBox hbErreur = new HBox(this.lProblemMDP);
                     hbErreur.setAlignment(Pos.CENTER);
 
@@ -242,15 +237,20 @@ public class PageConnection extends BorderPane {
                     sErreur = new Stage();
                     sErreur.setScene(sTemp);
                     sErreur.show();
+                } else {
+                    this.inStage.close();
+                    sPageAccueil = new Scene(new PageAccueil(inStage,id));
+                    inStage.setScene(sPageAccueil);
+                    inStage.show();
                 }
             } catch (Exception ex) {
                 throw new Error(ex);
             }
 
-            this.inStage.close();
-            sPageAccueil = new Scene(new PageAccueil(inStage));
-            inStage.setScene(sPageAccueil);
-            inStage.show();
+//            this.inStage.close();
+//            sPageAccueil = new Scene(new PageAccueil(inStage));
+//            inStage.setScene(sPageAccueil);
+//            inStage.show();
 
         });
     }
