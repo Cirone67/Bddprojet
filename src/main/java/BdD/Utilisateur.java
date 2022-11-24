@@ -44,6 +44,7 @@ public class Utilisateur {
     }
 
 //Get et Set---------------------------------------------------
+    
     public int getStatut() {
         return statut;
     }
@@ -68,6 +69,15 @@ public class Utilisateur {
         return prenom;
     }
 
+    public int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+    
     public void setEmail(String email) {
         this.email = email;
     }
@@ -332,7 +342,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
                 }
                 return res;
             }
@@ -352,7 +362,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
                 }
                 return res;
             }
@@ -396,7 +406,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
                 }
                 return res;
             }
@@ -419,7 +429,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("acheteur")));
+                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
                 }
                 return res;
             }
