@@ -140,9 +140,9 @@ public class Utilisateur {
     }
 
     //Créer un utilisateur-------------------------------------------------------  
-    public static void createUtilisateur(Connection con, String email, String mdp, String codePostal, String nom, String prenom, int statut)
+    public static int createUtilisateur(Connection con, String email, String mdp, String codePostal, String nom, String prenom, int statut)
             throws SQLException, EmailExisteDejaException {
-        // je me place dans une transaction pour m'assurer que la sÃ©quence
+    // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
         try (PreparedStatement chercheEmail = con.prepareStatement(
@@ -169,10 +169,12 @@ public class Utilisateur {
             }
         } catch (Exception ex) {
             con.rollback();
-            throw ex;
+            return -1;
+            //throw ex;
         } finally {
             con.setAutoCommit(true);
         }
+     return 1;
     }
 
     public static class EmailExisteDejaException extends Exception {
