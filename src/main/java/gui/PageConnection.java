@@ -269,7 +269,7 @@ public class PageConnection extends BorderPane {
 
                             Scene sTempErreur = new Scene(hbErreur);
                             sErreur = new Stage();
-                            sErreur.setScene(sTemp);
+                            sErreur.setScene(sTempErreur);
                             sErreur.show();
                         }
 
