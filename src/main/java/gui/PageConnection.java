@@ -228,7 +228,7 @@ public class PageConnection extends BorderPane {
             try ( Connection con = defautConnect()) {
                 int res;
                 res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
-                int id = 3; // TODO : demandeConnection renvoie l'id ou -1
+                //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
                 if (res == -1) {
                     HBox hbErreur = new HBox(this.lProblemMDP);
                     hbErreur.setAlignment(Pos.CENTER);
@@ -239,7 +239,7 @@ public class PageConnection extends BorderPane {
                     sErreur.show();
                 } else {
                     this.inStage.close();
-                    sPageAccueil = new Scene(new PageAccueil(inStage,id));
+                    sPageAccueil = new Scene(new PageAccueil(inStage,res));
                     inStage.setScene(sPageAccueil);
                     inStage.show();
                 }
