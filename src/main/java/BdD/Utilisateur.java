@@ -210,7 +210,7 @@ public class Utilisateur {
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
                         if (rs.getString("mdp").equals(pass)) {
-                            res = rs.getInt("idUtiliateur");
+                            res = rs.getInt("idUtilisateur");
                         }
                     }
                 } catch (SQLException ex) {
@@ -514,9 +514,11 @@ public class Utilisateur {
             //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
             //afficheTousLesUtilisateur(con);
             //deleteSchemaUtilisateur(con);
-            creeTableUtilisateur(con);
-            createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
-            createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+            //creeTableUtilisateur(con);
+           // createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
+           // createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+           //demandeConnection(con,"loic.lol@wanadoo.fr","blabla"));
+            
             //demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
         } catch (Exception ex) {
             throw new Error(ex);
