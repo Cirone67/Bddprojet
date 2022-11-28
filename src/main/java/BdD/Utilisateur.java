@@ -124,7 +124,7 @@ public class Utilisateur {
     public static void creeTableUtilisateur(Connection con)
             throws SQLException {
         con.setAutoCommit(false);
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             st.executeUpdate(
                     """
                     create table utilisateur (
@@ -153,7 +153,7 @@ public class Utilisateur {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
-        try ( PreparedStatement chercheEmail = con.prepareStatement(
+        try (PreparedStatement chercheEmail = con.prepareStatement(
                 "select email from utilisateur where email = ?")) {
             chercheEmail.setString(1, email);
             ResultSet testEmail = chercheEmail.executeQuery();
@@ -162,7 +162,7 @@ public class Utilisateur {
             }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
-            try ( PreparedStatement pst = con.prepareStatement(
+            try (PreparedStatement pst = con.prepareStatement(
                     """
                 insert into utilisateur (email, mdp, codePostal, nom, prenom, statut) values (?,?,?,?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -211,13 +211,13 @@ public class Utilisateur {
         int res;
         res = -1;
 //        try (Connection con = defautConnect()) {
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select mdp, idUtilisateur from Utilisateur where email = ?
                """
         )) {
             pst.setString(1, email);
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     if (rs.getString("mdp").equals(pass)) {
                         res = rs.getInt("idUtilisateur");
@@ -231,16 +231,53 @@ public class Utilisateur {
 //            throw new Error(ex);
         return res;
     }
+
     //    return res;
+// Permet de modifier son mdp
+    public static int demandeChangerMdp(Connection con, String email, String nvMdp) throws SQLException {
+        int res;
+        res = -1;
+
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select idUtilisateur from Utilisateur where email = ?
+               """
+        )) {
+            pst.setString(1, email);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res = rs.getInt("idUtilisateur");
+                }
+                if (res != -1) {
+                    con.setAutoCommit(false);
+                    try (PreparedStatement pst2 = con.prepareStatement(
+                            """
+               update Utilisateur set mdp = ?  where email = ?
+               """
+                    )) {
+                        pst2.setString(1, nvMdp);
+                        pst2.setString(2, email);
+                        pst2.executeUpdate();
+                        con.commit();
+                        con.setAutoCommit(true);
+
+                    }
+                }
+            } catch (SQLException ex) {
+
+            }
+            return res;
+        }
+    }
 
     //Lecture dans PGSQL----------------------
     public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             // pour effectuer une recherche, il faut utiliser un "executeQuery"
             // et non un "executeUpdate".
             // un executeQuery retourne un ResultSet qui contient le rÃ©sultat
             // de la recherche (donc une table avec quelques information supplÃ©mentaire)
-            try ( ResultSet tlu = st.executeQuery("select * from utilisateur")) {
+            try (ResultSet tlu = st.executeQuery("select * from utilisateur")) {
                 // un ResultSet se manipule un peu comme un fichier :
                 // - il faut le fermer quand on ne l'utilise plus
                 //   d'oÃ¹ l'utilisation du try(...) ci-dessus
@@ -278,7 +315,7 @@ public class Utilisateur {
 
     //Effacer dans PGSQL-----------------------   
     public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
             // puis les tables
             // suppression des liens
@@ -328,7 +365,7 @@ public class Utilisateur {
 //Envoie la liste des enchère à Affiche ses enchères en cours
     public static ArrayList<Enchere> afficheSesEnchères(Connection con, String email) throws SQLException {
         ArrayList<Enchere> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
                join Enchere.idArticle = Article.idArticle
@@ -337,7 +374,7 @@ public class Utilisateur {
         )) {
             pst.setString(1, email);
 
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
                             rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
@@ -350,14 +387,14 @@ public class Utilisateur {
 
     public static ArrayList<Enchere> afficheEnchereRemporte(Connection con, String email) throws SQLException {
         ArrayList<Enchere> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,prixIni,prix,dateDebut,dateFin,acheteur from Enchere where acheteur = ? and dateFin < ?
                """
         )) {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
                             rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
@@ -370,7 +407,7 @@ public class Utilisateur {
 //Affiche le gain de l'utilisateur
     public static int afficheGain(Connection con, String email) throws SQLException {
         int gain = 0;
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select prix,dateFin from Enchere 
                join Enchere.idArticle = Article.idArticle
@@ -380,7 +417,7 @@ public class Utilisateur {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
 
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     //if(java.sql.Date.valueOf(LocalDate.now()).after(rs.getDate("dateFin"))){
                     gain = rs.getInt("prix") + gain;
@@ -394,14 +431,14 @@ public class Utilisateur {
 
     public static ArrayList<Enchere> afficheEnchereRemporteEnCours(Connection con, String email) throws SQLException {
         ArrayList<Enchere> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin > ?
                """
         )) {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
                             rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
@@ -414,7 +451,7 @@ public class Utilisateur {
     //Affiche les enchères pour lesquelles il a enchéri mais qu'il ne possède plus
     public static ArrayList<Enchere> afficheEnchereNonRemporteEnCours(Connection con, String email) throws SQLException {
         ArrayList<Enchere> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
                join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
@@ -424,7 +461,7 @@ public class Utilisateur {
             pst.setString(1, email);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             pst.setString(3, email);
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Enchere(rs.getInt("idArticle"),
                             rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
@@ -439,7 +476,7 @@ public class Utilisateur {
     public static double statEnchereActive(Connection con) throws SQLException {
         double i = 0;
         double j = 0;
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select dateDebut,dateFin from Enchere
                where dateFin > ? and dateDebut < ?
@@ -447,18 +484,18 @@ public class Utilisateur {
         )) {
             pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     i = i + 1;
                 }
             }
         }
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select dateDebut,dateFin from Enchere
                """
         )) {
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     j = j + 1;
                 }
@@ -475,14 +512,14 @@ public class Utilisateur {
     public static double statPrix(Connection con) throws SQLException {
         double res = 0;
         int i = 0;
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select prixIni,prix from Enchere
                where dateFin < ?
                """
         )) {
             pst.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     i = i + 1;
                 }
@@ -496,7 +533,7 @@ public class Utilisateur {
     }
 
     public static void main(String[] args) {
-        try ( Connection con = defautConnect()) {
+        try (Connection con = defautConnect()) {
             //          System.out.println("connectÃ© !!!");
 //            Enchere.creeEnchere(con);
             //          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
