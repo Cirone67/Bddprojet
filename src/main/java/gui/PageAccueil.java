@@ -5,8 +5,13 @@
  */
 package gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Orientation;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,14 +28,14 @@ import javafx.stage.Stage;
  * @author drumm
  */
 public class PageAccueil extends BorderPane {
-    
+
     private Controleur controleur;
     private Stage inStage;
-    
+
     private int utilisateurCourant;
-    
+
     private TextField tfRechercher;
-    
+
     private Button bAccueil;
     private MenuButton bMultimedia;
     private MenuButton bMaisonEtJardin;
@@ -38,43 +43,62 @@ public class PageAccueil extends BorderPane {
     private MenuButton bCultureEtLoisirs;
     private MenuButton bAutoEtMoto;
     private MenuButton bReconditionne;
-    
+
     private BorderPane bpEcranPrincipal;
     //private BorderPane bpEntete;
-    
-    
-    public PageAccueil (Stage inStage,int utilisateurCourant) {
+
+    public PageAccueil(Stage inStage, int utilisateurCourant) {
         this.utilisateurCourant = utilisateurCourant;
         this.inStage = inStage;
         this.controleur = new Controleur(this);
-        
-        this.tfRechercher = new TextField ("Rechercher");
-        
-        this.bAccueil = new Button ("Accueil");
-        this.bMultimedia = new MenuButton ("Multimédia");
-        this.bMaisonEtJardin = new MenuButton ("Maison et Jardin");
-        this.bJouetsEtJeux = new MenuButton ("Jouets et Jeux");
-        this.bCultureEtLoisirs = new MenuButton ("Culture et Loisirs");
-        this.bAutoEtMoto = new MenuButton ("Auto et Moto");
-        this.bReconditionne = new MenuButton ("Reconditionné");
-        
-        BorderPane bpEntete = new BorderPane ();
+
+        this.tfRechercher = new TextField("Rechercher");
+
+        this.bAccueil = new Button("Accueil");
+        this.bMultimedia = new MenuButton("Multimédia");
+        this.bMaisonEtJardin = new MenuButton("Maison et Jardin");
+        this.bJouetsEtJeux = new MenuButton("Jouets et Jeux");
+        this.bCultureEtLoisirs = new MenuButton("Culture et Loisirs");
+        this.bAutoEtMoto = new MenuButton("Auto et Moto");
+        this.bReconditionne = new MenuButton("Reconditionné");
+
+        BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
         bpEntete.setLeft(ivLogoINSA);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
-        
-        
-        VBox vbRubriques = new VBox (this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
-            this.bAutoEtMoto, this.bReconditionne);
+
+        VBox vbRubriques = new VBox(this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
+                this.bAutoEtMoto, this.bReconditionne);
         vbRubriques.setSpacing(8);
-        
+
         vbRubriques.setBackground(bgGrey);
-        
-        
+
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
+
+        //Group root = new Group();
+        ScrollBar sbAffichagePrincipal = new ScrollBar();
+        sbAffichagePrincipal.setMin(0);
+        sbAffichagePrincipal.setMax(100);
+        sbAffichagePrincipal.setOrientation(Orientation.VERTICAL);
+        sbAffichagePrincipal.setLayoutX(this.getWidth()/* - sbAffichagePrincipal.getWidth()*/);
+        sbAffichagePrincipal.setPrefHeight(180);
+        sbAffichagePrincipal.setMax(360);
+        //root.getChildren().addAll(vbRubriques, sbAffichagePrincipal);
+
+        vbRubriques.setLayoutX(5);
+        vbRubriques.setSpacing(10);
+
+        sbAffichagePrincipal.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                vbRubriques.setLayoutY(-new_val.doubleValue());
+            }
+        });
+
+        this.setRight(sbAffichagePrincipal);
     }
 
     public Controleur getControleur() {
