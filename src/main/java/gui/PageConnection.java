@@ -107,39 +107,46 @@ public class PageConnection extends BorderPane {
         hlMDPOublie.setOnAction(new EventHandler<ActionEvent>() {
 
             private Label lMDPOublie;
-            private Label lNom;
+/*            private Label lNom;
             private TextField tfNom;
             private Label lPrenom;
             private TextField tfPrenom;
+*/          private Label lMail;
+            private TextField tfMail;
             private Label lMDP;
             private PasswordField pfMDP;
             private Label lConfirmationMDP;
             private PasswordField pfConfirmationMDP;
-            private Button bValider;
+            private Button bValiderMDP;
+            private Label lErreur;
 
             @Override
             public void handle(ActionEvent event) {
                 this.lMDPOublie = new Label("Mot de passe oublié ?");
-                this.lNom = new Label("Nom : ");
-                this.tfNom = new TextField();
-                this.lPrenom = new Label("Prénom : ");
-                this.tfPrenom = new TextField();
+//                this.lNom = new Label("Nom : ");
+//                this.tfNom = new TextField();
+//                this.lPrenom = new Label("Prénom : ");
+//                this.tfPrenom = new TextField();
+                this.lMail = new Label ("Mail : ");
+                this.tfMail = new TextField ();
                 this.lMDP = new Label("Nouveau mot de passe : ");
                 this.pfMDP = new PasswordField();
                 this.lConfirmationMDP = new Label("Confirmez le mot de passe : ");
                 this.pfConfirmationMDP = new PasswordField();
-                this.bValider = new Button("Valider");
+                this.bValiderMDP = new Button("Valider");
+                this.lErreur = new Label ("Le mail n'existe pas");
 
                 HBox hbMDPOublie = new HBox(this.lMDPOublie);
-                HBox hbNom = new HBox(this.lNom, this.tfNom);
-                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
+//                HBox hbNom = new HBox(this.lNom, this.tfNom);
+//                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
+                HBox hbMail = new HBox (this.lMail, this.tfMail);
                 HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
                 HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
-                HBox hbValider = new HBox(this.bValider);
+                HBox hbValider = new HBox(this.bValiderMDP);
                 hbValider.setAlignment(Pos.CENTER);
                 hbMDPOublie.setAlignment(Pos.CENTER);
 
-                VBox vbRecreerMDP = new VBox(hbMDPOublie, hbNom, hbPrenom, hbMDP, hbConfirmationMDP, hbValider);
+                VBox vbRecreerMDP = new VBox(hbMDPOublie, hbMail, hbMDP, hbConfirmationMDP, hbValider);
                 vbRecreerMDP.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
                 vbRecreerMDP.setSpacing(8);
                 Scene sTemp = new Scene(vbRecreerMDP);
@@ -149,13 +156,49 @@ public class PageConnection extends BorderPane {
                 sMDPOublie.setTitle("Mot de passe oublié ?");
                 sMDPOublie.setResizable(false);
                 sMDPOublie.show();
+                
+                bValiderMDP.setOnAction((t) -> {
+                    System.out.println("oui");
+                    try ( Connection con = defautConnect()) {
+                        int res;
 
-                bValider.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        sMDPOublie.close();
+                        String mail = tfMail.getText();
+                        String nvMDP = pfMDP.getText();
+
+                        int statut = 1;
+
+
+                        System.out.println("je suis dedans");
+                        res = user.demandeChangerMdp(con, mail, nvMDP);
+                        if (res != -1) {
+//                                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
+//                                    @Override
+//                                    public void handle(ActionEvent t) {
+//                                        sNouvelUtilisateur.close();
+//                                    }
+//                                });
+                            sMDPOublie.close();
+                        } else {
+                            HBox hbErreur = new HBox(this.lErreur);
+                            hbErreur.setAlignment(Pos.CENTER);
+
+                            Scene sTempErreur = new Scene(hbErreur);
+                            sErreur = new Stage();
+                            sErreur.setScene(sTempErreur);
+                            sErreur.show();
+                        }
+
+                    } catch (Exception ex) {
+                        throw new Error(ex);
                     }
                 });
+
+//                bValider.setOnAction(new EventHandler<ActionEvent>() {
+//                    @Override
+//                    public void handle(ActionEvent t) {
+//                        sMDPOublie.close();
+//                    }
+//                });
             }
         });
 
@@ -312,6 +355,7 @@ public class PageConnection extends BorderPane {
 //            inStage.show();
         }
         );
+        
     }
 
     /**
