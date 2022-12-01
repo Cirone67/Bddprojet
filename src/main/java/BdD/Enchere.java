@@ -112,7 +112,7 @@ public class Enchere {
         try (Statement st = con.createStatement()) {
             st.executeUpdate(
                     """
-                    create ListPosseseur (
+                    create table ListPosseseur (
                         idArticle integer not null,
                         idUtilisateur integer not null
                     )
@@ -162,7 +162,7 @@ public class Enchere {
     }
 
     // creer une enchère
-    public static void createEnchere(Connection con, int idArticle, String vendeur, double prixIni, double prix, Date dateDebut, Date dateFin, int acheteur)
+    public static void createEnchere(Connection con, int idArticle, double prixIni, double prix, Date dateDebut, Date dateFin, int acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
@@ -178,15 +178,14 @@ public class Enchere {
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try (PreparedStatement pst = con.prepareStatement(
                     """
-                insert into Enchere (idArticle,vendeur,prixIni,prix,dateDebut,dateFin,acheteur) values (?,?,?,?,?,?,?)
-                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                insert into Enchere (idArticle,prixIni,prix,dateDebut,dateFin,acheteur) values (?,?,?,?,?,?)
+                """)) {
                 pst.setInt(1, idArticle);
-                pst.setString(2, vendeur);
-                pst.setDouble(3, prixIni);
-                pst.setDouble(4, prix);
-                pst.setDate(5, dateDebut);
-                pst.setDate(6, dateFin);
-                pst.setInt(7, acheteur);
+                pst.setDouble(2, prixIni);
+                pst.setDouble(3, prix);
+                pst.setDate(4, dateDebut);
+                pst.setDate(5, dateFin);
+                pst.setInt(6, acheteur);
                 pst.executeUpdate();
                 con.commit();
             }
@@ -377,13 +376,13 @@ public class Enchere {
         this.acheteur = acheteur;
     }
 
-    //Permet au vendeur de modifier l'etat de l'enchère.  
-    public void encherir(Connection con, Utilisateur encherreur, double prixPropose) throws SQLException {
+    //Permet au vendeur de modifier l'etat de l'enchère.
+    public void encherir(Connection con, int idUtilisateurConnecter, double prixPropose) throws SQLException {
         Enchere nouvelle = new Enchere(this.getIdArticle(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getAcheteur());
         if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())) {
             if (prixPropose > nouvelle.prix && prixPropose > nouvelle.prixIni) {
                 nouvelle.prix = prixPropose;
-                nouvelle.acheteur = encherreur.getIdUtilisateur();
+                nouvelle.acheteur = idUtilisateurConnecter;
                 con.setAutoCommit(false);
                 try (PreparedStatement pst = con.prepareStatement(
                         """

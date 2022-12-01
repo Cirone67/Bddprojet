@@ -72,23 +72,24 @@ public class SurCategorie {
 //Creer la table SurCategorie-----------------------------------------------
         public static void creeTableSurCategorie(Connection con)
             throws SQLException {
+            System.out.println("dedans");
         con.setAutoCommit(false);
         try ( Statement st = con.createStatement()) {
             st.executeUpdate(
                     """
                     create table SurCategorie (
                         idSurCategorie serial primary key, 
-                        designation varchar(30) not null unique,
+                        designation varchar(30) not null unique
                     )
                     """);
-                    try ( Statement st2 = con.createStatement()) {
-            st.executeUpdate(
-                    """
-                    create table SurCategorie_Categorie (
-                        idSurCategorie integer not null, 
-                        idCategorie integer not null,
-                    )
-                    """);
+//                    try ( Statement st2 = con.createStatement()) {
+//            st.executeUpdate(
+//                    """
+//                    create table SurCategorie_Categorie (
+//                        idSurCategorie integer not null, 
+//                        idCategorie integer not null
+//                    )
+//                    """);
             con.commit();
             con.setAutoCommit(true);
         } catch (SQLException ex) {
@@ -98,7 +99,7 @@ public class SurCategorie {
             con.setAutoCommit(true);
         }
     }
-        }       
+               
   //Créer une surCategorie------------------------------------
     public static void createSurCategorie(Connection con, String designation)
             throws SQLException, idCategorieExisteDejaException {

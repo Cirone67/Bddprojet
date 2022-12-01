@@ -161,7 +161,7 @@ public class Categorie {
         try (PreparedStatement pst = con.prepareStatement(
                 """
                 insert into JoinCategorieArticle (idArticle, idCategorie) values (?,?)
-                """, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                """)) {
             pst.setInt(1, idArticle);
             pst.setInt(2, idCategorie);
 
@@ -194,6 +194,25 @@ public class Categorie {
             }
         }
     }
+    
+   //Trouver une categorie par sa désignation:
+//        public static Categorie Categorieavecdesi(Connection con, String designation) throws SQLException {
+//        try (PreparedStatement pst = con.prepareStatement(
+//                """
+//               select idCategorie,designation,idSurCategorie
+//                 from Categorie where designation = ?
+//               """
+//        )) {
+//            pst.setString(1,designation);
+//            try (ResultSet rs = pst.executeQuery()) {
+//                while (rs.next()) {
+//                    Categorie res = new Categorie(rs.getInt("idCategorie"),rs.getString("designation"), rs.getInt("IdSurCategorie"));
+//                 return res;              
+//                }
+//                 
+//            }
+//        }
+//    }
 //Renvoie la liste des enchères dans un groupe de catégorie
 
     public static ArrayList<Article> articleParCategorie(Connection con, ArrayList<String> desiCategorie) throws SQLException {
@@ -246,6 +265,7 @@ public class Categorie {
             System.out.println("connectÃ© !!!");
 
             //Enchere.creeEnchere(con);
+            
             //createCategorie(con,"chat",6);
             //tousLesCategorie(con);
             //deleteSchemaUtilisateur(con);

@@ -154,39 +154,39 @@ public class Article {
         }
     }
 //Créer une Article------------------------------------
-    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , String posseseur )
+    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , int posseseur )
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
             try ( PreparedStatement pst = con.prepareStatement(
                     """
-                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur) values (?,?,?,?,?)
-                while (@i< ?)
-                    begin
-                    @i = @i+1  
-                    insert into JoinCategorieArticle (idCategorie,idArticle) values (select idCategorie from Categorie where designation = ? ,?)
-                    end
                 
+                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur) values (?,?,?,?,?)                
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 pst.setString(1, designation);
                 pst.setString(2, descriptionCourte);
                 pst.setString(3, descriptionLongue);
                 pst.setInt(4, expedition);
-                pst.setString(5, posseseur);
-                pst.setInt(6,desiCategorie.size());
-                int i=0;
-                while (i< desiCategorie.size()){
-                pst.setString(7, desiCategorie.get(i));
-                }
-                pst.setInt(8,PreparedStatement.RETURN_GENERATED_KEYS);
+                pst.setInt(5, posseseur);
                 pst.executeUpdate();
-                con.commit();
-//            }
-//        } catch (Exception ex) {
-//            con.rollback();
-//            throw ex;
-//        } finally {
-            con.setAutoCommit(true);
+                con.commit();              
+            }
+            int i=0;
+            while (i< desiCategorie.size()){
+             try ( PreparedStatement pst = con.prepareStatement(
+                    """   
+                    insert into JoinCategorieArticle (idCategorie,idArticle) values ((select idCategorie from Categorie where designation = ?) ,(select idArticle from Article where designation = ?));
+                
+                """)) {
+                pst.setString(2, designation);
+                pst.setString(1, desiCategorie.get(i));
+                pst.executeUpdate();
+                con.commit();              
+                System.out.println(desiCategorie.get(i));
+                i=i+1;
+                }
+            
         }
+     con.setAutoCommit(true);
     }
 //Lecture dans PGSQL----------------------
    public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {

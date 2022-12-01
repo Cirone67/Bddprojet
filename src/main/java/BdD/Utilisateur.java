@@ -537,7 +537,7 @@ public class Utilisateur {
             //          System.out.println("connectÃ© !!!");
 //            Enchere.creeEnchere(con);
             //          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            //           Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
+             //          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
             //           Date dateFin = new java.sql.Date(simpleDateFormat.parse("30/10/2022").getTime());
 //            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
 
