@@ -30,10 +30,10 @@ public class Article {
   private int expedition; //(0 = livrer,1 = a toi de le chercher)
   private  String URLPhoto;
 //  private int idCategorie;
-  private String posseseur;
+  private int posseseur;
 
  //Constructor  
-  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, String URLPhoto, String posseseur) {
+  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, String URLPhoto, int posseseur) {
         this.idArticle = idArticle;
         this.designation = designation;
         this.descriptionCourte = descriptionCourte;
@@ -77,7 +77,7 @@ public class Article {
 //        return idCategorie;
 //    }
 
-    public String getPosseseur() {
+    public int getPosseseur() {
         return posseseur;
     }
 
@@ -105,7 +105,7 @@ public class Article {
 //        this.idCategorie = categorie;
 //    }
 
-    public void setPosseseur(String posseseur) {
+    public void setPosseseur(int posseseur) {
         this.posseseur = posseseur;
     }
 //Lien avec PGSQL------------------------------------------------
@@ -153,7 +153,7 @@ public class Article {
             con.setAutoCommit(true);
         }
     }
-//Créer une categorie------------------------------------
+//Créer une Article------------------------------------
     public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , String posseseur )
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
@@ -204,7 +204,7 @@ public class Article {
 //                    if(i!= 0){
 //                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
-                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getString("URLPhoto"),rs.getString("posseseur")));
+                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getString("URLPhoto"),rs.getInt("posseseur")));
 //                    }
 //                    }
 //                    if(i==0){
