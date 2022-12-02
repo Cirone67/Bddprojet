@@ -8,9 +8,8 @@ package gui;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -37,30 +36,33 @@ public class PageAccueil extends BorderPane {
     private TextField tfRechercher;
 
     private Button bAccueil;
-    private MenuButton bMultimedia;
-    private MenuButton bMaisonEtJardin;
-    private MenuButton bJouetsEtJeux;
-    private MenuButton bCultureEtLoisirs;
-    private MenuButton bAutoEtMoto;
-    private MenuButton bReconditionne;
+    private Button bMultimedia;
+    private Button bMaisonEtJardin;
+    private Button bJouetsEtJeux;
+    private Button bCultureEtLoisirs;
+    private Button bAutoEtMoto;
+    private Button bReconditionne;
 
     private BorderPane bpEcranPrincipal;
+    private AffichageEnchere afficherEnchere;
     //private BorderPane bpEntete;
 
     public PageAccueil(Stage inStage, int utilisateurCourant) {
         this.utilisateurCourant = utilisateurCourant;
         this.inStage = inStage;
         this.controleur = new Controleur(this);
+        this.afficherEnchere = new AffichageEnchere(this);
 
         this.tfRechercher = new TextField("Rechercher");
 
         this.bAccueil = new Button("Accueil");
-        this.bMultimedia = new MenuButton("Multimédia");
-        this.bMaisonEtJardin = new MenuButton("Maison et Jardin");
-        this.bJouetsEtJeux = new MenuButton("Jouets et Jeux");
-        this.bCultureEtLoisirs = new MenuButton("Culture et Loisirs");
-        this.bAutoEtMoto = new MenuButton("Auto et Moto");
-        this.bReconditionne = new MenuButton("Reconditionné");
+        this.bMultimedia = new Button("Multimédia");
+        this.bMaisonEtJardin = new Button("Maison et Jardin");
+        this.bJouetsEtJeux = new Button("Jouets et Jeux");
+        this.bCultureEtLoisirs = new Button("Culture et Loisirs");
+        this.bAutoEtMoto = new Button("Auto et Moto");
+        this.bReconditionne = new Button("Reconditionné");
+        
 
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
@@ -77,6 +79,10 @@ public class PageAccueil extends BorderPane {
 
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
+        
+        bMultimedia.setOnAction((t) -> {
+            this.afficherEnchere.fenetreEnchere("Multimedia");
+        });
 
         //Group root = new Group();
         ScrollBar sbAffichagePrincipal = new ScrollBar();
