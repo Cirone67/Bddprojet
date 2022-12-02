@@ -19,13 +19,13 @@ public class Main {
 //Fonction pour créer toutes les tables à la suite.
  public static void createTable(){
      try ( Connection con = defautConnect()) {
-            //Article.creeTableArticle(con);
-            //Enchere.creeEnchere(con);
-            //SurCategorie.creeTableSurCategorie(con);
-            //Utilisateur.creeTableUtilisateur(con);
-            //Categorie.creeTableCategorie(con);
-            //Enchere.creeTableListPosseseur(con);
-            //Categorie.creeTableJoinCategorieArticle(con);
+            Article.creeTableArticle(con);
+            Enchere.creeEnchere(con);
+            SurCategorie.creeTableSurCategorie(con);
+            Utilisateur.creeTableUtilisateur(con);
+            Categorie.creeTableCategorie(con);
+            Enchere.creeTableListPosseseur(con);
+            Categorie.creeTableJoinCategorieArticle(con);
             
             } catch (Exception ex) {
             throw new Error(ex);
@@ -75,7 +75,7 @@ public class Main {
  }
 public static void main(String[] args) {
 
-            //createTable();
+            createTable();
             createExemple();
         }
         
