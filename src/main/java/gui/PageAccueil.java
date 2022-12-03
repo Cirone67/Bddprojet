@@ -42,6 +42,7 @@ public class PageAccueil extends BorderPane {
     private Button bCultureEtLoisirs;
     private Button bAutoEtMoto;
     private Button bReconditionne;
+    private Button bEnchere;
 
     private BorderPane bpEcranPrincipal;
     private AffichageEnchere afficherEnchere;
@@ -62,12 +63,14 @@ public class PageAccueil extends BorderPane {
         this.bCultureEtLoisirs = new Button("Culture et Loisirs");
         this.bAutoEtMoto = new Button("Auto et Moto");
         this.bReconditionne = new Button("Reconditionné");
+        this.bEnchere = new Button ("Créer une enchère");
         
 
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
         bpEntete.setLeft(ivLogoINSA);
+        bpEntete.setRight(this.bEnchere);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
 
@@ -80,8 +83,12 @@ public class PageAccueil extends BorderPane {
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
         
-        bMultimedia.setOnAction((t) -> {
-            this.afficherEnchere.fenetreEnchere("Multimedia");
+//        bMultimedia.setOnAction((t) -> {
+//            this.afficherEnchere.fenetreEnchere("Multimedia");
+//        });
+        
+        bEnchere.setOnAction((t) -> {
+            this.afficherEnchere.fenetreEnchere();
         });
 
         //Group root = new Group();
