@@ -109,7 +109,21 @@ public class AffichageEnchere extends BorderPane {
                 String sNom = tfNom.getText();
                 double dPrixInitial = getDoubleFromTextField(tfPrixInitial);
                 LocalDate dDateDebut = dpDateDebut.getValue();
-                dDateDebut.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate dDateFin = dpDateFin.getValue();
+                String sDescriptionCourte = tfDescriptionCourte.getText();
+                String sDescriptionLongue = tfDescriptionLongue.getText();
+                int iModeEnvoi = 0;
+                
+                if (rbEnvoiPostal.isSelected()) {
+                    iModeEnvoi = 1;
+                }
+                
+                if (rbVenirChercher.isSelected()) {
+                    iModeEnvoi = 2;
+                }
+
+
+//dDateDebut.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 //                dpDateDebut.setOnAction(new EventHandler<ActionEvent>() {
 //                    @Override
 //                    public void handle(ActionEvent event) {
