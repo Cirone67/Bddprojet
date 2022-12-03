@@ -274,7 +274,6 @@ public class PageConnection extends BorderPane {
                 sNouvelUtilisateur.show();
 
                 bValiderNU.setOnAction((t) -> {
-                    System.out.println("oui");
                     try ( Connection con = defautConnect()) {
                         int res;
 
@@ -342,6 +341,7 @@ public class PageConnection extends BorderPane {
                 } else {
                     this.inStage.close();
                     sPageAccueil = new Scene(new PageAccueil(inStage, res));
+                    inStage.setMaximized(true);
                     inStage.setScene(sPageAccueil);
                     inStage.show();
                 }

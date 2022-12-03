@@ -5,12 +5,14 @@
  */
 package gui;
 
+import BdD.Enchere;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,14 +47,16 @@ public class PageAccueil extends BorderPane {
     private Button bEnchere;
 
     private BorderPane bpEcranPrincipal;
-    private AffichageEnchere afficherEnchere;
+    private CreerEnchere creerEnchere;
+    private AfficherEnchere affichageEnchere;
     //private BorderPane bpEntete;
 
     public PageAccueil(Stage inStage, int utilisateurCourant) {
         this.utilisateurCourant = utilisateurCourant;
         this.inStage = inStage;
         this.controleur = new Controleur(this);
-        this.afficherEnchere = new AffichageEnchere(this);
+        this.creerEnchere = new CreerEnchere(this);
+        this.affichageEnchere = new AfficherEnchere(this);
 
         this.tfRechercher = new TextField("Rechercher");
 
@@ -88,7 +92,7 @@ public class PageAccueil extends BorderPane {
 //        });
         
         bEnchere.setOnAction((t) -> {
-            this.afficherEnchere.fenetreEnchere();
+            this.creerEnchere.fenetreEnchere();
         });
 
         //Group root = new Group();
@@ -112,7 +116,12 @@ public class PageAccueil extends BorderPane {
         });
 
         this.setRight(sbAffichagePrincipal);
-    }
+        
+        bMultimedia.setOnAction((t) -> {
+            this.affichageEnchere.fenetreAffichageEnchere("Multimédia");
+        });
+        
+    } 
 
     public Controleur getControleur() {
         return controleur;

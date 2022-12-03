@@ -28,7 +28,7 @@ import javafx.stage.Stage;
  *
  * @author drumm
  */
-public class AffichageEnchere extends BorderPane {
+public class CreerEnchere extends BorderPane {
 
     private PageAccueil vue;
     private Stage sEnchere;
@@ -52,7 +52,7 @@ public class AffichageEnchere extends BorderPane {
     private Label lTitreFenetre;
     private Button bValiderEnchere;
 
-    public AffichageEnchere(PageAccueil vue) {
+    public CreerEnchere(PageAccueil vue) {
         this.vue = vue;
     }
 
