@@ -175,13 +175,13 @@ public class Enchere {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
         // test du nom - crÃ©ation est bien atomique et isolÃ©e
         con.setAutoCommit(false);
-        try (PreparedStatement chercheEmail = con.prepareStatement(
-                "select idArticle from Enchere where idArticle = ?")) {
-            chercheEmail.setInt(1, idArticle);
-            ResultSet testEmail = chercheEmail.executeQuery();
-            if (testEmail.next()) {
-                throw new EnchereExisteDejaException();
-            }
+//        try (PreparedStatement chercheEmail = con.prepareStatement(
+//                "select idArticle from Enchere where idArticle = ?")) {
+//            chercheEmail.setInt(1, idArticle);
+//            ResultSet testEmail = chercheEmail.executeQuery();
+//            if (testEmail.next()) {
+//                throw new EnchereExisteDejaException();
+//            }
             // lors de la creation du PreparedStatement, il faut que je prÃ©cise
             // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
             try (PreparedStatement pst = con.prepareStatement(
@@ -197,12 +197,12 @@ public class Enchere {
                 pst.executeUpdate();
                 con.commit();
             }
-        } catch (Exception ex) {
-            con.rollback();
-            throw ex;
-        } finally {
+//        } catch (Exception ex) {
+//            con.rollback();
+//            throw ex;
+//        } finally {
             con.setAutoCommit(true);
-        }
+//        }
     }
 //    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
 //        boolean existe = true;
