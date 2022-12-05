@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,7 +28,7 @@ public class Enchere {
     private Date dateDebut;
     private Date dateFin; 
     private int acheteur;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //Constructors
 
     public Enchere(int idArticle, double prixIni, double prix, Date dateDebut, Date dateFin, int acheteur) {
@@ -161,7 +162,14 @@ public class Enchere {
         }
     }
 
-    // creer une enchère
+    // creer une enchère et Article
+    public static void createElement(Connection con,double prixIni,Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie )throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
+        
+        int idArticle = Article.createArticle(con, designation, descriptionCourte, descriptionLongue, expedition, desiCategorie, idUtilisateur);
+        createEnchere(con,idArticle, prixIni, prixIni, dateDebut, dateFin, idUtilisateur);
+    }
+    
+   //Creer une enchère 
     public static void createEnchere(Connection con, int idArticle, double prixIni, double prix, Date dateDebut, Date dateFin, int acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence

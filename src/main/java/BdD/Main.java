@@ -34,16 +34,18 @@ public class Main {
  }
  
  public static void createExemple(){
-     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
      try ( Connection con = defautConnect()) {
          //Créer 2 surCatégorie
-         SurCategorie.createSurCategorie(con, "bricolage");
-         SurCategorie.createSurCategorie(con, "loisir");
+         SurCategorie.createSurCategorie(con, "SurCat1");
+         SurCategorie.createSurCategorie(con, "SurCat2");
          //Créer 2 sous catégorie par Catégorie
-            Categorie.createCategorie( con, "outil", 1);
-            Categorie.createCategorie( con, "materiel", 1);
-            Categorie.createCategorie( con, "sport", 2);
-            Categorie.createCategorie( con, "musique", 2);
+            Categorie.createCategorie( con, "Auto et Moto", 1);
+            Categorie.createCategorie( con, "Culture et Loisirs", 1);
+            Categorie.createCategorie( con, "Jouets et Jeux", 1);
+            Categorie.createCategorie( con, "Maison et Jardin", 2);
+            Categorie.createCategorie( con, "multimédia", 2);
+            Categorie.createCategorie( con, "Reconditionné", 2);
          //Creation de 2 utilisateur
          Utilisateur.createUtilisateur(con, "titi.toto@gmail.com", "pomme", "FR-80000", "titi", "toto", 0);
          Utilisateur.createUtilisateur(con, "tom.jerry@gmail.com", "patate", "FR-67000", "tom", "jerry", 1);
@@ -56,8 +58,8 @@ public class Main {
          Article.createArticle(con, "marteau", "très dure", "bon etat", 0,Article1type , 1);
          Article.createArticle(con, "corde", "rien à dire", "fissure", 0,Article2type , 2);
          //Enchere lié aux articles
-          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
-          Date dateFin = new java.sql.Date(simpleDateFormat.parse("30/10/2022").getTime());
+          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("2022-12-4").getTime());
+          Date dateFin = new java.sql.Date(simpleDateFormat.parse("2022-12-30").getTime());
          Enchere.createEnchere(con, 1, 100, 100, dateDebut, dateFin, 1);
          Enchere.createEnchere(con, 2, 50, 50, dateDebut, dateFin, 2);
          

@@ -154,7 +154,7 @@ public class Article {
         }
     }
 //Créer une Article------------------------------------
-    public static void createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , int posseseur )
+    public static int createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , int posseseur )
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
             try ( PreparedStatement pst = con.prepareStatement(
@@ -187,6 +187,7 @@ public class Article {
             
         }
      con.setAutoCommit(true);
+     return PreparedStatement.RETURN_GENERATED_KEYS;
     }
 //Lecture dans PGSQL----------------------
    public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {
