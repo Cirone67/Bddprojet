@@ -8,27 +8,25 @@ package gui;
 import BdD.Utilisateur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
  *
  * @author drumm
  */
-public class AfficherEnchere {
+public class AfficherEnchere extends TableView {
 
     private PageAccueil vue;
     private Stage sAffichageEnchere;
     private Button bTest;
+//    private ObservableList<Utilisateur> utilisateurs;
 
     public AfficherEnchere(PageAccueil vue) {
         this.vue = vue;
@@ -36,6 +34,8 @@ public class AfficherEnchere {
 
     public void fenetreAffichageEnchere(String sRubrique) {
         TableView tvEncheres = new TableView();
+//        this.utilisateurs = FXCollections.observableArrayList(utilisateurs);
+        this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.bTest = new Button("sRubrique");
 
         TableColumn<String, String> columnNom = new TableColumn<String, String>("Nom");
@@ -46,30 +46,32 @@ public class AfficherEnchere {
         TableColumn<String, String> columnDescLongue = new TableColumn<String, String>("Description longue");
         TableColumn<String, String> columnModeEnvoi = new TableColumn<String, String>("Mode d'envoi");
 
-//        columnNom.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-//        columnPrix.setCellValueFactory(new PropertyValueFactory<>("Prix"));
-//        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("Date de début"));
-//        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("Date de fin"));
-//        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("Description courte"));
-//        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("Description longue"));
-//        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("Mode d'envoi"));
+        columnNom.setCellValueFactory(new PropertyValueFactory<>("Nom"));
+        columnPrix.setCellValueFactory(new PropertyValueFactory<>("Prix"));
+        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("Date de début"));
+        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("Date de fin"));
+        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("Description courte"));
+        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("Description longue"));
+        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("Mode d'envoi"));
 
         tvEncheres.getColumns().addAll(columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
+        
 //        tvEncheres.getItems().add(new Utilisateur("testMail", "TestMDP", "FR-13250", "TestNom", "TestPrenom", 1));
-
-        StackPane root = new StackPane();
-        root.setPadding(new Insets(5));
-        root.getChildren().add(tvEncheres);
-
+//
+//        StackPane root = new StackPane();
+//        root.setPadding(new Insets(5));
+//        root.getChildren().add(tvEncheres);
+//
         ObservableList<String> list = FXCollections.observableArrayList();
         list.add("Nom");
         tvEncheres.setItems(list);
+//        tvEncheres.setItems(list);
 //        columnNom.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>);
 //        tvEncheres.getColumns().addAll("Nom"+"Prix"+"Date Début"+"Date Fin"+"Descrip Courte"+"Descrip longue"+"Mode Envoi");
 
 //        ObservableList<UserAccount> list = getUserList();
-//        tvEncheres.setItems(list);
-        VBox vbAfficherEnchere = new VBox(root);
+//        tvEncheres.setItems(bTest);
+        VBox vbAfficherEnchere = new VBox(tvEncheres);
 
         sAffichageEnchere = new Stage();
         Scene sTemp = new Scene(vbAfficherEnchere);
