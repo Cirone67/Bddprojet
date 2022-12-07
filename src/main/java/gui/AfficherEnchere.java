@@ -5,7 +5,8 @@
  */
 package gui;
 
-import BdD.Utilisateur;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -26,6 +27,8 @@ public class AfficherEnchere extends TableView {
     private PageAccueil vue;
     private Stage sAffichageEnchere;
     private Button bTest;
+    private ObservableList<String> obTest;
+    private ArrayList<String> lTest;
 //    private ObservableList<Utilisateur> utilisateurs;
 
     public AfficherEnchere(PageAccueil vue) {
@@ -34,9 +37,20 @@ public class AfficherEnchere extends TableView {
 
     public void fenetreAffichageEnchere(String sRubrique) {
         TableView tvEncheres = new TableView();
+//        this.lTest = new ArrayList<String>();
+
 //        this.utilisateurs = FXCollections.observableArrayList(utilisateurs);
+        lTest.add("1");
+        lTest.add("2");
+        lTest.add("3");
+        lTest.add("4");
+        lTest.add("5");
+        lTest.add("6");
+        lTest.add("7");
+        //System.out.println(lTest);
+        this.obTest = FXCollections.observableArrayList(lTest);
         this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        this.bTest = new Button("sRubrique");
+//        this.bTest = new Button("sRubrique");
 
         TableColumn<String, String> columnNom = new TableColumn<String, String>("Nom");
         TableColumn<String, String> columnPrix = new TableColumn<String, String>("Prix");
@@ -55,22 +69,22 @@ public class AfficherEnchere extends TableView {
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("Mode d'envoi"));
 
         tvEncheres.getColumns().addAll(columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
-        
+
 //        tvEncheres.getItems().add(new Utilisateur("testMail", "TestMDP", "FR-13250", "TestNom", "TestPrenom", 1));
 //
 //        StackPane root = new StackPane();
 //        root.setPadding(new Insets(5));
 //        root.getChildren().add(tvEncheres);
 //
-        ObservableList<String> list = FXCollections.observableArrayList();
-        list.add("Nom");
-        tvEncheres.setItems(list);
+//        ObservableList<String> list = FXCollections.observableArrayList();
+//        list.add("Nom");
+//        tvEncheres.setItems(list);
 //        tvEncheres.setItems(list);
 //        columnNom.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>);
 //        tvEncheres.getColumns().addAll("Nom"+"Prix"+"Date Début"+"Date Fin"+"Descrip Courte"+"Descrip longue"+"Mode Envoi");
-
 //        ObservableList<UserAccount> list = getUserList();
 //        tvEncheres.setItems(bTest);
+        tvEncheres.setItems(obTest);
         VBox vbAfficherEnchere = new VBox(tvEncheres);
 
         sAffichageEnchere = new Stage();
