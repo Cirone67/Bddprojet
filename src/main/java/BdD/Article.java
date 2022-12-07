@@ -187,8 +187,23 @@ public class Article {
             
         }
      con.setAutoCommit(true);
-     return PreparedStatement.RETURN_GENERATED_KEYS;
+     int res=0;
+             try (PreparedStatement pst = con.prepareStatement(
+                """
+               select max(idArticle) from Article
+               """
+        )) {
+            //pst.setString(1, designation);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res = rs.getInt(1);
+                }
+            } catch (SQLException ex) {
+            }
+        }
+    return res;   
     }
+     
 //Lecture dans PGSQL----------------------
    public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {
         ArrayList<Article> res = new ArrayList<>();
