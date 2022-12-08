@@ -5,8 +5,8 @@
  */
 package gui;
 
+import BdD.Utilisateur;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -35,8 +35,9 @@ public class AfficherEnchere extends TableView {
         this.vue = vue;
     }
 
-    public void fenetreAffichageEnchere(String sRubrique) {
+    public void fenetreAffichageEnchere(ArrayList alUtilisateur) {
         TableView tvEncheres = new TableView();
+        ArrayList<String> lTest = new ArrayList<>();
 //        this.lTest = new ArrayList<String>();
 
 //        this.utilisateurs = FXCollections.observableArrayList(utilisateurs);
@@ -47,43 +48,29 @@ public class AfficherEnchere extends TableView {
         lTest.add("5");
         lTest.add("6");
         lTest.add("7");
-        //System.out.println(lTest);
-        this.obTest = FXCollections.observableArrayList(lTest);
+        System.out.println(lTest);
+        this.obTest = FXCollections.observableArrayList(alUtilisateur);
         this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 //        this.bTest = new Button("sRubrique");
 
-        TableColumn<String, String> columnNom = new TableColumn<String, String>("Nom");
-        TableColumn<String, String> columnPrix = new TableColumn<String, String>("Prix");
-        TableColumn<String, String> columnDateDebut = new TableColumn<String, String>("Date de début");
-        TableColumn<String, String> columnDateFin = new TableColumn<String, String>("Date de fin");
-        TableColumn<String, String> columnDescCourte = new TableColumn<String, String>("Description courte");
-        TableColumn<String, String> columnDescLongue = new TableColumn<String, String>("Description longue");
-        TableColumn<String, String> columnModeEnvoi = new TableColumn<String, String>("Mode d'envoi");
+        TableColumn<Utilisateur, String> columnNom = new TableColumn<Utilisateur, String>("Nom");
+        TableColumn<Utilisateur, String> columnPrix = new TableColumn<Utilisateur, String>("Prix");
+        TableColumn<Utilisateur, String> columnDateDebut = new TableColumn<Utilisateur, String>("Date de début");
+        TableColumn<Utilisateur, String> columnDateFin = new TableColumn<Utilisateur, String>("Date de fin");
+        TableColumn<Utilisateur, String> columnDescCourte = new TableColumn<Utilisateur, String>("Description courte");
+        TableColumn<Utilisateur, String> columnDescLongue = new TableColumn<Utilisateur, String>("Description longue");
+        TableColumn<Utilisateur, String> columnModeEnvoi = new TableColumn<Utilisateur, String>("Mode d'envoi");
 
-        columnNom.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-        columnPrix.setCellValueFactory(new PropertyValueFactory<>("Prix"));
-        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("Date de début"));
-        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("Date de fin"));
-        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("Description courte"));
-        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("Description longue"));
-        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("Mode d'envoi"));
+        columnNom.setCellValueFactory(new PropertyValueFactory<>("idUtilisateur"));
+        columnPrix.setCellValueFactory(new PropertyValueFactory<>("email"));
+        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("mdp"));
+        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("codePostal"));
+        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("prenom"));
+        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("statut"));
 
         tvEncheres.getColumns().addAll(columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
 
-//        tvEncheres.getItems().add(new Utilisateur("testMail", "TestMDP", "FR-13250", "TestNom", "TestPrenom", 1));
-//
-//        StackPane root = new StackPane();
-//        root.setPadding(new Insets(5));
-//        root.getChildren().add(tvEncheres);
-//
-//        ObservableList<String> list = FXCollections.observableArrayList();
-//        list.add("Nom");
-//        tvEncheres.setItems(list);
-//        tvEncheres.setItems(list);
-//        columnNom.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>);
-//        tvEncheres.getColumns().addAll("Nom"+"Prix"+"Date Début"+"Date Fin"+"Descrip Courte"+"Descrip longue"+"Mode Envoi");
-//        ObservableList<UserAccount> list = getUserList();
-//        tvEncheres.setItems(bTest);
         tvEncheres.setItems(obTest);
         VBox vbAfficherEnchere = new VBox(tvEncheres);
 

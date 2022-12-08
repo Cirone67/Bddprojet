@@ -5,14 +5,15 @@
  */
 package gui;
 
-import BdD.Enchere;
+import BdD.Utilisateur;
+import static BdD.Utilisateur.defautConnect;
+import java.sql.Connection;
+import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,6 +50,8 @@ public class PageAccueil extends BorderPane {
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
+
+    private ArrayList<Utilisateur> alCategorie;
     //private BorderPane bpEntete;
 
     public PageAccueil(Stage inStage, int utilisateurCourant) {
@@ -67,8 +70,8 @@ public class PageAccueil extends BorderPane {
         this.bCultureEtLoisirs = new Button("Culture et Loisirs");
         this.bAutoEtMoto = new Button("Auto et Moto");
         this.bReconditionne = new Button("Reconditionné");
-        this.bEnchere = new Button ("Créer une enchère");
-        
+        this.bEnchere = new Button("Créer une enchère");
+        this.alCategorie = new ArrayList<>();
 
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
@@ -86,12 +89,12 @@ public class PageAccueil extends BorderPane {
 
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
-        
+
 //        bMultimedia.setOnAction((t) -> {
 //            this.afficherEnchere.fenetreEnchere("Multimedia");
 //        });
-        
         bEnchere.setOnAction((t) -> {
+
             this.creerEnchere.fenetreEnchere();
         });
 
@@ -116,12 +119,17 @@ public class PageAccueil extends BorderPane {
         });
 
         this.setRight(sbAffichagePrincipal);
-        
+
         bMultimedia.setOnAction((t) -> {
-            this.affichageEnchere.fenetreAffichageEnchere("Multimédia");
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Utilisateur.afficheTousLesUtilisateur(con);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
         });
-        
-    } 
+
+    }
 
     public Controleur getControleur() {
         return controleur;
