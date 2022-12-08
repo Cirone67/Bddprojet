@@ -277,7 +277,7 @@ public class Utilisateur {
         try (Statement st = con.createStatement()) {
             try (ResultSet tlu = st.executeQuery("select * from utilisateur")) {
                 while (tlu.next()) {
-                      res.add(new Utilisateur(tlu.getInt("idUtilisateur"),tlu.getString("email"),tlu.getString("mdp"), tlu.getString("CodePostale"),tlu.getString("nom"),tlu.getString("prenom"),tlu.getInt("statut")));
+                      res.add(new Utilisateur(tlu.getInt("idUtilisateur"),tlu.getString("email"),tlu.getString("mdp"), tlu.getString("codePostal"),tlu.getString("nom"),tlu.getString("prenom"),tlu.getInt("statut")));
                 }
             }
         }
