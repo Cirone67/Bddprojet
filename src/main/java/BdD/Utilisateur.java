@@ -34,7 +34,8 @@ public class Utilisateur {
     private PageConnection pcConnection;
 
 //Constructor-------------------------------------------------
-    public Utilisateur(String email, String mdp, String codePostale, String nom, String prenom, int statut) {
+    public Utilisateur(int idUtilisateur,String email, String mdp, String codePostale, String nom, String prenom, int statut) {
+        this.idUtilisateur = idUtilisateur;
         this.email = email;
         this.mdp = mdp;
         this.codePostale = codePostale;
@@ -271,46 +272,16 @@ public class Utilisateur {
     }
 
     //Lecture dans PGSQL----------------------
-    public static void afficheTousLesUtilisateur(Connection con) throws SQLException {
+    public  static ArrayList<Utilisateur> afficheTousLesUtilisateur(Connection con) throws SQLException {
+        ArrayList<Utilisateur> res = new ArrayList<>();
         try (Statement st = con.createStatement()) {
-            // pour effectuer une recherche, il faut utiliser un "executeQuery"
-            // et non un "executeUpdate".
-            // un executeQuery retourne un ResultSet qui contient le rÃ©sultat
-            // de la recherche (donc une table avec quelques information supplÃ©mentaire)
             try (ResultSet tlu = st.executeQuery("select * from utilisateur")) {
-                // un ResultSet se manipule un peu comme un fichier :
-                // - il faut le fermer quand on ne l'utilise plus
-                //   d'oÃ¹ l'utilisation du try(...) ci-dessus
-                // - il faut utiliser la mÃ©thode next du ResultSet pour passer
-                //   d'une ligne Ã  la suivante.
-                //   . s'il y avait effectivement une ligne suivante, next renvoie true
-                //   . si l'on Ã©tait sur la derniÃ¨re ligne, next renvoie false
-                //   . au dÃ©but, on est "avant la premiÃ¨re ligne", il faut donc
-                //     faire un premier next pour accÃ©der Ã  la premiÃ¨re ligne
-                //     Note : ce premier next peut renvoyer false si le rÃ©sultat
-                //            du select Ã©tait vide
-                // on va donc trÃ¨s souvent avoir un next
-                //   . dans un if si l'on veut tester qu'il y a bien un rÃ©sultat
-                //   . dans un while si l'on veut traiter l'ensemble des lignes
-                //     de la table rÃ©sultat
-
-                System.out.println("liste des utilisateurs :");
-                System.out.println("------------------------");
-                // ici, on veut lister toutes les lignes, d'oÃ¹ le while
                 while (tlu.next()) {
-                    // Ensuite, pour accÃ©der Ã  chaque colonne de la ligne courante,
-                    // on a les mÃ©thode getInt, getString... en fonction du type
-                    // de la colonne.
-
-                    // on peut accÃ©der Ã  une colonne par son nom :
-                    String email = tlu.getString("email");
-                    // ou par son numÃ©ro (la premiÃ¨re colonne a le numÃ©ro 1)
-                    String pass = tlu.getString(2);
-                    System.out.println(email + " : " + " (" + pass + ")");
+                      res.add(new Utilisateur(tlu.getInt("idUtilisateur"),tlu.getString("email"),tlu.getString("mdp"), tlu.getString("CodePostale"),tlu.getString("nom"),tlu.getString("prenom"),tlu.getInt("statut")));
                 }
             }
         }
-
+    return res;
     }
 
     //Effacer dans PGSQL-----------------------   
@@ -470,7 +441,7 @@ public class Utilisateur {
             }
         }
     }
-
+    
     //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.
     //-% d'Enchere active
     public static double statEnchereActive(Connection con) throws SQLException {
