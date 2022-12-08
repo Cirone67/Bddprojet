@@ -27,18 +27,18 @@ public class Utilisateur {
     private int idUtilisateur;
     private String email;
     private String mdp;
-    private String codePostale;
+    private String codePostal;
     private String nom;
     private String prenom;
     private int statut; //statut 0= administrateur/1 = utilisateur;
     private PageConnection pcConnection;
 
 //Constructor-------------------------------------------------
-    public Utilisateur(int idUtilisateur,String email, String mdp, String codePostale, String nom, String prenom, int statut) {
+    public Utilisateur(int idUtilisateur,String email, String mdp, String codePostal, String nom, String prenom, int statut) {
         this.idUtilisateur = idUtilisateur;
         this.email = email;
         this.mdp = mdp;
-        this.codePostale = codePostale;
+        this.codePostal = codePostal;
         this.nom = nom;
         this.prenom = prenom;
         this.statut = statut;
@@ -57,8 +57,8 @@ public class Utilisateur {
         return mdp;
     }
 
-    public String getCodePostale() {
-        return codePostale;
+    public String getCodePostal() {
+        return codePostal;
     }
 
     public String getNom() {
@@ -85,8 +85,8 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    public void setCodePostale(String codePostale) {
-        this.codePostale = codePostale;
+    public void setCodePostal(String codePostal) {
+        this.codePostal = codePostal;
     }
 
     public void setNom(String nom) {
