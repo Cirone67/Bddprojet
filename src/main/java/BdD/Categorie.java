@@ -267,7 +267,7 @@ public class Categorie {
                select distinct Article.designation,Article.description.Courte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin from Enchere
                inner join Article on Enchere.idArticle = Enchere.idArticle
                join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
-               join JoinCategorieArticle on JoinCategorieArticle.idCategorie = Categorie.idCategorie
+               join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
                where Categorie.designation = ?
                """
             )) {
