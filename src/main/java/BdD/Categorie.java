@@ -264,7 +264,7 @@ public class Categorie {
         //for (int i = 0; i < desiCategorie.size(); i++) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select distinct Article.designation,Article.description.Courte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin from Enchere
+               select distinct designation,description.Courte,descriptionLongue,expedition,prix,dateDebut,dateFin from Enchere
                join Article on Enchere.idArticle = Article.idArticle
                join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
                join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
