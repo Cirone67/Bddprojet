@@ -259,7 +259,51 @@ public class Categorie {
         }
         return res;
     }
-
+    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
+        //for (int i = 0; i < desiCategorie.size(); i++) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    """
+               select distinct Article.designation,Article.description.Courte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin from Enchere
+               inner join Article on Enchere.idArticle = Enchere.idArticle
+               join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
+               join JoinCategorieArticle on JoinCategorieArticle.idCategorie = Categorie.idCategorie
+               where Categorie.designation = ?
+               """
+            )) {
+                pst.setString(1, desiCategorie);
+                try (ResultSet rs = pst.executeQuery()) {
+                    while (rs.next()) {
+//                    if(res.size()!= 0){
+//                       int m=0;
+//                    for(int j=0;j<res.size();j++){
+//                      if(res.get(j)){
+                        res.add(new Affichage(rs.getString("Article.designation"),
+                                rs.getString("Article.descriptionCourte"), rs.getString("Article.descriptionLongue"), rs.getInt("Article.expedition"),rs.getDouble("Enchere.prix"),rs.getDate("Enchere.dateDebut"),rs.getDate("Enchere.dateFin")));
+                    }
+                }
+//                    }else{
+//                      res.add(rs.getInt("idArticle") );  
+//                    }                 
+            }
+//            if (desiCategorie.isEmpty()) {
+//                try (PreparedStatement pst = con.prepareStatement(
+//                        """
+//               select distinct idArticle,designation,descriptionCourte,descriptionLongue,expedition,URLPhoto,posseseur from Article
+//               """
+//                )) {
+//                    try (ResultSet rs = pst.executeQuery()) {
+//                        while (rs.next()) {
+//                            res.add(new Article(rs.getInt("idArticle"), rs.getString("designation"),
+//                                    rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getString("URLPhoto"), rs.getInt("posseseur")));
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
+        return res;
+    }
     public static void main(String[] args) {
         try (Connection con = defautConnect()) {
             System.out.println("connectÃ© !!!");
