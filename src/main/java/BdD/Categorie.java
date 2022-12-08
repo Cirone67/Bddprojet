@@ -265,7 +265,7 @@ public class Categorie {
             try (PreparedStatement pst = con.prepareStatement(
                     """
                select distinct Article.designation,Article.description.Courte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin from Enchere
-               inner join Article on Enchere.idArticle = Enchere.idArticle
+               inner join Article on Enchere.idArticle = Article.idArticle
                join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
                join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
                where Categorie.designation = ?
