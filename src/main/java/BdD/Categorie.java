@@ -267,11 +267,12 @@ public class Categorie {
                select Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
-               join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
-               join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
+               inner join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
+               inner join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
                where Categorie.designation = ?
                """
             )) {
+                System.out.println(desiCategorie);
                 pst.setString(1, desiCategorie);
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
@@ -279,8 +280,8 @@ public class Categorie {
 //                       int m=0;
 //                    for(int j=0;j<res.size();j++){
 //                      if(res.get(j)){
-                        res.add(new Affichage(rs.getString("Article.designation"),
-                                rs.getString("Article.descriptionCourte"), rs.getString("Article.descriptionLongue"), rs.getInt("Article.expedition"),rs.getDouble("Enchere.prix"),rs.getDate("Enchere.dateDebut"),rs.getDate("Enchere.dateFin")));
+                        res.add(new Affichage(rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                     }
                 }
 //                    }else{
@@ -303,6 +304,7 @@ public class Categorie {
 //            }
 //
 //        }
+        System.out.println("res à Loic");
         return res;
     }
     public static void main(String[] args) {

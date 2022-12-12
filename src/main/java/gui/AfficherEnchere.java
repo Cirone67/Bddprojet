@@ -61,13 +61,13 @@ public class AfficherEnchere extends TableView {
         TableColumn<Utilisateur, String> columnDescLongue = new TableColumn<Utilisateur, String>("Description longue");
         TableColumn<Utilisateur, String> columnModeEnvoi = new TableColumn<Utilisateur, String>("Mode d'envoi");
 
-        columnNom.setCellValueFactory(new PropertyValueFactory<>("Article.designation"));
-        columnPrix.setCellValueFactory(new PropertyValueFactory<>("Enchere.prix"));
-        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("Enchere.dateDebut"));
-        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("Enchere.dateFin"));
-        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("Article.descriptionCourte"));
-        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("Article.descriptionLongue"));
-        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("Article.expedition"));
+        columnNom.setCellValueFactory(new PropertyValueFactory<>("designation"));
+        columnPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        columnDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+        columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("descriptionCourte"));
+        columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
+        columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
 
         tvEncheres.getColumns().addAll(columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
 

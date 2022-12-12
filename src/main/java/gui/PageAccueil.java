@@ -124,7 +124,7 @@ public class PageAccueil extends BorderPane {
 
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
-                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimedia");
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimédia");
                 System.out.println(alCategorie);
                 this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
             } catch (Exception ex) {
