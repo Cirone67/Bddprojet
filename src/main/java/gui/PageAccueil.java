@@ -5,6 +5,8 @@
  */
 package gui;
 
+import BdD.Affichage;
+import BdD.Categorie;
 import BdD.Utilisateur;
 import static BdD.Utilisateur.defautConnect;
 import java.sql.Connection;
@@ -51,7 +53,7 @@ public class PageAccueil extends BorderPane {
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
 
-    private ArrayList<Utilisateur> alCategorie;
+    private ArrayList<Affichage> alCategorie;
     //private BorderPane bpEntete;
 
     public PageAccueil(Stage inStage, int utilisateurCourant) {
@@ -122,7 +124,8 @@ public class PageAccueil extends BorderPane {
 
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
-                this.alCategorie = Utilisateur.afficheTousLesUtilisateur(con);
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimedia");
+                System.out.println(alCategorie);
                 this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
             } catch (Exception ex) {
                 throw new Error(ex);
