@@ -26,7 +26,7 @@ public class Enchere {
     private double prixIni;
     private double prix;
     private Date dateDebut;
-    private Date dateFin; 
+    private Date dateFin;
     private int acheteur;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //Constructors
@@ -163,13 +163,13 @@ public class Enchere {
     }
 
     // creer une enchère et Article
-    public static void createElement(Connection con,double prixIni,Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie )throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
-        
+    public static void createElement(Connection con, double prixIni, Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie) throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
+
         int idArticle = Article.createArticle(con, designation, descriptionCourte, descriptionLongue, expedition, desiCategorie, idUtilisateur);
-        createEnchere(con,idArticle, prixIni, prixIni, dateDebut, dateFin, idUtilisateur);
+        createEnchere(con, idArticle, prixIni, prixIni, dateDebut, dateFin, idUtilisateur);
     }
-    
-   //Creer une enchère 
+
+    //Creer une enchère 
     public static void createEnchere(Connection con, int idArticle, double prixIni, double prix, Date dateDebut, Date dateFin, int acheteur)
             throws SQLException, EnchereExisteDejaException {
         // je me place dans une transaction pour m'assurer que la sÃ©quence
@@ -182,26 +182,26 @@ public class Enchere {
 //            if (testEmail.next()) {
 //                throw new EnchereExisteDejaException();
 //            }
-            // lors de la creation du PreparedStatement, il faut que je prÃ©cise
-            // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
-            try (PreparedStatement pst = con.prepareStatement(
-                    """
+        // lors de la creation du PreparedStatement, il faut que je prÃ©cise
+        // que je veux qu'il conserve les clÃ©s gÃ©nÃ©rÃ©es
+        try (PreparedStatement pst = con.prepareStatement(
+                """
                 insert into Enchere (idArticle,prixIni,prix,dateDebut,dateFin,acheteur) values (?,?,?,?,?,?)
                 """)) {
-                pst.setInt(1, idArticle);
-                pst.setDouble(2, prixIni);
-                pst.setDouble(3, prix);
-                pst.setDate(4, dateDebut);
-                pst.setDate(5, dateFin);
-                pst.setInt(6, acheteur);
-                pst.executeUpdate();
-                con.commit();
-            }
+            pst.setInt(1, idArticle);
+            pst.setDouble(2, prixIni);
+            pst.setDouble(3, prix);
+            pst.setDate(4, dateDebut);
+            pst.setDate(5, dateFin);
+            pst.setInt(6, acheteur);
+            pst.executeUpdate();
+            con.commit();
+        }
 //        } catch (Exception ex) {
 //            con.rollback();
 //            throw ex;
 //        } finally {
-            con.setAutoCommit(true);
+        con.setAutoCommit(true);
 //        }
     }
 //    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
@@ -375,7 +375,6 @@ public class Enchere {
         this.dateFin = dateFin;
     }
 
-
     public void setPrix(double prix) {
         this.prix = prix;
     }
@@ -385,25 +384,42 @@ public class Enchere {
     }
 
     //Permet au vendeur de modifier l'etat de l'enchère.
-    public void encherir(Connection con, int idUtilisateurConnecter, double prixPropose) throws SQLException {
-        Enchere nouvelle = new Enchere(this.getIdArticle(), this.getPrixIni(), this.getPrix(), this.getDateDebut(), this.getDateFin(), this.getAcheteur());
-        if (java.sql.Date.valueOf(LocalDate.now()).before(this.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(this.getDateDebut())) {
-            if (prixPropose > nouvelle.prix && prixPropose > nouvelle.prixIni) {
-                nouvelle.prix = prixPropose;
-                nouvelle.acheteur = idUtilisateurConnecter;
-                con.setAutoCommit(false);
-                try (PreparedStatement pst = con.prepareStatement(
-                        """
+    public static void encherir(Connection con, int idUtilisateurConnecter, double prixPropose, int idArticle) throws SQLException {
+
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
+               where Enchere.idArticle = ?
+               """
+        )) {
+            pst.setInt(1, idArticle);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Enchere nouvelle = new Enchere(rs.getInt("idArticle"), rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur"));
+                    if (java.sql.Date.valueOf(LocalDate.now()).before(nouvelle.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(nouvelle.getDateDebut())) {
+                        if (prixPropose > nouvelle.getPrix() && prixPropose > nouvelle.getPrixIni()) {
+                            nouvelle.setPrix(prixPropose);
+                            nouvelle.setAcheteur(idUtilisateurConnecter);
+
+                            con.setAutoCommit(false);
+                            try (PreparedStatement pst2 = con.prepareStatement(
+                                    """
                 update Enchere set prix = ?, acheteur = ? where idArticle = ?
                 """)) {
-                    pst.setDouble(1, nouvelle.prix);
-                    pst.setInt(2, nouvelle.acheteur);
-                    pst.setInt(3, nouvelle.idArticle);
-                    pst.executeUpdate();
-                    con.commit();
+                                pst2.setDouble(1, nouvelle.prix);
+                                pst2.setInt(2, nouvelle.acheteur);
+                                pst2.setInt(3, nouvelle.idArticle);
+                                pst2.executeUpdate();
+                                con.commit();
+                            }
+                            con.setAutoCommit(true);
+                            UpdateListPosseseur(con, nouvelle.idArticle, nouvelle.acheteur);
+
+                        }
+                    }
                 }
-                con.setAutoCommit(true);
-                UpdateListPosseseur(con, nouvelle.idArticle, nouvelle.acheteur);
+
             }
         }
     }

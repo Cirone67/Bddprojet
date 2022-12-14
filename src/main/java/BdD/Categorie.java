@@ -264,7 +264,7 @@ public class Categorie {
         //for (int i = 0; i < desiCategorie.size(); i++) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
                inner join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
@@ -280,7 +280,7 @@ public class Categorie {
 //                       int m=0;
 //                    for(int j=0;j<res.size();j++){
 //                      if(res.get(j)){
-                        res.add(new Affichage(rs.getString("designation"),
+                        res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                     }
                 }

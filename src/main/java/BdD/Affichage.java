@@ -12,6 +12,7 @@ import java.sql.Date;
  * @author brenc
  */
 public class Affichage {
+  private int idArticle;
   private String designation;
   private String descriptionCourte;
   private String descriptionLongue;
@@ -20,7 +21,8 @@ public class Affichage {
   private Date dateDebut;
   private Date dateFin;
 
-    public Affichage(String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin) {
+    public Affichage(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin) {
+        this.idArticle= idArticle;
         this.designation = designation;
         this.descriptionCourte = descriptionCourte;
         this.descriptionLongue = descriptionLongue;
