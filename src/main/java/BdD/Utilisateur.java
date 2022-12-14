@@ -376,7 +376,7 @@ public class Utilisateur {
     }
 
 //Affiche le gain de l'utilisateur
-    public static int afficheGain(Connection con, String email) throws SQLException {
+    public static double afficheGain(Connection con, int idUtilisateur) throws SQLException {
         int gain = 0;
         try (PreparedStatement pst = con.prepareStatement(
                 """
@@ -385,7 +385,7 @@ public class Utilisateur {
                 where Article.posseseur = ? and Enchere.dateFin > ?
                """
         )) {
-            pst.setString(1, email);
+            pst.setInt(1, idUtilisateur);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
 
             try (ResultSet rs = pst.executeQuery()) {
