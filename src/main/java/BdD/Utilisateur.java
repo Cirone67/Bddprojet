@@ -334,21 +334,22 @@ public class Utilisateur {
 
 //Affichage__________________________________________________________________________________________
 //Envoie la liste des enchère à Affiche ses enchères en cours
-    public static ArrayList<Enchere> afficheSesEnchères(Connection con, String email) throws SQLException {
-        ArrayList<Enchere> res = new ArrayList<>();
+    public static ArrayList<Affichage> afficheSesEnchères(Connection con, int idUtilisateur) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
-               join Enchere.idArticle = Article.idArticle
+                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+                from Enchere
+               join Article on Enchere.idArticle = Article.idArticle
                where Article.posseseur = ?
                """
         )) {
-            pst.setString(1, email);
+            pst.setInt(1, idUtilisateur);
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
+                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;
             }
@@ -356,19 +357,22 @@ public class Utilisateur {
     }
 ////Affiche les enchères terminées et remportées
 
-    public static ArrayList<Enchere> afficheEnchereRemporte(Connection con, String email) throws SQLException {
-        ArrayList<Enchere> res = new ArrayList<>();
+    public static ArrayList<Affichage> afficheEnchereRemporte(Connection con, int idUtilisateur) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,prixIni,prix,dateDebut,dateFin,acheteur from Enchere where acheteur = ? and dateFin < ?
+                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+                from Enchere
+                join Article on Enchere.idArticle = Article.idArticle
+                where Enchere.acheteur = ? and Enchere.dateFin < ?
                """
         )) {
-            pst.setString(1, email);
+            pst.setInt(1, idUtilisateur);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
+                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;
             }
@@ -400,42 +404,47 @@ public class Utilisateur {
     }
     //Affiche les enchères en cours que possède l'utilisateur/pour lequel il a fait la meilleur offre
 
-    public static ArrayList<Enchere> afficheEnchereRemporteEnCours(Connection con, String email) throws SQLException {
-        ArrayList<Enchere> res = new ArrayList<>();
+    public static ArrayList<Affichage> afficheEnchereRemporteEnCours(Connection con, int idUtilisateur) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere where acheteur = ? and dateFin > ?
+               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               from Enchere
+               join Article on Enchere.idArticle = Article.idArticle
+                where Enchere.acheteur = ? and Enchere.dateFin >= ?
                """
         )) {
-            pst.setString(1, email);
+            pst.setInt(1, idUtilisateur);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
-                }
+                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
+             }
                 return res;
             }
         }
     }
 
     //Affiche les enchères pour lesquelles il a enchéri mais qu'il ne possède plus
-    public static ArrayList<Enchere> afficheEnchereNonRemporteEnCours(Connection con, String email) throws SQLException {
-        ArrayList<Enchere> res = new ArrayList<>();
+    public static ArrayList<Affichage> afficheEnchereNonRemporteEnCours(Connection con, int idUtilisateur) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,vendeur,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
-               join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
-               where acheteur != ? and dateFin < ? and encherreur = ?
+               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               from Enchere
+               join Article on Enchere.idArticle = Article.idArticle
+               inner join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
+               where Enchere.acheteur != ? and Enchere.dateFin >= ? and ListPosseseur.encherreur = ?
                """
         )) {
-            pst.setString(1, email);
+            pst.setInt(1, idUtilisateur);
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
-            pst.setString(3, email);
+            pst.setInt(3, idUtilisateur);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Enchere(rs.getInt("idArticle"),
-                            rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur")));
+                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;
             }
