@@ -48,10 +48,12 @@ public class PageAccueil extends BorderPane {
     private Button bAutoEtMoto;
     private Button bReconditionne;
     private Button bEnchere;
+    private Button bInfoUtilisateur;
 
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
+    private InfoUtilisateur infoUtilisateur;
 
     private ArrayList<Affichage> alCategorie;
     //private BorderPane bpEntete;
@@ -74,12 +76,14 @@ public class PageAccueil extends BorderPane {
         this.bReconditionne = new Button("Reconditionné");
         this.bEnchere = new Button("Créer une enchère");
         this.alCategorie = new ArrayList<>();
+        this.bInfoUtilisateur = new Button("Info Utilisateur");
 
+        VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
         bpEntete.setLeft(ivLogoINSA);
-        bpEntete.setRight(this.bEnchere);
+        bpEntete.setRight(vbEnchereUser);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
 
@@ -96,8 +100,11 @@ public class PageAccueil extends BorderPane {
 //            this.afficherEnchere.fenetreEnchere("Multimedia");
 //        });
         bEnchere.setOnAction((t) -> {
-
             this.creerEnchere.fenetreEnchere();
+        });
+
+        bInfoUtilisateur.setOnAction((t) -> {
+            this.infoUtilisateur.afficherInfoUtilisateur(utilisateurCourant);
         });
 
         //Group root = new Group();
@@ -125,7 +132,7 @@ public class PageAccueil extends BorderPane {
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimédia");
-                System.out.println(alCategorie);
+                //System.out.println(alCategorie);
                 this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
             } catch (Exception ex) {
                 throw new Error(ex);
