@@ -393,7 +393,7 @@ public class Enchere {
                """
         )) {
             pst.setInt(1, idArticle);
-
+         
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     Enchere nouvelle = new Enchere(rs.getInt("idArticle"), rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur"));
