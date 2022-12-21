@@ -5,6 +5,7 @@
  */
 package gui;
 
+import BdD.Categorie;
 import BdD.Utilisateur;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
@@ -51,16 +52,19 @@ public class AfficherEnchere extends TableView {
 //        System.out.println(lTest);
         this.obTest = FXCollections.observableArrayList(alEnchere);
         this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        System.out.println(alEnchere);
 //        this.bTest = new Button("sRubrique");
 
-        TableColumn<Utilisateur, String> columnNom = new TableColumn<Utilisateur, String>("Nom");
-        TableColumn<Utilisateur, String> columnPrix = new TableColumn<Utilisateur, String>("Prix");
-        TableColumn<Utilisateur, String> columnDateDebut = new TableColumn<Utilisateur, String>("Date de début");
-        TableColumn<Utilisateur, String> columnDateFin = new TableColumn<Utilisateur, String>("Date de fin");
-        TableColumn<Utilisateur, String> columnDescCourte = new TableColumn<Utilisateur, String>("Description courte");
-        TableColumn<Utilisateur, String> columnDescLongue = new TableColumn<Utilisateur, String>("Description longue");
-        TableColumn<Utilisateur, String> columnModeEnvoi = new TableColumn<Utilisateur, String>("Mode d'envoi");
+        TableColumn<Categorie, String> columIdArticle = new TableColumn<> ("ID Article");
+        TableColumn<Categorie, String> columnNom = new TableColumn<>("Nom");
+        TableColumn<Categorie, String> columnPrix = new TableColumn<>("Prix");
+        TableColumn<Categorie, String> columnDateDebut = new TableColumn<>("Date de début");
+        TableColumn<Categorie, String> columnDateFin = new TableColumn<>("Date de fin");
+        TableColumn<Categorie, String> columnDescCourte = new TableColumn<>("Description courte");
+        TableColumn<Categorie, String> columnDescLongue = new TableColumn<>("Description longue");
+        TableColumn<Categorie, String> columnModeEnvoi = new TableColumn<>("Mode d'envoi");
 
+        columIdArticle.setCellValueFactory(new PropertyValueFactory<>("idArticle"));
         columnNom.setCellValueFactory(new PropertyValueFactory<>("designation"));
         columnPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
         columnDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
@@ -69,7 +73,7 @@ public class AfficherEnchere extends TableView {
         columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
 
-        tvEncheres.getColumns().addAll(columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
+        tvEncheres.getColumns().addAll(columIdArticle, columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
 
         tvEncheres.setItems(obTest);
         VBox vbAfficherEnchere = new VBox(tvEncheres);

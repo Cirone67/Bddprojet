@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -39,6 +41,7 @@ public class PageAccueil extends BorderPane {
     private int utilisateurCourant;
 
     private TextField tfRechercher;
+    private Label lGain;
 
     private Button bAccueil;
     private Button bMultimedia;
@@ -78,14 +81,26 @@ public class PageAccueil extends BorderPane {
         this.alCategorie = new ArrayList<>();
         this.bInfoUtilisateur = new Button("Info Utilisateur");
 
+        try ( Connection con = defautConnect()) {
+            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
+            String sGain = "" + dGain;
+            this.lGain = new Label (sGain);
+        } catch (Exception ex) {
+            throw new Error(ex);
+        }
+        
         VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
+        VBox vbGain = new VBox (this.lGain);
+        vbGain.setAlignment(Pos.CENTER);
+        bpEntete.setBottom(vbGain); 
         bpEntete.setLeft(ivLogoINSA);
         bpEntete.setRight(vbEnchereUser);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
+
 
         VBox vbRubriques = new VBox(this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
                 this.bAutoEtMoto, this.bReconditionne);

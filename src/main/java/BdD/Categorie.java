@@ -280,7 +280,7 @@ public class Categorie {
 //                       int m=0;
 //                    for(int j=0;j<res.size();j++){
 //                      if(res.get(j)){
-                        res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                        res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                     }
                 }
