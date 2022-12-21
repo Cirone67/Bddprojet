@@ -384,8 +384,8 @@ public class Utilisateur {
         int gain = 0;
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select prix,dateFin from Enchere 
-               join Enchere.idArticle = Article.idArticle
+               select prix,dateFin, prixIni from Enchere 
+               join Article on Enchere.idArticle = Article.idArticle
                 where Article.posseseur = ? and Enchere.dateFin > ?
                """
         )) {
@@ -395,7 +395,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     //if(java.sql.Date.valueOf(LocalDate.now()).after(rs.getDate("dateFin"))){
-                    gain = rs.getInt("prix") + gain;
+                    gain = (rs.getInt("prix")-rs.getInt("prixIni")) + gain;
                     //} //Si jamais ca marche pas dans sql
                 }
                 return gain;
