@@ -6,7 +6,6 @@
 package gui;
 
 import BdD.Categorie;
-import BdD.Utilisateur;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,8 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -55,7 +57,7 @@ public class AfficherEnchere extends TableView {
         System.out.println(alEnchere);
 //        this.bTest = new Button("sRubrique");
 
-        TableColumn<Categorie, String> columIdArticle = new TableColumn<> ("ID Article");
+        TableColumn<Categorie, String> columIdArticle = new TableColumn<>("ID Article");
         TableColumn<Categorie, String> columnNom = new TableColumn<>("Nom");
         TableColumn<Categorie, String> columnPrix = new TableColumn<>("Prix");
         TableColumn<Categorie, String> columnDateDebut = new TableColumn<>("Date de début");
@@ -73,10 +75,25 @@ public class AfficherEnchere extends TableView {
         columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
 
+        columnPrix.setEditable(true);
+        columnPrix.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnPrix.setOnEditCommit((CellEditEvent<Categorie, String> event) -> {
+            TablePosition<Categorie, String> pos = event.getTablePosition();
+
+            String newFullName = event.getNewValue();
+
+//            int row = pos.getRow();
+//            Categorie person = event.getTableView().getItems().get(row);
+//
+//            person.setFullName(newFullName);
+            System.out.println("entré je suis");
+        });
+
         tvEncheres.getColumns().addAll(columIdArticle, columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
 
         tvEncheres.setItems(obTest);
         VBox vbAfficherEnchere = new VBox(tvEncheres);
+        tvEncheres.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         sAffichageEnchere = new Stage();
         Scene sTemp = new Scene(vbAfficherEnchere);
