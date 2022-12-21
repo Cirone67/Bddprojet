@@ -388,7 +388,7 @@ public class Enchere {
 
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select idArticle,prixIni,prix,dateDebut,dateFin,etat,acheteur from Enchere
+               select idArticle,prixIni,prix,dateDebut,dateFin,acheteur from Enchere
                where Enchere.idArticle = ?
                """
         )) {
