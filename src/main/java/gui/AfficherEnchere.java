@@ -5,21 +5,26 @@
  */
 package gui;
 
+import BdD.Affichage;
 import BdD.Categorie;
+import BdD.Enchere;
+import static BdD.Utilisateur.defautConnect;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
 
 /**
  *
@@ -40,6 +45,7 @@ public class AfficherEnchere extends TableView {
 
     public void fenetreAffichageEnchere(ArrayList alEnchere) {
         TableView tvEncheres = new TableView();
+        tvEncheres.setEditable(true);
         ArrayList<String> lTest = new ArrayList<>();
 //        this.lTest = new ArrayList<String>();
 
@@ -57,14 +63,14 @@ public class AfficherEnchere extends TableView {
         System.out.println(alEnchere);
 //        this.bTest = new Button("sRubrique");
 
-        TableColumn<Categorie, String> columIdArticle = new TableColumn<>("ID Article");
-        TableColumn<Categorie, String> columnNom = new TableColumn<>("Nom");
-        TableColumn<Categorie, String> columnPrix = new TableColumn<>("Prix");
-        TableColumn<Categorie, String> columnDateDebut = new TableColumn<>("Date de début");
-        TableColumn<Categorie, String> columnDateFin = new TableColumn<>("Date de fin");
-        TableColumn<Categorie, String> columnDescCourte = new TableColumn<>("Description courte");
-        TableColumn<Categorie, String> columnDescLongue = new TableColumn<>("Description longue");
-        TableColumn<Categorie, String> columnModeEnvoi = new TableColumn<>("Mode d'envoi");
+        TableColumn<Affichage, String> columIdArticle = new TableColumn<>("ID Article");
+        TableColumn<Affichage, String> columnNom = new TableColumn<>("Nom");
+        TableColumn<Affichage, Double> columnPrix = new TableColumn<>("Prix");
+        TableColumn<Affichage, String> columnDateDebut = new TableColumn<>("Date de début");
+        TableColumn<Affichage, String> columnDateFin = new TableColumn<>("Date de fin");
+        TableColumn<Affichage, String> columnDescCourte = new TableColumn<>("Description courte");
+        TableColumn<Affichage, String> columnDescLongue = new TableColumn<>("Description longue");
+        TableColumn<Affichage, String> columnModeEnvoi = new TableColumn<>("Mode d'envoi");
 
         columIdArticle.setCellValueFactory(new PropertyValueFactory<>("idArticle"));
         columnNom.setCellValueFactory(new PropertyValueFactory<>("designation"));
@@ -76,17 +82,17 @@ public class AfficherEnchere extends TableView {
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
 
         columnPrix.setEditable(true);
-        columnPrix.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnPrix.setOnEditCommit((CellEditEvent<Categorie, String> event) -> {
-            TablePosition<Categorie, String> pos = event.getTablePosition();
-
-            String newFullName = event.getNewValue();
-
-//            int row = pos.getRow();
-//            Categorie person = event.getTableView().getItems().get(row);
-//
-//            person.setFullName(newFullName);
-            System.out.println("entré je suis");
+        columnPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        columnPrix.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Affichage, Double>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Affichage, Double> t) {
+                try ( Connection con = defautConnect()) {
+                    Affichage cTest = t.getRowValue();
+                    Enchere.encherir(con, vue.getUtilisateurCourant(), t.getNewValue(), 8);
+                } catch (Exception ex) {
+                    throw new Error(ex);
+                }
+            }
         });
 
         tvEncheres.getColumns().addAll(columIdArticle, columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);

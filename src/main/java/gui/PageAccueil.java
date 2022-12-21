@@ -81,21 +81,21 @@ public class PageAccueil extends BorderPane {
         this.alCategorie = new ArrayList<>();
         this.bInfoUtilisateur = new Button("Info Utilisateur");
 
-        try ( Connection con = defautConnect()) {
-            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
-            String sGain = "" + dGain;
-            this.lGain = new Label (sGain);
-        } catch (Exception ex) {
-            throw new Error(ex);
-        }
+//        try ( Connection con = defautConnect()) {
+//            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
+//            String sGain = "" + dGain;
+//            this.lGain = new Label (sGain);
+//        } catch (Exception ex) {
+//            throw new Error(ex);
+//        }
         
         VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
         bpEntete.setCenter(this.tfRechercher);
-        VBox vbGain = new VBox (this.lGain);
-        vbGain.setAlignment(Pos.CENTER);
-        bpEntete.setBottom(vbGain); 
+//        VBox vbGain = new VBox (this.lGain);
+//        vbGain.setAlignment(Pos.CENTER);
+//        bpEntete.setBottom(vbGain); 
         bpEntete.setLeft(ivLogoINSA);
         bpEntete.setRight(vbEnchereUser);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
@@ -147,6 +147,56 @@ public class PageAccueil extends BorderPane {
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimédia");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bMaisonEtJardin.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Maison et Jardin");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bJouetsEtJeux.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Jouets et Jeux");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bCultureEtLoisirs.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Culture et Loisirs");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bAutoEtMoto.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Auto et Moto");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bReconditionne.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Reconditionné");
                 //System.out.println(alCategorie);
                 this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
             } catch (Exception ex) {
