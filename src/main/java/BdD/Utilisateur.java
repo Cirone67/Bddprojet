@@ -381,7 +381,7 @@ public class Utilisateur {
 
 //Affiche le gain de l'utilisateur
     public static double afficheGain(Connection con, int idUtilisateur) throws SQLException {
-        int gain = 0;
+        double gain = 0;
         try (PreparedStatement pst = con.prepareStatement(
                 """
                select prix,dateFin, prixIni from Enchere 
@@ -395,7 +395,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     //if(java.sql.Date.valueOf(LocalDate.now()).after(rs.getDate("dateFin"))){
-                    gain = (rs.getInt("prix")-rs.getInt("prixIni")) + gain;
+                    gain = (rs.getDouble("prix")-rs.getDouble("prixIni")) + gain;
                     //} //Si jamais ca marche pas dans sql
                 }
                 return gain;
