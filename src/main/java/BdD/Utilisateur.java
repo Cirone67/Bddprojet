@@ -283,6 +283,30 @@ public class Utilisateur {
         }
     return res;
     }
+    
+    public static Utilisateur afficheInfoUtilisateur(Connection con, int idUtilisateur) throws SQLException {
+        Utilisateur res = new Utilisateur(0,"defaut","defaut","defaut","defaut","defaut",0);
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                select * from Utilisateur where idUtilisateur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+              res.setCodePostal(rs.getString("codePostal"));
+              res.setEmail(rs.getString("email"));
+              res.setIdUtilisateur(rs.getInt("idUtilisateur"));
+              res.setMdp(rs.getString("mdp"));
+              res.setNom(rs.getString("nom"));
+              res.setPrenom(rs.getString("prenom"));
+              res.setStatut(rs.getInt("statut"));
+                }
+ }
+            }
+        return res; 
+    
+    }
 
     //Effacer dans PGSQL-----------------------   
     public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
@@ -386,7 +410,7 @@ public class Utilisateur {
                 """
                select prix,dateFin, prixIni from Enchere 
                join Article on Enchere.idArticle = Article.idArticle
-                where Article.posseseur = ? and Enchere.dateFin > ?
+                where Article.posseseur = ? and Enchere.dateFin < ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
