@@ -141,7 +141,7 @@ public class Article {
                         descriptionLongue varchar(500),
                         expedition integer not null,
                         URLPhoto varchar(80),
-                        posseseur varchar(30) not null
+                        posseseur integer not null
                     )
                     """);
             con.commit();

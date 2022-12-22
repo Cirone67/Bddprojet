@@ -372,7 +372,7 @@ public class Utilisateur {
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;
@@ -395,7 +395,7 @@ public class Utilisateur {
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;
@@ -442,7 +442,7 @@ public class Utilisateur {
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
              }
                 return res;
@@ -457,9 +457,9 @@ public class Utilisateur {
                 """
                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
-               join Article on Enchere.idArticle = Article.idArticle
-               inner join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
-               where Enchere.acheteur != ? and Enchere.dateFin >= ? and ListPosseseur.encherreur = ?
+               inner join Article on Enchere.idArticle = Article.idArticle
+               join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
+               where Enchere.acheteur != ? and Enchere.dateFin >= ? and ListPosseseur.idUtilisateur = ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
@@ -467,7 +467,7 @@ public class Utilisateur {
             pst.setInt(3, idUtilisateur);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idCategorie"),rs.getString("designation"),
+                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
                                 rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
                 }
                 return res;

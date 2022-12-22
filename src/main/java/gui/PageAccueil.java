@@ -52,7 +52,12 @@ public class PageAccueil extends BorderPane {
     private Button bReconditionne;
     private Button bEnchere;
     private Button bInfoUtilisateur;
-
+    private Button bAfficheSesEncheres;
+    private Button bAfficheEnchereRemporte;
+    private Button bAfficheEnchereNonRemporteEnCours;
+    private Button bAfficheEnchereRemporteEnCours;
+    
+    
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
@@ -80,6 +85,10 @@ public class PageAccueil extends BorderPane {
         this.bEnchere = new Button("Créer une enchère");
         this.alCategorie = new ArrayList<>();
         this.bInfoUtilisateur = new Button("Info Utilisateur");
+        this.bAfficheSesEncheres = new Button("Mes Enchères");
+        this.bAfficheEnchereNonRemporteEnCours = new Button("! Enchère à enchérir au plus vite !");
+        this.bAfficheEnchereRemporte = new Button("Enchère remportée");
+        this.bAfficheEnchereRemporteEnCours = new Button("Garder un oeil sur ses acquisitions");
 
 //        try ( Connection con = defautConnect()) {
 //            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
@@ -103,7 +112,7 @@ public class PageAccueil extends BorderPane {
 
 
         VBox vbRubriques = new VBox(this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
-                this.bAutoEtMoto, this.bReconditionne);
+                this.bAutoEtMoto, this.bReconditionne, this.bAfficheSesEncheres,this.bAfficheEnchereRemporte,this.bAfficheEnchereNonRemporteEnCours,this.bAfficheEnchereRemporteEnCours);
         vbRubriques.setSpacing(8);
 
         vbRubriques.setBackground(bgGrey);
@@ -197,6 +206,46 @@ public class PageAccueil extends BorderPane {
         bReconditionne.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Reconditionné");
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bAfficheSesEncheres.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Utilisateur.afficheSesEnchères(con, utilisateurCourant);
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bAfficheEnchereNonRemporteEnCours.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Utilisateur.afficheEnchereNonRemporteEnCours(con, utilisateurCourant);
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bAfficheEnchereRemporte.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Utilisateur.afficheEnchereRemporte(con, utilisateurCourant);
+                //System.out.println(alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
+        });
+        
+        bAfficheEnchereRemporteEnCours.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alCategorie = Utilisateur.afficheEnchereRemporteEnCours(con, utilisateurCourant);
                 //System.out.println(alCategorie);
                 this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
             } catch (Exception ex) {

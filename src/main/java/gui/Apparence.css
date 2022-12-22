@@ -1,0 +1,104 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22 avr. 2021, 12:17:39
+    Author     : Guillaume R
+*/
+
+
+.button {
+    -fx-background-color: #ccc; 
+    -fx-text-color: #111; 
+    -fx-border-color: #e2e2e2; 
+    -fx-border-width: 2; 
+    -fx-padding: 3 10 3 10; 
+    -fx-font-size: 9pt
+}
+
+#boutonMenu{  
+    -fx-padding: 3 30 3 30; 
+    -fx-border-width: 0,0,3,0;
+    -fx-font-size: 10pt
+}
+
+#boutonMenuSelect{
+    -fx-padding: 3 30 3 30;
+    -fx-border-color: #95bff5;
+    -fx-font-size: 10pt
+}
+
+.button:hover {
+    -fx-background-color: #d8d8d8;
+}
+
+.button:pressed {
+  -fx-background-color: #e6edf0;
+  -fx-text-fill: #1d1d1d;
+}
+
+.button:focused {
+}
+
+.button:disabled{
+    -fx-opacity: 0.4;
+    -fx-text-fill: #212121;
+}
+
+.choice-box{
+    -fx-background-color: #ccc; 
+    -fx-text-color: #111; 
+    -fx-border-color: #e2e2e2; 
+    -fx-border-width: 2;
+    -fx-padding: 1 1 1 1; 
+    -fx-font-size: 9pt;
+}
+
+.choice-box:hover{
+    -fx-background-color: #d8d8d8;
+}
+
+
+.color-picker{
+    -fx-background-color: #ccc; 
+    -fx-text-color: #111; 
+    -fx-border-color: #e2e2e2; 
+    -fx-border-width: 2; 
+    -fx-padding: 1 10 1 10; 
+    -fx-font-size: 9pt
+}
+
+.color-picker:hover{
+    -fx-background-color: #d8d8d8;
+}
+
+
+.scroll-bar .thumb{
+    -fx-background-color: #cdcdcd;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-color: #dadada;
+}
+
+.tool-bar{
+    -fx-background-color: #ccc;
+}
+
+.label{}
+
+.text-field{
+    -fx-font-family: "Segoe UI Semibold";
+}
+
+
+#titre{
+    -fx-font-size: 11pt; 
+    -fx-font-family: "Segoe UI Semibold"; 
+    -fx-opacity: 0.8
+}
+
+
+
