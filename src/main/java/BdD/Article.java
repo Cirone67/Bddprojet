@@ -1,14 +1,13 @@
 package BdD;
 
 //package ProjetBdD.gui;
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,23 +16,23 @@ import java.util.List;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author brenc
  */
 public class Article {
-  private int idArticle;
-  private String designation;
-  private String descriptionCourte;
-  private String descriptionLongue;
-  private int expedition; //(0 = livrer,1 = a toi de le chercher)
-  private  String URLPhoto;
-//  private int idCategorie;
-  private int posseseur;
 
- //Constructor  
-  public Article(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, String URLPhoto, int posseseur) {
+    private int idArticle;
+    private String designation;
+    private String descriptionCourte;
+    private String descriptionLongue;
+    private int expedition; //(0 = livrer,1 = a toi de le chercher)
+    private String URLPhoto;
+//  private int idCategorie;
+    private int posseseur;
+
+    //Constructor  
+    public Article(int idArticle, String designation, String descriptionCourte, String descriptionLongue, int expedition, String URLPhoto, int posseseur) {
         this.idArticle = idArticle;
         this.designation = designation;
         this.descriptionCourte = descriptionCourte;
@@ -43,7 +42,7 @@ public class Article {
         this.posseseur = posseseur;
         this.URLPhoto = URLPhoto;
     }
- 
+
 //Get et Set  
     public String getDesignation() {
         return designation;
@@ -52,7 +51,6 @@ public class Article {
 //    public int getIdCategorie() {  
 //        return idCategorie;
 //    }
-
     public int getIdArticle() {
         return idArticle;
     }
@@ -76,7 +74,6 @@ public class Article {
 //    public int getCategorie() {
 //        return idCategorie;
 //    }
-
     public int getPosseseur() {
         return posseseur;
     }
@@ -104,34 +101,35 @@ public class Article {
 //    public void setCategorie(int categorie) {
 //        this.idCategorie = categorie;
 //    }
-
     public void setPosseseur(int posseseur) {
         this.posseseur = posseseur;
     }
 //Lien avec PGSQL------------------------------------------------
-        public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
+
+    public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(
                 "jdbc:postgresql://" + host + ":" + port
-                        + "/" + database,
+                + "/" + database,
                 user, pass);
         con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
         return con;
     }
-   
+
     public static Connection defautConnect()
             throws ClassNotFoundException, SQLException {
-        try{
-        return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
-        }catch(SQLException ex){
-        return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass"); 
+        try {
+            return connectGeneralPostGres("localhost", 5439, "postgres", "postgres", "pass");
+        } catch (SQLException ex) {
+            return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass");
         }
     }
 //Creer la table Article-----------------------------------------------
-        public static void creeTableArticle(Connection con)
+
+    public static void creeTableArticle(Connection con)
             throws SQLException {
         con.setAutoCommit(false);
-        try ( Statement st = con.createStatement()) {
+        try (Statement st = con.createStatement()) {
             st.executeUpdate(
                     """
                     create table Article (
@@ -154,25 +152,26 @@ public class Article {
         }
     }
 //Créer une Article------------------------------------
-    public static int createArticle(Connection con,String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie , int posseseur )
+
+    public static int createArticle(Connection con, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, int posseseur)
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
-            try ( PreparedStatement pst = con.prepareStatement(
-                    """
+        try (PreparedStatement pst = con.prepareStatement(
+                """
                 
                 insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur) values (?,?,?,?,?)                
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                pst.setString(1, designation);
-                pst.setString(2, descriptionCourte);
-                pst.setString(3, descriptionLongue);
-                pst.setInt(4, expedition);
-                pst.setInt(5, posseseur);
-                pst.executeUpdate();
-                con.commit();              
-            }
-            int i=0;
-            while (i< desiCategorie.size()){
-             try ( PreparedStatement pst = con.prepareStatement(
+            pst.setString(1, designation);
+            pst.setString(2, descriptionCourte);
+            pst.setString(3, descriptionLongue);
+            pst.setInt(4, expedition);
+            pst.setInt(5, posseseur);
+            pst.executeUpdate();
+            con.commit();
+        }
+        int i = 0;
+        while (i < desiCategorie.size()) {
+            try (PreparedStatement pst = con.prepareStatement(
                     """   
                     insert into JoinCategorieArticle (idCategorie,idArticle) values ((select idCategorie from Categorie where designation = ?) ,(select idArticle from Article where designation = ?));
                 
@@ -180,15 +179,15 @@ public class Article {
                 pst.setString(2, designation);
                 pst.setString(1, desiCategorie.get(i));
                 pst.executeUpdate();
-                con.commit();              
+                con.commit();
                 System.out.println(desiCategorie.get(i));
-                i=i+1;
-                }
-            
+                i = i + 1;
+            }
+
         }
-     con.setAutoCommit(true);
-     int res=0;
-             try (PreparedStatement pst = con.prepareStatement(
+        con.setAutoCommit(true);
+        int res = 0;
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select max(idArticle) from Article
                """
@@ -201,26 +200,26 @@ public class Article {
             } catch (SQLException ex) {
             }
         }
-    return res;   
+        return res;
     }
-     
+
 //Lecture dans PGSQL----------------------
-   public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {
+    public static ArrayList<Article> actulisteTousArticle(Connection con) throws SQLException {
         ArrayList<Article> res = new ArrayList<>();
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle,designation,descriptionCourte,descriptionLongue,expedition,URLPhoto,posseseur
                  from Article
                """
         )) {
-            try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
 //                  for (int i = 0;i<=res.size();i++){
 //                      for(int j = 0; j<=i;j++)
 //                    if(i!= 0){
 //                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
-                    res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
-                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getString("URLPhoto"),rs.getInt("posseseur")));
+                    res.add(new Article(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getString("URLPhoto"), rs.getInt("posseseur")));
 //                    }
 //                    }
 //                    if(i==0){
@@ -233,67 +232,100 @@ public class Article {
             }
         }
     }
-   
-   //Liste des Articles par 
-      //Fonction qui associe nom et désignation d'un article
-    public static int nomconnecttodesignation(Connection con, String designation)throws SQLException{
+
+    //Liste des Articles par 
+    //Fonction qui associe nom et désignation d'un article
+    public static int nomconnecttodesignation(Connection con, String designation) throws SQLException {
         int res;
-        try ( PreparedStatement pst = con.prepareStatement(
+        try (PreparedStatement pst = con.prepareStatement(
                 """
                select idArticle from Article where designation = ?
                """
         )) {
             pst.setString(1, designation);
             pst.executeUpdate();
-          try ( ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 //while (rs.next()) {
-                    res = rs.getInt("idArticle");               
+                res = rs.getInt("idArticle");
                 //}   
-        return res;
+                return res;
+            }
+        }
     }
-    }
-    }
-    
+
     //Décompose une phrase en liste de mot
-    public static ArrayList<String> decomposeRecherche(String recherche){
+    public static ArrayList<String> decomposeRecherche(String recherche) {
         ArrayList<String> res = new ArrayList<>();
         String[] resint = recherche.split(" ");
-        for(int i=0; i < resint.length;i++){
+        for (int i = 0; i < resint.length; i++) {
             res.add(resint[i]);
         }
-      return res;   
+        return res;
     }
-     //  cherche Article à afficher
-      public static ArrayList<Article> ChercheArticle (ArrayList<Article> article,ArrayList<String> chercher){
- 
-          ArrayList<Article> res = new ArrayList<>();
-           for( int i =0;i< article.size();i++){
-               int compteur = 0;
-               for( int j = 0; j<chercher.size();j++){
-            int index1 = article.get(i).designation.indexOf(chercher.get(j));      
-            int index2 = article.get(i).descriptionCourte.indexOf(chercher.get(j));       
-            int index3 = article.get(i).descriptionLongue.indexOf(chercher.get(j));
-            if (index1 != -1 || index1 != -1 ||  index1 != -1 ){
-                compteur = compteur +1;
-            }  
-           }
-               if (compteur == chercher.size()){
-                   res.add(article.get(i));
-               }
-           }
-           return res ;  
-      }
-     
-      //chercher en spécifiant les catégories des articles.
-     public static ArrayList<Article> ChercheArticleparCategories (ArrayList<Article> article,ArrayList<String> chercher){
+    //  cherche Article à afficher
+
+    public static ArrayList<Affichage> ChercheArticle(Connection con, ArrayList<String> chercher) throws SQLException {
+        ArrayList<Affichage> res = new ArrayList<>();
+        for (int j = 0; j < chercher.size(); j++) {
+            try (PreparedStatement pst = con.prepareStatement(
+                    """
+               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               from Enchere
+               inner join Article on Enchere.idArticle = Article.idArticle
+               WHERE CHARINDEX(?, Article.) > 0
+                 OR CHARINDEX(?, Column1) > 0
+                 OR CHARINDEX(?, Column1) > 0              
+
+               """
+            )) {
+                pst.setString(1, chercher.get(j));
+                pst.setString(2, chercher.get(j));
+                pst.setString(3, chercher.get(j));
+
+                try (ResultSet rs = pst.executeQuery()) {
+                    while (rs.next()) {
+                        res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                    }
+
+                }
+            }
+        }
+        return res;
+    }
+
+//          
+//          
+//          
+//           for( int i =0;i< article.size();i++){
+//               int compteur = 0;
+//               for( int j = 0; j<chercher.size();j++){
+//            int index1 = article.get(i).designation.indexOf(chercher.get(j));      
+//            int index2 = article.get(i).descriptionCourte.indexOf(chercher.get(j));       
+//            int index3 = article.get(i).descriptionLongue.indexOf(chercher.get(j));
+//            if (index1 != -1 || index1 != -1 ||  index1 != -1 ){
+//                compteur = compteur +1;
+//            }  
+//           }
+//               if (compteur == chercher.size()){
+//                   res.add(article.get(i));
+//               }
+//           }
+//           return res ;  
+//}
+
+//chercher en spécifiant les catégories des articles.
+public static ArrayList<Article> ChercheArticleparCategories (ArrayList<Article> article,ArrayList<String> chercher){
          ArrayList<Article> res = new ArrayList<>();
          
          return res;
-     }
+     
+
+}
   
       
       
         public static class idArticleExisteDejaException extends Exception {
-    }  
+}
 
 }
