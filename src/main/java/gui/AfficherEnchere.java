@@ -70,7 +70,7 @@ public class AfficherEnchere extends TableView {
         columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("descriptionCourte"));
         columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
-
+        columIdArticle.setVisible(false);
         columnPrix.setEditable(true);
         columnPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
