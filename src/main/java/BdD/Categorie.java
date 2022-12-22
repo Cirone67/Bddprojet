@@ -272,7 +272,7 @@ public class Categorie {
                where Categorie.designation = ?
                """
             )) {
-                System.out.println(desiCategorie);
+//                System.out.println(desiCategorie);
                 pst.setString(1, desiCategorie);
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
@@ -304,7 +304,7 @@ public class Categorie {
 //            }
 //
 //        }
-        System.out.println("res à Loic");
+//        System.out.println("res à Loic");
         return res;
     }
     public static void main(String[] args) {
