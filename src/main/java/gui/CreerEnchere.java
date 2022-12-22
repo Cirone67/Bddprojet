@@ -169,10 +169,10 @@ public class CreerEnchere extends BorderPane {
                 SimpleDateFormat simpleDateFormatDebut = new SimpleDateFormat("yyyy-MM-dd");
                 Date dDebutString = new java.sql.Date(simpleDateFormatDebut.parse(dDebut).getTime());
                 
-                LocalDate ldDateFin = dpDateDebut.getValue();
+                LocalDate ldDateFin = dpDateFin.getValue();
                 String dFin = ldDateFin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 SimpleDateFormat simpleDateFormatFin = new SimpleDateFormat("yyyy-MM-dd");
-                Date dFinString = new java.sql.Date(simpleDateFormatFin.parse(dDebut).getTime());
+                Date dFinString = new java.sql.Date(simpleDateFormatFin.parse(dFin).getTime());
 
                 creerEnchere.createElement(con, dPrixInitial, dDebutString, dFinString, vue.getUtilisateurCourant(), sNom, sDescriptionCourte, sDescriptionLongue,
                         iModeEnvoi, alRubriques);

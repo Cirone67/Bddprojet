@@ -6,22 +6,22 @@
 package gui;
 
 import BdD.Affichage;
-import BdD.Categorie;
 import BdD.Enchere;
 import static BdD.Utilisateur.defautConnect;
 import java.sql.Connection;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
@@ -83,10 +83,14 @@ public class AfficherEnchere extends TableView {
 
         columnPrix.setEditable(true);
         columnPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+//        final ObservableList<TablePosition> selectedCells = tvEncheres.getSelectionModel().getSelectedCells().addListener(new ListChangeListener<TablePosition>() {
+//            
+//        }
         columnPrix.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Affichage, Double>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Affichage, Double> t) {
                 try ( Connection con = defautConnect()) {
+                    System.out.println("Nveau prix : " + t.getNewValue());
                     Affichage cTest = t.getRowValue();
                     Enchere.encherir(con, vue.getUtilisateurCourant(), t.getNewValue(), 8);
                 } catch (Exception ex) {
