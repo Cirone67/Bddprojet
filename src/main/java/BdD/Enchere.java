@@ -396,9 +396,17 @@ public class Enchere {
          
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
+                    System.out.println("1");
+                    System.out.println(LocalDate.now());
+                   
+                    System.out.println("1");
                     Enchere nouvelle = new Enchere(rs.getInt("idArticle"), rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur"));
-                    if (java.sql.Date.valueOf(LocalDate.now()).before(nouvelle.getDateFin()) && java.sql.Date.valueOf(LocalDate.now()).after(nouvelle.getDateDebut())) {
+                     System.out.println(nouvelle.getDateFin());
+                     System.out.println(nouvelle.getDateDebut());
+                     if ((java.sql.Date.valueOf(LocalDate.now()).before(nouvelle.getDateFin()) || (java.sql.Date.valueOf(LocalDate.now()).equals(nouvelle.getDateFin())) )&& (java.sql.Date.valueOf(LocalDate.now()).after(nouvelle.getDateDebut()))|| (java.sql.Date.valueOf(LocalDate.now()).equals(nouvelle.getDateDebut()))) {
+                        System.out.println("2");
                         if (prixPropose > nouvelle.getPrix() && prixPropose > nouvelle.getPrixIni()) {
+                            System.out.println("3");
                             nouvelle.setPrix(prixPropose);
                             nouvelle.setAcheteur(idUtilisateurConnecter);
 
