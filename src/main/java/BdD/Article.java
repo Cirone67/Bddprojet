@@ -269,12 +269,12 @@ public class Article {
         for (int j = 0; j < chercher.size(); j++) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
-               from Enchere
-               inner join Article on Enchere.idArticle = Article.idArticle
-               WHERE CHARINDEX(?, Article.) > 0
-                 OR CHARINDEX(?, Column1) > 0
-                 OR CHARINDEX(?, Column1) > 0              
+                            select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+                            from Enchere
+                            inner join Article on Enchere.idArticle = Article.idArticle
+                            WHERE strpos(Article.designation,? ) > 0
+                              OR strpos(Article.descriptionCourte,? ) > 0
+                              OR strpos(Article.descriptionLongue,? ) > 0                
 
                """
             )) {
