@@ -32,6 +32,10 @@ public class Affichage {
         this.dateFin = dateFin;
     }
 
+    public int getIdArticle() {
+        return idArticle;
+    }
+
     public String getDesignation() {
         return designation;
     }
@@ -59,6 +63,39 @@ public class Affichage {
     public Date getDateFin() {
         return dateFin;
     }
+
+    public void setIdArticle(int idArticle) {
+        this.idArticle = idArticle;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public void setDescriptionCourte(String descriptionCourte) {
+        this.descriptionCourte = descriptionCourte;
+    }
+
+    public void setDescriptionLongue(String descriptionLongue) {
+        this.descriptionLongue = descriptionLongue;
+    }
+
+    public void setExpedition(int expedition) {
+        this.expedition = expedition;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public void setDateDebut(Date dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public void setDateFin(Date dateFin) {
+        this.dateFin = dateFin;
+    }
   
+    
   
 }
