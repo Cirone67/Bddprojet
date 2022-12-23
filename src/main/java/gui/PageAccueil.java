@@ -121,18 +121,10 @@ public class PageAccueil extends BorderPane {
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
 
-//        bMultimedia.setOnAction((t) -> {
-//            this.afficherEnchere.fenetreEnchere("Multimedia");
-//        });
         bEnchere.setOnAction((t) -> {
             this.creerEnchere.fenetreEnchere();
         });
 
-//        bInfoUtilisateur.setOnAction((t) -> {
-//            this.infoUtilisateur.afficherInfoUtilisateur(utilisateurCourant);
-//        });
-
-        //Group root = new Group();
         ScrollBar sbAffichagePrincipal = new ScrollBar();
         sbAffichagePrincipal.setMin(0);
         sbAffichagePrincipal.setMax(100);
@@ -255,7 +247,6 @@ public class PageAccueil extends BorderPane {
         });
         
         bInfoUtilisateur.setOnAction((t) -> {
-            System.out.println(this.utilisateurCourant);
             infoUtilisateur.afficherInfoUtilisateur(this.utilisateurCourant); 
         });
  
