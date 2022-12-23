@@ -72,6 +72,7 @@ public class PageAccueil extends BorderPane {
         this.controleur = new Controleur(this);
         this.creerEnchere = new CreerEnchere(this);
         this.affichageEnchere = new AfficherEnchere(this);
+        this.infoUtilisateur = new InfoUtilisateur();
 
         this.tfRechercher = new TextField("Rechercher");
 
@@ -127,9 +128,9 @@ public class PageAccueil extends BorderPane {
             this.creerEnchere.fenetreEnchere();
         });
 
-        bInfoUtilisateur.setOnAction((t) -> {
-            this.infoUtilisateur.afficherInfoUtilisateur(utilisateurCourant);
-        });
+//        bInfoUtilisateur.setOnAction((t) -> {
+//            this.infoUtilisateur.afficherInfoUtilisateur(utilisateurCourant);
+//        });
 
         //Group root = new Group();
         ScrollBar sbAffichagePrincipal = new ScrollBar();
@@ -252,7 +253,12 @@ public class PageAccueil extends BorderPane {
                 throw new Error(ex);
             }
         });
-
+        
+        bInfoUtilisateur.setOnAction((t) -> {
+            System.out.println(this.utilisateurCourant);
+            infoUtilisateur.afficherInfoUtilisateur(this.utilisateurCourant); 
+        });
+ 
     }
 
     public Controleur getControleur() {
