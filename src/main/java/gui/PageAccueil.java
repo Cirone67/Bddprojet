@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
@@ -62,6 +61,7 @@ public class PageAccueil extends BorderPane {
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
     private InfoUtilisateur infoUtilisateur;
+    private Rechercher search;
 
     private ArrayList<Affichage> alCategorie;
     //private BorderPane bpEntete;
@@ -71,8 +71,9 @@ public class PageAccueil extends BorderPane {
         this.inStage = inStage;
         this.controleur = new Controleur(this);
         this.creerEnchere = new CreerEnchere(this);
-        this.affichageEnchere = new AfficherEnchere(this);
+        this.affichageEnchere = new AfficherEnchere();
         this.infoUtilisateur = new InfoUtilisateur();
+        this.search = new Rechercher();
 
         this.tfRechercher = new TextField("Rechercher");
 
@@ -249,6 +250,9 @@ public class PageAccueil extends BorderPane {
         bInfoUtilisateur.setOnAction((t) -> {
             infoUtilisateur.afficherInfoUtilisateur(this.utilisateurCourant); 
         });
+        
+        String sRecherche = tfRechercher.getText();
+        search.rechercherEnchere(sRecherche);
  
     }
 

@@ -41,8 +41,8 @@ public class AfficherEnchere extends TableView {
     private int iIDArticleSelectionne;
 //    private ObservableList<Utilisateur> utilisateurs;
 
-    public AfficherEnchere(PageAccueil vue) {
-        this.vue = vue;
+    public AfficherEnchere() {
+
     }
 
     public void fenetreAffichageEnchere(ArrayList alEnchere) {
