@@ -24,6 +24,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -33,15 +34,15 @@ import javafx.stage.Stage;
  * @author drumm
  */
 public class PageAccueil extends BorderPane {
-
+    
     private Controleur controleur;
     private Stage inStage;
-
+    
     private int utilisateurCourant;
-
+    
     private TextField tfRechercher;
     private Label lGain;
-
+    
     private Button bAccueil;
     private Button bMultimedia;
     private Button bMaisonEtJardin;
@@ -55,14 +56,14 @@ public class PageAccueil extends BorderPane {
     private Button bAfficheEnchereRemporte;
     private Button bAfficheEnchereNonRemporteEnCours;
     private Button bAfficheEnchereRemporteEnCours;
-    
+    private Button bValiderRecherche;
     
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
     private InfoUtilisateur infoUtilisateur;
     private Rechercher search;
-
+    
     private ArrayList<Affichage> alCategorie;
     //private BorderPane bpEntete;
 
@@ -74,9 +75,9 @@ public class PageAccueil extends BorderPane {
         this.affichageEnchere = new AfficherEnchere();
         this.infoUtilisateur = new InfoUtilisateur();
         this.search = new Rechercher();
-
+        
         this.tfRechercher = new TextField("Rechercher");
-
+        
         this.bAccueil = new Button("Accueil");
         this.bMultimedia = new Button("Multimédia");
         this.bMaisonEtJardin = new Button("Maison et Jardin");
@@ -91,6 +92,7 @@ public class PageAccueil extends BorderPane {
         this.bAfficheEnchereNonRemporteEnCours = new Button("! Enchère à enchérir au plus vite !");
         this.bAfficheEnchereRemporte = new Button("Enchère remportée");
         this.bAfficheEnchereRemporteEnCours = new Button("Garder un oeil sur ses acquisitions");
+        this.bValiderRecherche = new Button("Valider la recherche");
 
 //        try ( Connection con = defautConnect()) {
 //            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
@@ -99,11 +101,11 @@ public class PageAccueil extends BorderPane {
 //        } catch (Exception ex) {
 //            throw new Error(ex);
 //        }
-        
         VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
         BorderPane bpEntete = new BorderPane();
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
-        bpEntete.setCenter(this.tfRechercher);
+        HBox hbRecherche = new HBox(this.tfRechercher, this.bValiderRecherche);
+        bpEntete.setCenter(hbRecherche);
 //        VBox vbGain = new VBox (this.lGain);
 //        vbGain.setAlignment(Pos.CENTER);
 //        bpEntete.setBottom(vbGain); 
@@ -111,21 +113,20 @@ public class PageAccueil extends BorderPane {
         bpEntete.setRight(vbEnchereUser);
         Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
         bpEntete.setBackground(bgGrey);
-
-
+        
         VBox vbRubriques = new VBox(this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
-                this.bAutoEtMoto, this.bReconditionne, this.bAfficheSesEncheres,this.bAfficheEnchereRemporte,this.bAfficheEnchereNonRemporteEnCours,this.bAfficheEnchereRemporteEnCours);
+                this.bAutoEtMoto, this.bReconditionne, this.bAfficheSesEncheres, this.bAfficheEnchereRemporte, this.bAfficheEnchereNonRemporteEnCours, this.bAfficheEnchereRemporteEnCours);
         vbRubriques.setSpacing(8);
-
+        
         vbRubriques.setBackground(bgGrey);
-
+        
         this.setTop(bpEntete);
         this.setLeft(vbRubriques);
-
+        
         bEnchere.setOnAction((t) -> {
             this.creerEnchere.fenetreEnchere();
         });
-
+        
         ScrollBar sbAffichagePrincipal = new ScrollBar();
         sbAffichagePrincipal.setMin(0);
         sbAffichagePrincipal.setMax(100);
@@ -137,16 +138,16 @@ public class PageAccueil extends BorderPane {
 
         vbRubriques.setLayoutX(5);
         vbRubriques.setSpacing(10);
-
+        
         sbAffichagePrincipal.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 vbRubriques.setLayoutY(-new_val.doubleValue());
             }
         });
-
+        
         this.setRight(sbAffichagePrincipal);
-
+        
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimédia");
@@ -248,18 +249,20 @@ public class PageAccueil extends BorderPane {
         });
         
         bInfoUtilisateur.setOnAction((t) -> {
-            infoUtilisateur.afficherInfoUtilisateur(this.utilisateurCourant); 
+            infoUtilisateur.afficherInfoUtilisateur(this.utilisateurCourant);            
         });
         
-        String sRecherche = tfRechercher.getText();
-        search.rechercherEnchere(sRecherche);
- 
+        bValiderRecherche.setOnAction((t) -> {
+            String sRecherche = tfRechercher.getText();
+            search.rechercherEnchere(sRecherche);
+        });
+        
     }
-
+    
     public Controleur getControleur() {
         return controleur;
     }
-
+    
     public void setControleur(Controleur controleur) {
         this.controleur = controleur;
     }
