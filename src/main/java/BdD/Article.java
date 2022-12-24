@@ -284,11 +284,24 @@ public class Article {
 
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
-                        res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
-                    }
+                        Affichage aff = new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"));
+                        int drapeau = 0;
+                        for (int i = 0; i < res.size(); i++) {
+                            if (res.get(i).getIdArticle() == rs.getInt("idArticle")) {
+                                drapeau = 1;
+                            }
+                        }
 
+                        if (drapeau == 0) {
+                            res.add(aff);
+                        }
+
+                    }
+                    // res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                    //        rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
                 }
+
             }
         }
         return res;
@@ -313,19 +326,15 @@ public class Article {
 //           }
 //           return res ;  
 //}
-
 //chercher en spécifiant les catégories des articles.
-public static ArrayList<Article> ChercheArticleparCategories (ArrayList<Article> article,ArrayList<String> chercher){
-         ArrayList<Article> res = new ArrayList<>();
-         
-         return res;
-     
+    public static ArrayList<Article> ChercheArticleparCategories(ArrayList<Article> article, ArrayList<String> chercher) {
+        ArrayList<Article> res = new ArrayList<>();
 
-}
-  
-      
-      
-        public static class idArticleExisteDejaException extends Exception {
-}
+        return res;
+
+    }
+
+    public static class idArticleExisteDejaException extends Exception {
+    }
 
 }
