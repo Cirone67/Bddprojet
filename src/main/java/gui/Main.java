@@ -25,7 +25,6 @@ public class Main extends Application {
         primaryStage.show();  
 */  
         scene = new Scene(new PageConnection(primaryStage));
-        //scene.getStylesheets().add(getClass().getResource("Apparence.css").toString()); 
         primaryStage.setScene(scene);
         primaryStage.show(); 
     }
