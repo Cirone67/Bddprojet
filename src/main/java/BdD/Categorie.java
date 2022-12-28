@@ -2,6 +2,9 @@ package BdD;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -263,7 +267,7 @@ public class Categorie {
         }   
         return res;
     }
-    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, FileNotFoundException {
+    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, FileNotFoundException, MalformedURLException, IOException {
         ArrayList<Affichage> res = new ArrayList<>();
         //for (int i = 0; i < desiCategorie.size(); i++) {
             try (PreparedStatement pst = con.prepareStatement(
@@ -307,7 +311,7 @@ public class Categorie {
 //                }
 //            }
 //
-//        }
+//        }(new FileInputStream(res.get(i).getURLPhoto()) 
 //        System.out.println("res à Loic");
 
         //Fonction pour trouver l'image sur le net
@@ -315,7 +319,8 @@ public class Categorie {
         for( int i =0; i<res.size();i++){
             if(res.get(i).getURLPhoto() != null){
             System.out.println("photo");
-            Image image = new Image(new FileInputStream(res.get(i).getURLPhoto()) ,100,200,false,false);
+            //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+            Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
             ImageView imageView = new ImageView(image);
             System.out.println(imageView);
             res.set(i, new Affichage(res.get(i).getIdArticle(),res.get(i).getDesignation(),res.get(i).getDescriptionCourte(),res.get(i).getDescriptionLongue(),res.get(i).getExpedition(),res.get(i).getPrix(),res.get(i).getDateDebut(),res.get(i).getDateFin(),imageView));
