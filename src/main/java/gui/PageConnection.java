@@ -134,29 +134,42 @@ public class PageConnection extends BorderPane {
 //                this.tfNom = new TextField();
 //                this.lPrenom = new Label("Prénom : ");
 //                this.tfPrenom = new TextField();
-                this.lMail = new Label ("Mail : ");
+                this.lMail = new Label ("Mail ------------------------- ");
                 this.tfMail = new TextField ();
-                this.lMDP = new Label("Nouveau mot de passe : ");
+                this.lMDP = new Label("Nouveau mot de passe ---- ");
                 this.pfMDP = new PasswordField();
                 this.lConfirmationMDP = new Label("Confirmez le mot de passe : ");
                 this.pfConfirmationMDP = new PasswordField();
                 this.bValiderMDP = new Button("Valider");
                 this.lErreur = new Label ("Le mail n'existe pas");
 
-                HBox hbMDPOublie = new HBox(this.lMDPOublie);
-//                HBox hbNom = new HBox(this.lNom, this.tfNom);
-//                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
-                HBox hbMail = new HBox (this.lMail, this.tfMail);
-                HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
-                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
-                HBox hbValider = new HBox(this.bValiderMDP);
-                hbValider.setAlignment(Pos.CENTER);
-                hbMDPOublie.setAlignment(Pos.CENTER);
-
-                VBox vbRecreerMDP = new VBox(hbMDPOublie, hbMail, hbMDP, hbConfirmationMDP, hbValider);
-                vbRecreerMDP.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
-                vbRecreerMDP.setSpacing(8);
-                Scene sTemp = new Scene(vbRecreerMDP);
+                GridPane gpMDPOublie = new GridPane ();
+                gpMDPOublie.add(lMDPOublie, 0, 0, 2, 1);
+                GridPane.setHalignment(lMDPOublie, HPos.CENTER);
+                gpMDPOublie.add(lMail, 0, 1);
+                gpMDPOublie.add(tfMail, 1, 1);
+                gpMDPOublie.add(lMDP, 0, 2);
+                gpMDPOublie.add(pfMDP, 1, 2);
+                gpMDPOublie.add(bValiderMDP, 0, 3, 2, 1);
+                GridPane.setHalignment(bValiderMDP, HPos.CENTER);
+                gpMDPOublie.setPadding(new Insets(5));
+                gpMDPOublie.setVgap(5);
+                gpMDPOublie.setHgap(5);
+                
+//                HBox hbMDPOublie = new HBox(this.lMDPOublie);
+////                HBox hbNom = new HBox(this.lNom, this.tfNom);
+////                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
+//                HBox hbMail = new HBox (this.lMail, this.tfMail);
+//                HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
+//                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
+//                HBox hbValider = new HBox(this.bValiderMDP);
+//                hbValider.setAlignment(Pos.CENTER);
+//                hbMDPOublie.setAlignment(Pos.CENTER);
+//
+//                VBox vbRecreerMDP = new VBox(hbMDPOublie, hbMail, hbMDP, hbConfirmationMDP, hbValider);
+//                vbRecreerMDP.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+//                vbRecreerMDP.setSpacing(8);
+                Scene sTemp = new Scene(gpMDPOublie);
 
                 sMDPOublie = new Stage();
                 sMDPOublie.setScene(sTemp);
