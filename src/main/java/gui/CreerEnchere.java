@@ -28,6 +28,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -75,6 +78,8 @@ public class CreerEnchere extends BorderPane {
     public void fenetreEnchere() {
 
         this.lTitreFenetre = new Label("Créer une enchère");
+        lTitreFenetre.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
+        lTitreFenetre.setUnderline(true);
         this.lNom = new Label("Nom de l'objet -------- ");
         this.tfNom = new TextField();
         this.lPrixInitial = new Label("Prix Initial -------------- ");
@@ -100,6 +105,8 @@ public class CreerEnchere extends BorderPane {
         this.cbAutoEtMoto = new CheckBox("Auto et Moto");
         this.cbReconditionne = new CheckBox("Reconditionné");
         this.lCategorie = new Label("Choisir la catégorie correspondante");
+        lCategorie.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
+        lCategorie.setUnderline(true);
 
         this.bTest = new Button("Test");
 
@@ -148,26 +155,6 @@ public class CreerEnchere extends BorderPane {
         gpCategorie.setAlignment(Pos.CENTER);
         gpCategorie.setVgap(5);
         gpCategorie.setHgap(5);
-
-//        VBox vbTitre = new VBox(this.lTitreFenetre);
-//        HBox hbNom = new HBox(this.lNom, this.tfNom);
-//        HBox hbPrix = new HBox(this.lPrixInitial, this.tfPrixInitial);
-//        HBox hbDateDebut = new HBox(this.lDateDebut, this.dpDateDebut);
-//        HBox hbDateFin = new HBox(this.lDateFin, this.dpDateFin);
-//        HBox hbDescriptionCoute = new HBox(this.lDescriptionCourte, this.tfDescriptionCourte);
-//        HBox hbDescriptionLongue = new HBox(this.lDescriptionLongue, this.tfDescriptionLongue);
-//        HBox hbURLPhoto = new HBox(this.lURLPhoto,this.tfURLPhoto);
-//        HBox hbMoyenExpedition = new HBox(this.lMoyenExpedition, this.rbEnvoiPostal, this.rbVenirChercher);
-//        VBox vbBoutonValider = new VBox(this.bValiderEnchere);
-//        VBox vbAppelCategotie = new VBox(this.lCategorie);
-//        HBox hbCategorieEtage1 = new HBox(this.cbMultimdia, this.cbMaisonEtJardin, this.cbJouetsEtJeux);
-//        HBox hbCategorieEtage2 = new HBox(this.cbCultureEtLoisirs, this.cbAutoEtMoto, this.cbReconditionne);
-//        VBox vbCategorie = new VBox(hbCategorieEtage1, hbCategorieEtage2);
-//
-//        vbBoutonValider.setAlignment(Pos.CENTER);
-//        vbTitre.setAlignment(Pos.CENTER);
-//
-//        VBox vbEnsembleFenetre = new VBox(vbTitre, hbNom, hbPrix, hbDateDebut, hbDateFin, hbDescriptionCoute, hbDescriptionLongue,hbURLPhoto, hbMoyenExpedition, vbAppelCategotie, vbCategorie, vbBoutonValider);
 
         VBox vbFenetre = new VBox (gpAffichageCreation, gpCategorie);
 

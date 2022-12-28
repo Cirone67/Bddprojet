@@ -25,7 +25,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -68,11 +70,13 @@ public class PageConnection extends BorderPane {
 
         this.inStage = inStage;
 
-        this.lTitre = new Label("Se Connecter");
+        this.lTitre = new Label("Se connecter");
+        lTitre.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
+        lTitre.setUnderline(true);
 
         this.tfIdentifiant = new TextField();
         this.lIdentifiant = new Label("Identifiant ----------------- ");
-        this.lMotDePasse = new Label("Mot de Passe ------------- ");
+        this.lMotDePasse = new Label("Mot de Passe ------------- "); 
         this.pfMotDePasse = new PasswordField();
         this.hlMDPOublie = new Hyperlink("Mot de Passe oublié ?");
         this.hlNouvelUtilisateur = new Hyperlink("Nouvel Utilisateur ?");
@@ -114,11 +118,7 @@ public class PageConnection extends BorderPane {
         hlMDPOublie.setOnAction(new EventHandler<ActionEvent>() {
 
             private Label lMDPOublie;
-/*            private Label lNom;
-            private TextField tfNom;
-            private Label lPrenom;
-            private TextField tfPrenom;
-*/          private Label lMail;
+            private Label lMail;
             private TextField tfMail;
             private Label lMDP;
             private PasswordField pfMDP;
@@ -130,6 +130,8 @@ public class PageConnection extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 this.lMDPOublie = new Label("Mot de passe oublié ?");
+                lMDPOublie.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
+                lMDPOublie.setUnderline(true);
 //                this.lNom = new Label("Nom : ");
 //                this.tfNom = new TextField();
 //                this.lPrenom = new Label("Prénom : ");
@@ -156,19 +158,6 @@ public class PageConnection extends BorderPane {
                 gpMDPOublie.setVgap(5);
                 gpMDPOublie.setHgap(5);
                 
-//                HBox hbMDPOublie = new HBox(this.lMDPOublie);
-////                HBox hbNom = new HBox(this.lNom, this.tfNom);
-////                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
-//                HBox hbMail = new HBox (this.lMail, this.tfMail);
-//                HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
-//                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
-//                HBox hbValider = new HBox(this.bValiderMDP);
-//                hbValider.setAlignment(Pos.CENTER);
-//                hbMDPOublie.setAlignment(Pos.CENTER);
-//
-//                VBox vbRecreerMDP = new VBox(hbMDPOublie, hbMail, hbMDP, hbConfirmationMDP, hbValider);
-//                vbRecreerMDP.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
-//                vbRecreerMDP.setSpacing(8);
                 Scene sTemp = new Scene(gpMDPOublie);
 
                 sMDPOublie = new Stage();
@@ -189,12 +178,6 @@ public class PageConnection extends BorderPane {
 
                         res = user.demandeChangerMdp(con, mail, nvMDP);
                         if (res != -1) {
-//                                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
-//                                    @Override
-//                                    public void handle(ActionEvent t) {
-//                                        sNouvelUtilisateur.close();
-//                                    }
-//                                });
                             sMDPOublie.close();
                         } else {
                             HBox hbErreur = new HBox(this.lErreur);
@@ -202,6 +185,7 @@ public class PageConnection extends BorderPane {
 
                             Scene sTempErreur = new Scene(hbErreur);
                             sErreur = new Stage();
+                            sErreur.setTitle("Erreur mot de passe !");
                             sErreur.setScene(sTempErreur);
                             sErreur.show();
                         }
@@ -210,13 +194,6 @@ public class PageConnection extends BorderPane {
                         throw new Error(ex);
                     }
                 });
-
-//                bValider.setOnAction(new EventHandler<ActionEvent>() {
-//                    @Override
-//                    public void handle(ActionEvent t) {
-//                        sMDPOublie.close();
-//                    }
-//                });
             }
         });
 
@@ -242,48 +219,49 @@ public class PageConnection extends BorderPane {
             @Override
             public void handle(ActionEvent event) {
                 this.lNouvelUtilisateur = new Label("Nouvel Utilisateur");
-                this.lNom = new Label("Nom : ");
+                lNouvelUtilisateur.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
+                lNouvelUtilisateur.setUnderline(true);
+                this.lNom = new Label("Nom ---------------- ");
                 this.tfNom = new TextField();
-                this.lPrenom = new Label("Prénom : ");
+                this.lPrenom = new Label("Prénom ------------- ");
                 this.tfPrenom = new TextField();
-                this.lMail = new Label("Mail : ");
+                this.lMail = new Label("Mail ----------------- ");
                 this.tfMail = new TextField();
-                this.lMDP = new Label("Mot de Passe : ");
+                this.lMDP = new Label("Mot de Passe ------- ");
                 this.pfMDP = new PasswordField();
-//                this.lConfirmationMDP = new Label("Confirmer le mot de passe : ");
-//                this.pfConfirmationMDP = new PasswordField();
-                this.lCodePostal = new Label("Code postal : ");
+                this.lCodePostal = new Label("Code postal --------- ");
                 this.tfCodePostal = new TextField();
                 this.bValiderNU = new Button("Valider");
                 this.rbAdmin = new RadioButton("Administrateur");
                 this.rbUtilisateur = new RadioButton("Utilisateur");
                 this.lErreur = new Label("Le mail est déjà utilisé");
-
-                HBox hbNouvelUtilisateur = new HBox(this.lNouvelUtilisateur);
-                hbNouvelUtilisateur.setAlignment(Pos.CENTER);
-
-                HBox hbNom = new HBox(this.lNom, this.tfNom);
-                HBox hbPrenom = new HBox(this.lPrenom, this.tfPrenom);
-                HBox hbMail = new HBox(this.lMail, this.tfMail);
-                HBox hbMDP = new HBox(this.lMDP, this.pfMDP);
-//                HBox hbConfirmationMDP = new HBox(this.lConfirmationMDP, this.pfConfirmationMDP);
-                HBox hbCodePostal = new HBox(this.lCodePostal, this.tfCodePostal);
-
-                HBox hbValider = new HBox(this.bValiderNU);
-                hbValider.setAlignment(Pos.CENTER);
-
+                
                 ToggleGroup tgStatut = new ToggleGroup();
                 this.rbAdmin.setToggleGroup(tgStatut);
                 this.rbUtilisateur.setToggleGroup(tgStatut);
-                HBox hbStatut = new HBox(this.rbAdmin, this.rbUtilisateur);
-                hbStatut.setAlignment(Pos.CENTER);
-                hbStatut.setSpacing(8);
+                
+                GridPane gpNewUser = new GridPane ();
+                gpNewUser.add(lNouvelUtilisateur, 0, 0, 2, 1);
+                GridPane.setHalignment(lNouvelUtilisateur, HPos.CENTER);
+                gpNewUser.add(lNom, 0, 1);
+                gpNewUser.add(tfNom, 1, 1);
+                gpNewUser.add(lPrenom, 0, 2);
+                gpNewUser.add(tfPrenom, 1, 2);
+                gpNewUser.add(lMail, 0, 3);
+                gpNewUser.add(tfMail, 1, 3);
+                gpNewUser.add(lMDP, 0, 4);
+                gpNewUser.add(pfMDP, 1, 4);
+                gpNewUser.add(lCodePostal, 0, 5);
+                gpNewUser.add(tfCodePostal, 1, 5);
+                gpNewUser.add(rbAdmin, 0, 6);
+                gpNewUser.add(rbUtilisateur, 1, 6);
+                gpNewUser.add(bValiderNU, 0, 7, 2, 1);
+                GridPane.setHalignment(bValiderNU, HPos.CENTER);
+                gpNewUser.setPadding(new Insets(5));
+                gpNewUser.setVgap(5);
+                gpNewUser.setHgap(5);
 
-                VBox vbNouvelUtilisateur = new VBox(hbNouvelUtilisateur, hbNom, hbPrenom, hbMail, hbMDP, /*hbConfirmationMDP,*/ hbCodePostal, hbStatut, hbValider);
-                vbNouvelUtilisateur.setPadding(new javafx.geometry.Insets(30, 30, 30, 30));
-                vbNouvelUtilisateur.setSpacing(8);
-
-                Scene sTemp = new Scene(vbNouvelUtilisateur);
+                Scene sTemp = new Scene(gpNewUser);
 
                 sNouvelUtilisateur = new Stage();
                 sNouvelUtilisateur.setScene(sTemp);
@@ -313,7 +291,6 @@ public class PageConnection extends BorderPane {
                             }
                         }
 
-                        System.out.println("je suis dedans");
                         res = user.createUtilisateur(con, mail, mdp, codePostal, nom, prenom, statut);
                         if (res == 1) {
 //                                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
@@ -329,6 +306,7 @@ public class PageConnection extends BorderPane {
 
                             Scene sTempErreur = new Scene(hbErreur);
                             sErreur = new Stage();
+                            sErreur.setTitle("Erreur création utilisateur !");
                             sErreur.setScene(sTempErreur);
                             sErreur.show();
                         }
