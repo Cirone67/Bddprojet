@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,6 +25,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -72,21 +75,21 @@ public class CreerEnchere extends BorderPane {
     public void fenetreEnchere() {
 
         this.lTitreFenetre = new Label("Créer une enchère");
-        this.lNom = new Label("Nom de l'objet : ");
+        this.lNom = new Label("Nom de l'objet -------- ");
         this.tfNom = new TextField();
-        this.lPrixInitial = new Label("Prix Initial : ");
+        this.lPrixInitial = new Label("Prix Initial -------------- ");
         this.tfPrixInitial = new TextField();
-        this.lDateDebut = new Label("Date de début : ");
+        this.lDateDebut = new Label("Date de début --------- ");
         this.dpDateDebut = new DatePicker();
-        this.lDateFin = new Label("Date de fin : ");
+        this.lDateFin = new Label("Date de fin ------------ ");
         this.dpDateFin = new DatePicker();
-        this.lDescriptionCourte = new Label("Description courte : ");
+        this.lDescriptionCourte = new Label("Description courte ---- ");
         this.tfDescriptionCourte = new TextField();
-        this.lDescriptionLongue = new Label("Description longue : ");
+        this.lDescriptionLongue = new Label("Description longue --- ");
         this.tfDescriptionLongue = new TextField();
-        this.lURLPhoto = new Label("URL Photo : ");
+        this.lURLPhoto = new Label("URL Photo ------------ ");
         this.tfURLPhoto = new TextField();
-        this.lMoyenExpedition = new Label("Mode d'envoi : ");
+        this.lMoyenExpedition = new Label("Mode d'envoi --------- ");
         this.rbEnvoiPostal = new RadioButton("Envoi Postal");
         this.rbVenirChercher = new RadioButton("Se déplacer");
         this.bValiderEnchere = new Button("Valider");
@@ -103,32 +106,79 @@ public class CreerEnchere extends BorderPane {
         ToggleGroup tgModeEnvoi = new ToggleGroup();
         this.rbEnvoiPostal.setToggleGroup(tgModeEnvoi);
         this.rbVenirChercher.setToggleGroup(tgModeEnvoi);
+        
+        HBox hbExpedition = new HBox (rbEnvoiPostal, rbVenirChercher);
+        hbExpedition.setSpacing(5);
+        
+        GridPane gpAffichageCreation = new GridPane ();
+        gpAffichageCreation.add(lTitreFenetre, 0, 0, 2, 1);
+        GridPane.setHalignment(lTitreFenetre, HPos.CENTER);
+        gpAffichageCreation.add(lNom, 0, 1);
+        gpAffichageCreation.add(tfNom, 1, 1);
+        gpAffichageCreation.add(lPrixInitial, 0, 2);
+        gpAffichageCreation.add(tfPrixInitial, 1, 2);
+        gpAffichageCreation.add(lDateDebut, 0, 3);
+        gpAffichageCreation.add(dpDateDebut, 1, 3);
+        gpAffichageCreation.add(lDateFin, 0, 4);
+        gpAffichageCreation.add(dpDateFin, 1, 4);
+        gpAffichageCreation.add(lDescriptionCourte, 0, 5);
+        gpAffichageCreation.add(tfDescriptionCourte, 1, 5);
+        gpAffichageCreation.add(lDescriptionLongue, 0, 6);
+        gpAffichageCreation.add(tfDescriptionLongue, 1, 6);
+        gpAffichageCreation.add(lURLPhoto, 0, 7);
+        gpAffichageCreation.add(tfURLPhoto, 1, 7);
+        gpAffichageCreation.add(lMoyenExpedition, 0, 8);
+        gpAffichageCreation.add(hbExpedition, 1, 8);
+        gpAffichageCreation.setPadding(new Insets(5));
+        gpAffichageCreation.setAlignment(Pos.CENTER);
+        gpAffichageCreation.setVgap(5);
+        
+        GridPane gpCategorie = new GridPane ();
+        gpCategorie.add(lCategorie, 0, 0, 3, 1);
+        GridPane.setHalignment(lCategorie, HPos.CENTER);
+        gpCategorie.add(cbMultimdia, 0, 1);
+        gpCategorie.add(cbMaisonEtJardin, 1, 1);
+        gpCategorie.add(cbJouetsEtJeux, 2, 1);
+        gpCategorie.add(cbCultureEtLoisirs, 0, 2);
+        gpCategorie.add(cbAutoEtMoto, 1, 2);
+        gpCategorie.add(cbReconditionne, 2, 2);
+        gpCategorie.add(bValiderEnchere, 1, 3);
+        GridPane.setHalignment(bValiderEnchere, HPos.CENTER);
+        gpCategorie.setPadding(new Insets(5));
+        gpCategorie.setAlignment(Pos.CENTER);
+        gpCategorie.setVgap(5);
+        gpCategorie.setHgap(5);
 
-        VBox vbTitre = new VBox(this.lTitreFenetre);
-        HBox hbNom = new HBox(this.lNom, this.tfNom);
-        HBox hbPrix = new HBox(this.lPrixInitial, this.tfPrixInitial);
-        HBox hbDateDebut = new HBox(this.lDateDebut, this.dpDateDebut);
-        HBox hbDateFin = new HBox(this.lDateFin, this.dpDateFin);
-        HBox hbDescriptionCoute = new HBox(this.lDescriptionCourte, this.tfDescriptionCourte);
-        HBox hbDescriptionLongue = new HBox(this.lDescriptionLongue, this.tfDescriptionLongue);
-        HBox hbURLPhoto = new HBox(this.lURLPhoto,this.tfURLPhoto);
-        HBox hbMoyenExpedition = new HBox(this.lMoyenExpedition, this.rbEnvoiPostal, this.rbVenirChercher);
-        VBox vbBoutonValider = new VBox(this.bValiderEnchere);
-        VBox vbAppelCategotie = new VBox(this.lCategorie);
-        HBox hbCategorieEtage1 = new HBox(this.cbMultimdia, this.cbMaisonEtJardin, this.cbJouetsEtJeux);
-        HBox hbCategorieEtage2 = new HBox(this.cbCultureEtLoisirs, this.cbAutoEtMoto, this.cbReconditionne);
-        VBox vbCategorie = new VBox(hbCategorieEtage1, hbCategorieEtage2);
+//        VBox vbTitre = new VBox(this.lTitreFenetre);
+//        HBox hbNom = new HBox(this.lNom, this.tfNom);
+//        HBox hbPrix = new HBox(this.lPrixInitial, this.tfPrixInitial);
+//        HBox hbDateDebut = new HBox(this.lDateDebut, this.dpDateDebut);
+//        HBox hbDateFin = new HBox(this.lDateFin, this.dpDateFin);
+//        HBox hbDescriptionCoute = new HBox(this.lDescriptionCourte, this.tfDescriptionCourte);
+//        HBox hbDescriptionLongue = new HBox(this.lDescriptionLongue, this.tfDescriptionLongue);
+//        HBox hbURLPhoto = new HBox(this.lURLPhoto,this.tfURLPhoto);
+//        HBox hbMoyenExpedition = new HBox(this.lMoyenExpedition, this.rbEnvoiPostal, this.rbVenirChercher);
+//        VBox vbBoutonValider = new VBox(this.bValiderEnchere);
+//        VBox vbAppelCategotie = new VBox(this.lCategorie);
+//        HBox hbCategorieEtage1 = new HBox(this.cbMultimdia, this.cbMaisonEtJardin, this.cbJouetsEtJeux);
+//        HBox hbCategorieEtage2 = new HBox(this.cbCultureEtLoisirs, this.cbAutoEtMoto, this.cbReconditionne);
+//        VBox vbCategorie = new VBox(hbCategorieEtage1, hbCategorieEtage2);
+//
+//        vbBoutonValider.setAlignment(Pos.CENTER);
+//        vbTitre.setAlignment(Pos.CENTER);
+//
+//        VBox vbEnsembleFenetre = new VBox(vbTitre, hbNom, hbPrix, hbDateDebut, hbDateFin, hbDescriptionCoute, hbDescriptionLongue,hbURLPhoto, hbMoyenExpedition, vbAppelCategotie, vbCategorie, vbBoutonValider);
 
-        vbBoutonValider.setAlignment(Pos.CENTER);
-        vbTitre.setAlignment(Pos.CENTER);
+        VBox vbFenetre = new VBox (gpAffichageCreation, gpCategorie);
 
-        VBox vbEnsembleFenetre = new VBox(vbTitre, hbNom, hbPrix, hbDateDebut, hbDateFin, hbDescriptionCoute, hbDescriptionLongue,hbURLPhoto, hbMoyenExpedition, vbAppelCategotie, vbCategorie, vbBoutonValider);
-
-        Scene sTemp = new Scene(vbEnsembleFenetre);
+        Scene sTemp = new Scene(vbFenetre);
 
         sEnchere = new Stage();
         sEnchere.setScene(sTemp);
         sEnchere.setTitle("Créer une enchère");
+        sEnchere.setHeight(420);
+        sEnchere.setWidth(360);
+        sEnchere.setResizable(false);
         sEnchere.show();
 
         bValiderEnchere.setOnAction((t) -> {

@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
@@ -42,6 +44,7 @@ public class PageAccueil extends BorderPane {
     
     private TextField tfRechercher;
     private Label lGain;
+    private Label lUserCourant;
     
     private Button bAccueil;
     private Button bMultimedia;
@@ -87,12 +90,32 @@ public class PageAccueil extends BorderPane {
         this.bReconditionne = new Button("Reconditionné");
         this.bEnchere = new Button("Créer une enchère");
         this.alCategorie = new ArrayList<>();
-        this.bInfoUtilisateur = new Button("Info Utilisateur");
+        this.bInfoUtilisateur = new Button("Informations \nutilisateur");
         this.bAfficheSesEncheres = new Button("Mes Enchères");
-        this.bAfficheEnchereNonRemporteEnCours = new Button("! Enchère à enchérir au plus vite !");
-        this.bAfficheEnchereRemporte = new Button("Enchère remportée");
-        this.bAfficheEnchereRemporteEnCours = new Button("Garder un oeil sur ses acquisitions");
+        this.bAfficheEnchereNonRemporteEnCours = new Button("! Enchères à enchérir \nau plus vite !");
+        this.bAfficheEnchereRemporte = new Button("Enchères remportées");
+        this.bAfficheEnchereRemporteEnCours = new Button("Garder un oeil \nsur ses acquisitions");
         this.bValiderRecherche = new Button("Valider la recherche");
+        this.lUserCourant = new Label ("" + utilisateurCourant);
+        
+        bEnchere.setPrefSize(150, 70);
+        bMultimedia.setPrefWidth(120);
+        bMaisonEtJardin.setPrefWidth(120);
+        bJouetsEtJeux.setPrefWidth(120);
+        bCultureEtLoisirs.setPrefWidth(120);
+        bAutoEtMoto.setPrefWidth(120);
+        bReconditionne.setPrefWidth(120);
+        bValiderRecherche.setPrefWidth(130);
+        tfRechercher.setPrefWidth(630);
+        
+        bInfoUtilisateur.setPrefSize(180, 50);
+        bAfficheSesEncheres.setPrefSize(180, 50);
+        bAfficheEnchereRemporte.setPrefSize(180, 50);
+        bAfficheEnchereNonRemporteEnCours.setPrefSize(180, 50);
+        bAfficheEnchereRemporteEnCours.setPrefSize(180, 50);
+        
+        Background bgSilver = new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, null));
+        Background bgLightGrey = new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, null));
 
 //        try ( Connection con = defautConnect()) {
 //            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
@@ -101,52 +124,59 @@ public class PageAccueil extends BorderPane {
 //        } catch (Exception ex) {
 //            throw new Error(ex);
 //        }
-        VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
         BorderPane bpEntete = new BorderPane();
+        HBox hbCategories = new HBox (bMultimedia, bMaisonEtJardin, bJouetsEtJeux, bCultureEtLoisirs, bAutoEtMoto, bReconditionne);
+        hbCategories.setSpacing(10);
+        hbCategories.setPadding(new Insets(5));
+        hbCategories.setAlignment(Pos.CENTER);
+        HBox hbRecherche = new HBox (tfRechercher, bValiderRecherche);
+        hbRecherche.setSpacing(10);
+        hbRecherche.setPadding(new Insets(5));
+        hbRecherche.setAlignment(Pos.CENTER);
         ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
-        HBox hbRecherche = new HBox(this.tfRechercher, this.bValiderRecherche);
-        bpEntete.setCenter(hbRecherche);
-//        VBox vbGain = new VBox (this.lGain);
-//        vbGain.setAlignment(Pos.CENTER);
-//        bpEntete.setBottom(vbGain); 
+        VBox vbCentre = new VBox (hbRecherche, hbCategories);
+        
         bpEntete.setLeft(ivLogoINSA);
-        bpEntete.setRight(vbEnchereUser);
-        Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
-        bpEntete.setBackground(bgGrey);
+        bpEntete.setCenter(vbCentre);
+        bpEntete.setRight(bEnchere);
         
-        VBox vbRubriques = new VBox(this.bAccueil, this.bMultimedia, this.bMaisonEtJardin, this.bJouetsEtJeux, this.bCultureEtLoisirs,
-                this.bAutoEtMoto, this.bReconditionne, this.bAfficheSesEncheres, this.bAfficheEnchereRemporte, this.bAfficheEnchereNonRemporteEnCours, this.bAfficheEnchereRemporteEnCours);
-        vbRubriques.setSpacing(8);
+        VBox vbUtilisateur = new VBox (bInfoUtilisateur, bAfficheSesEncheres, bAfficheEnchereRemporte, bAfficheEnchereNonRemporteEnCours, bAfficheEnchereRemporteEnCours);
+        vbUtilisateur.setSpacing(10);
+        vbUtilisateur.setPadding(new Insets (5));
         
-        vbRubriques.setBackground(bgGrey);
+        bpEntete.setBackground(bgSilver);
+        vbUtilisateur.setBackground(bgLightGrey);
+        
+//        VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
+////        BorderPane bpEntete = new BorderPane();
+////        ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
+////        HBox hbRecherche = new HBox(this.tfRechercher, this.bValiderRecherche);
+//        bpEntete.setCenter(hbRecherche);
+////        VBox vbGain = new VBox (this.lGain);
+////        vbGain.setAlignment(Pos.CENTER);
+////        bpEntete.setBottom(vbGain); 
+//        bpEntete.setLeft(ivLogoINSA);
+//        bpEntete.setRight(vbEnchereUser);
+//        Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
+//        bpEntete.setBackground(bgGrey);
+        
+//        VBox vbRubriques = new VBox(this.bAfficheSesEncheres, this.bAfficheEnchereRemporte, this.bAfficheEnchereNonRemporteEnCours, this.bAfficheEnchereRemporteEnCours);
+//        vbRubriques.setSpacing(8);
+        
+//        vbRubriques.setBackground(bgGrey);
         
         this.setTop(bpEntete);
-        this.setLeft(vbRubriques);
+        this.setLeft(vbUtilisateur);
         
         bEnchere.setOnAction((t) -> {
             this.creerEnchere.fenetreEnchere();
         });
         
-        ScrollBar sbAffichagePrincipal = new ScrollBar();
-        sbAffichagePrincipal.setMin(0);
-        sbAffichagePrincipal.setMax(100);
-        sbAffichagePrincipal.setOrientation(Orientation.VERTICAL);
-        sbAffichagePrincipal.setLayoutX(this.getWidth()/* - sbAffichagePrincipal.getWidth()*/);
-        sbAffichagePrincipal.setPrefHeight(180);
-        sbAffichagePrincipal.setMax(360);
         //root.getChildren().addAll(vbRubriques, sbAffichagePrincipal);
 
-        vbRubriques.setLayoutX(5);
-        vbRubriques.setSpacing(10);
+//        vbRubriques.setLayoutX(5);
+//        vbRubriques.setSpacing(10);
         
-        sbAffichagePrincipal.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                vbRubriques.setLayoutY(-new_val.doubleValue());
-            }
-        });
-        
-        this.setRight(sbAffichagePrincipal);
         
         bMultimedia.setOnAction((t) -> {
             try ( Connection con = defautConnect()) {

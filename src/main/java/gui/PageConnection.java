@@ -158,7 +158,6 @@ public class PageConnection extends BorderPane {
                 sMDPOublie.show();
                 
                 bValiderMDP.setOnAction((t) -> {
-                    System.out.println("oui");
                     try ( Connection con = defautConnect()) {
                         int res;
 
@@ -168,7 +167,6 @@ public class PageConnection extends BorderPane {
                         int statut = 1;
 
 
-                        System.out.println("je suis dedans");
                         res = user.demandeChangerMdp(con, mail, nvMDP);
                         if (res != -1) {
 //                                bValiderNU.setOnAction(new EventHandler<ActionEvent>() {
@@ -341,7 +339,8 @@ public class PageConnection extends BorderPane {
                 } else {
                     this.inStage.close();
                     sPageAccueil = new Scene(new PageAccueil(inStage, res));
-                    inStage.setMaximized(true);
+//                    inStage.setMaximized(true);
+                    inStage.setTitle("INS'Enchères");
                     inStage.setScene(sPageAccueil);
                     inStage.show();
                 }
