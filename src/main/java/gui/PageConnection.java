@@ -11,6 +11,8 @@ import static BdD.Utilisateur.defautConnect;
 import java.sql.Connection;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +23,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -67,9 +70,9 @@ public class PageConnection extends BorderPane {
 
         this.lTitre = new Label("Se Connecter");
 
-        this.tfIdentifiant = new TextField("Identifiant");
-        this.lIdentifiant = new Label("Identifiant : ");
-        this.lMotDePasse = new Label("Mot de Passe : ");
+        this.tfIdentifiant = new TextField();
+        this.lIdentifiant = new Label("Identifiant ----------------- ");
+        this.lMotDePasse = new Label("Mot de Passe ------------- ");
         this.pfMotDePasse = new PasswordField();
         this.hlMDPOublie = new Hyperlink("Mot de Passe oublié ?");
         this.hlNouvelUtilisateur = new Hyperlink("Nouvel Utilisateur ?");
@@ -86,23 +89,27 @@ public class PageConnection extends BorderPane {
         this.bValiderConnection = new Button("Valider");
 
         this.lProblemMDP = new Label("Connexion impossible - Erreur MDP ou identifiant");
-
-        HBox hbValider = new HBox(this.bValiderConnection);
-        hbValider.setAlignment(Pos.CENTER);
-
-        //inStage.setResizable(false);
-        HBox hbTitre = new HBox(this.lTitre);
-        hbTitre.setAlignment(Pos.CENTER);
-
-        HBox hbIdentifiant = new HBox(this.lIdentifiant, this.getTfIdentifiant());
-        HBox hbMotDePasse = new HBox(this.lMotDePasse, this.getPfMotDePasse());
-        VBox vbConnection = new VBox(hbTitre, hbIdentifiant, hbMotDePasse, hbValider, this.hlMDPOublie, this.hlNouvelUtilisateur);
-
-        vbConnection.setSpacing(8);
+        
+        GridPane gpAffichageConnection = new GridPane ();
+        gpAffichageConnection.add(lTitre, 0, 0, 2, 1);
+        GridPane.setHalignment(lTitre, HPos.CENTER);
+        gpAffichageConnection.add(lIdentifiant, 0, 1);
+        gpAffichageConnection.add(tfIdentifiant, 1, 1);
+        gpAffichageConnection.add(lMotDePasse, 0, 2);
+        gpAffichageConnection.add(pfMotDePasse, 1, 2);
+        gpAffichageConnection.add(hlMDPOublie, 0, 3);
+        gpAffichageConnection.add(hlNouvelUtilisateur, 0, 4);
+        gpAffichageConnection.add(bValiderConnection, 0, 5, 2, 1);
+        GridPane.setHalignment(bValiderConnection, HPos.CENTER);
+        gpAffichageConnection.setPadding(new Insets(5));
+        gpAffichageConnection.setVgap(5);
+        gpAffichageConnection.setHgap(5);
+        
+        inStage.setResizable(false);
 
         this.inStage.setTitle("Se connecter");
 
-        this.setLeft(vbConnection);
+        this.setLeft(gpAffichageConnection);
 
         hlMDPOublie.setOnAction(new EventHandler<ActionEvent>() {
 
