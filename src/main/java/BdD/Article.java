@@ -153,19 +153,20 @@ public class Article {
     }
 //Créer une Article------------------------------------
 
-    public static int createArticle(Connection con, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, int posseseur)
+    public static int createArticle(Connection con, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, int posseseur, String URLPhoto)
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
         try (PreparedStatement pst = con.prepareStatement(
                 """
                 
-                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur) values (?,?,?,?,?)                
+                insert into Article (designation, descriptionCourte,  descriptionLongue,  expedition,  posseseur,URLPhoto) values (?,?,?,?,?,?)                
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, designation);
             pst.setString(2, descriptionCourte);
             pst.setString(3, descriptionLongue);
             pst.setInt(4, expedition);
             pst.setInt(5, posseseur);
+            pst.setString(6, URLPhoto);
             pst.executeUpdate();
             con.commit();
         }
@@ -324,7 +325,7 @@ public class Article {
 //                   res.add(article.get(i));
 //               }
 //           }
-//           return res ;  
+//           return res ;
 //}
 //chercher en spécifiant les catégories des articles.
     public static ArrayList<Article> ChercheArticleparCategories(ArrayList<Article> article, ArrayList<String> chercher) {

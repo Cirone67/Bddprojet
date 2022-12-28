@@ -51,6 +51,8 @@ public class CreerEnchere extends BorderPane {
     private Label lDescriptionLongue;
     private TextField tfDescriptionLongue;
     private Label lMoyenExpedition;
+    private TextField tfURLPhoto;
+    private Label lURLPhoto;
     private RadioButton rbEnvoiPostal;
     private RadioButton rbVenirChercher;
     private Label lTitreFenetre;
@@ -82,6 +84,8 @@ public class CreerEnchere extends BorderPane {
         this.tfDescriptionCourte = new TextField();
         this.lDescriptionLongue = new Label("Description longue : ");
         this.tfDescriptionLongue = new TextField();
+        this.lURLPhoto = new Label("URL Photo : ");
+        this.tfURLPhoto = new TextField();
         this.lMoyenExpedition = new Label("Mode d'envoi : ");
         this.rbEnvoiPostal = new RadioButton("Envoi Postal");
         this.rbVenirChercher = new RadioButton("Se déplacer");
@@ -107,6 +111,7 @@ public class CreerEnchere extends BorderPane {
         HBox hbDateFin = new HBox(this.lDateFin, this.dpDateFin);
         HBox hbDescriptionCoute = new HBox(this.lDescriptionCourte, this.tfDescriptionCourte);
         HBox hbDescriptionLongue = new HBox(this.lDescriptionLongue, this.tfDescriptionLongue);
+        HBox hbURLPhoto = new HBox(this.lURLPhoto,this.tfURLPhoto);
         HBox hbMoyenExpedition = new HBox(this.lMoyenExpedition, this.rbEnvoiPostal, this.rbVenirChercher);
         VBox vbBoutonValider = new VBox(this.bValiderEnchere);
         VBox vbAppelCategotie = new VBox(this.lCategorie);
@@ -117,7 +122,7 @@ public class CreerEnchere extends BorderPane {
         vbBoutonValider.setAlignment(Pos.CENTER);
         vbTitre.setAlignment(Pos.CENTER);
 
-        VBox vbEnsembleFenetre = new VBox(vbTitre, hbNom, hbPrix, hbDateDebut, hbDateFin, hbDescriptionCoute, hbDescriptionLongue, hbMoyenExpedition, vbAppelCategotie, vbCategorie, vbBoutonValider);
+        VBox vbEnsembleFenetre = new VBox(vbTitre, hbNom, hbPrix, hbDateDebut, hbDateFin, hbDescriptionCoute, hbDescriptionLongue,hbURLPhoto, hbMoyenExpedition, vbAppelCategotie, vbCategorie, vbBoutonValider);
 
         Scene sTemp = new Scene(vbEnsembleFenetre);
 
@@ -134,6 +139,7 @@ public class CreerEnchere extends BorderPane {
                 LocalDate dDateFin = dpDateFin.getValue();
                 String sDescriptionCourte = tfDescriptionCourte.getText();
                 String sDescriptionLongue = tfDescriptionLongue.getText();
+                String sURLPhoto = tfURLPhoto.getText();
                 ArrayList<String> alRubriques = new ArrayList<>();
                 int iModeEnvoi = 0;
 
@@ -175,7 +181,7 @@ public class CreerEnchere extends BorderPane {
                 Date dFinString = new java.sql.Date(simpleDateFormatFin.parse(dFin).getTime());
 
                 creerEnchere.createElement(con, dPrixInitial, dDebutString, dFinString, vue.getUtilisateurCourant(), sNom, sDescriptionCourte, sDescriptionLongue,
-                        iModeEnvoi, alRubriques);
+                        iModeEnvoi, alRubriques,sURLPhoto);
                 
                 sEnchere.close();
                 

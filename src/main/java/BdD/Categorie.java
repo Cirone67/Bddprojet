@@ -1,5 +1,7 @@
 package BdD;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -256,15 +260,15 @@ public class Categorie {
                 }
             }
 
-        }
+        }   
         return res;
     }
-    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException {
+    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, FileNotFoundException {
         ArrayList<Affichage> res = new ArrayList<>();
         //for (int i = 0; i < desiCategorie.size(); i++) {
             try (PreparedStatement pst = con.prepareStatement(
                     """
-               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               select Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
                inner join JoinCategorieArticle on Article.idArticle = JoinCategorieArticle.idArticle
@@ -281,7 +285,7 @@ public class Categorie {
 //                    for(int j=0;j<res.size();j++){
 //                      if(res.get(j)){
                         res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
+                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin"),rs.getString("URLPhoto")));
                     }
                 }
 //                    }else{
@@ -305,20 +309,18 @@ public class Categorie {
 //
 //        }
 //        System.out.println("res à Loic");
-        return res;
-    }
-    public static void main(String[] args) {
-        try (Connection con = defautConnect()) {
-            System.out.println("connectÃ© !!!");
 
-            //Enchere.creeEnchere(con);
-            
-            //createCategorie(con,"chat",6);
-            //tousLesCategorie(con);
-            //deleteSchemaUtilisateur(con);
-            //System.out.println(tousLesCategorie(con).get(1).getIdcategorie());
-        } catch (Exception ex) {
-            throw new Error(ex);
+        //Fonction pour trouver l'image sur le net
+        
+        for( int i =0; i<res.size();i++){
+            if(res.get(i).getURLPhoto() != null){
+            System.out.println("photo");
+            Image image = new Image(new FileInputStream(res.get(i).getURLPhoto()) ,100,200,false,false);
+            ImageView imageView = new ImageView(image);
+            System.out.println(imageView);
+            res.set(i, new Affichage(res.get(i).getIdArticle(),res.get(i).getDesignation(),res.get(i).getDescriptionCourte(),res.get(i).getDescriptionLongue(),res.get(i).getExpedition(),res.get(i).getPrix(),res.get(i).getDateDebut(),res.get(i).getDateFin(),imageView));
+            }
         }
+        return res;
     }
 }

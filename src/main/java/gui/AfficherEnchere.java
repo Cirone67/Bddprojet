@@ -21,7 +21,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
@@ -49,7 +49,6 @@ public class AfficherEnchere extends TableView {
         TableView tvEncheres = new TableView();
         tvEncheres.setEditable(true);
         ArrayList<String> lTest = new ArrayList<>();
-
         this.obTest = FXCollections.observableArrayList(alEnchere);
         this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -61,7 +60,8 @@ public class AfficherEnchere extends TableView {
         TableColumn<Affichage, String> columnDescCourte = new TableColumn<>("Description courte");
         TableColumn<Affichage, String> columnDescLongue = new TableColumn<>("Description longue");
         TableColumn<Affichage, String> columnModeEnvoi = new TableColumn<>("Mode d'envoi");
-
+        TableColumn<Affichage, ImageView> columnPhoto = new TableColumn<>("Images");
+        
         columIdArticle.setCellValueFactory(new PropertyValueFactory<>("idArticle"));
         columnNom.setCellValueFactory(new PropertyValueFactory<>("designation"));
         columnPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
@@ -70,6 +70,7 @@ public class AfficherEnchere extends TableView {
         columnDescCourte.setCellValueFactory(new PropertyValueFactory<>("descriptionCourte"));
         columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
+        columnPhoto.setCellValueFactory(new PropertyValueFactory<>("image"));    
         columIdArticle.setVisible(false);
         columnPrix.setEditable(true);
         columnPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -99,7 +100,7 @@ public class AfficherEnchere extends TableView {
             }
         });
 
-        tvEncheres.getColumns().addAll(columIdArticle, columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi);
+        tvEncheres.getColumns().addAll(columIdArticle, columnNom, columnPrix, columnDateDebut, columnDateFin, columnDescCourte, columnDescLongue, columnModeEnvoi, columnPhoto);
 
         tvEncheres.setItems(obTest);
         VBox vbAfficherEnchere = new VBox(tvEncheres);

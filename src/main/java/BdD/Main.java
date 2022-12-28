@@ -55,8 +55,8 @@ public class Main {
          Article1type.add("outil");
          Article1type.add("materiel");
          Article2type.add("sport");
-         Article.createArticle(con, "marteau", "très dure", "bon etat", 0,Article1type , 1);
-         Article.createArticle(con, "corde", "rien à dire", "fissure", 0,Article2type , 2);
+         Article.createArticle(con, "marteau", "très dure", "bon etat", 0,Article1type , 1,null);
+         Article.createArticle(con, "corde", "rien à dire", "fissure", 0,Article2type , 2,null);
          //Enchere lié aux articles
          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("2022-12-22").getTime());
           Date dateFin = new java.sql.Date(simpleDateFormat.parse("2022-12-30").getTime());

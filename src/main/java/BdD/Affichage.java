@@ -6,6 +6,7 @@
 package BdD;
 
 import java.sql.Date;
+import javafx.scene.image.ImageView;
 
 /**
  *
@@ -20,6 +21,8 @@ public class Affichage {
   private double prix;
   private Date dateDebut;
   private Date dateFin;
+  private String URLPhoto;
+  private ImageView image;
 
     public Affichage(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin) {
         this.idArticle= idArticle;
@@ -32,6 +35,40 @@ public class Affichage {
         this.dateFin = dateFin;
     }
 
+    public Affichage(int idArticle, String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin, String URLPhoto) {
+        this.idArticle = idArticle;
+        this.designation = designation;
+        this.descriptionCourte = descriptionCourte;
+        this.descriptionLongue = descriptionLongue;
+        this.expedition = expedition;
+        this.prix = prix;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.URLPhoto = URLPhoto;
+    }
+
+    public Affichage(int idArticle, String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin, ImageView image) {
+        this.idArticle = idArticle;
+        this.designation = designation;
+        this.descriptionCourte = descriptionCourte;
+        this.descriptionLongue = descriptionLongue;
+        this.expedition = expedition;
+        this.prix = prix;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.image = image;
+    }
+    
+    public String getURLPhoto() {
+        return URLPhoto;
+    }
+
+    public ImageView getImage() {
+        return image;
+    }
+
+    
+    
     public int getIdArticle() {
         return idArticle;
     }
@@ -68,6 +105,14 @@ public class Affichage {
         this.idArticle = idArticle;
     }
 
+    public void setURLPhoto(String URLPhoto) {
+        this.URLPhoto = URLPhoto;
+    }
+
+    public void setImage(ImageView Image) {
+        this.image = Image;
+    }
+    
     public void setDesignation(String designation) {
         this.designation = designation;
     }

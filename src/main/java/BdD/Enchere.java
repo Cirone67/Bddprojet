@@ -163,9 +163,9 @@ public class Enchere {
     }
 
     // creer une enchère et Article
-    public static void createElement(Connection con, double prixIni, Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie) throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
+    public static void createElement(Connection con, double prixIni, Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, String URLPhoto) throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
 
-        int idArticle = Article.createArticle(con, designation, descriptionCourte, descriptionLongue, expedition, desiCategorie, idUtilisateur);
+        int idArticle = Article.createArticle(con, designation, descriptionCourte, descriptionLongue, expedition, desiCategorie, idUtilisateur, URLPhoto);
         createEnchere(con, idArticle, prixIni, prixIni, dateDebut, dateFin, idUtilisateur);
     }
 

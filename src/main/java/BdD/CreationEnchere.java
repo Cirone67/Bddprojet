@@ -32,6 +32,8 @@ public class CreationEnchere extends BorderPane {
     private TextField tfNomObjet;
     private Label lDescriptionCourte;
     private TextField tfDescriptionCourte;
+    private TextField tfURLPhoto;
+    private Label lURLPhoto;
     private Label lDescriptionLongue;
     private TextField tfDescriptionLongue;
     private Label lModeEnvoi;
