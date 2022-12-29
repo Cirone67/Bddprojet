@@ -147,24 +147,6 @@ public class PageAccueil extends BorderPane {
         bpEntete.setBackground(bgSilver);
         vbUtilisateur.setBackground(bgLightGrey);
         
-//        VBox vbEnchereUser = new VBox(bInfoUtilisateur, bEnchere);
-////        BorderPane bpEntete = new BorderPane();
-////        ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
-////        HBox hbRecherche = new HBox(this.tfRechercher, this.bValiderRecherche);
-//        bpEntete.setCenter(hbRecherche);
-////        VBox vbGain = new VBox (this.lGain);
-////        vbGain.setAlignment(Pos.CENTER);
-////        bpEntete.setBottom(vbGain); 
-//        bpEntete.setLeft(ivLogoINSA);
-//        bpEntete.setRight(vbEnchereUser);
-//        Background bgGrey = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, null));
-//        bpEntete.setBackground(bgGrey);
-        
-//        VBox vbRubriques = new VBox(this.bAfficheSesEncheres, this.bAfficheEnchereRemporte, this.bAfficheEnchereNonRemporteEnCours, this.bAfficheEnchereRemporteEnCours);
-//        vbRubriques.setSpacing(8);
-        
-//        vbRubriques.setBackground(bgGrey);
-        
         this.setTop(bpEntete);
         this.setLeft(vbUtilisateur);
         
@@ -182,7 +164,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Multimédia");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Multimédia");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -192,7 +174,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Maison et Jardin");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Maison Et Jardin");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -202,7 +184,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Jouets et Jeux");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Jouets et Jeux");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -212,7 +194,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Culture et Loisirs");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Culture et Loisirs");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -222,7 +204,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Auto et Moto");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Auto et Moto");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -232,7 +214,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Categorie.EnchereEtArticleParCategorie(con, "Reconditionné");
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Reconditionné");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -242,7 +224,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Utilisateur.afficheSesEnchères(con, utilisateurCourant);
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Ses enchères");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -252,7 +234,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Utilisateur.afficheEnchereNonRemporteEnCours(con, utilisateurCourant);
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Enchères non remportées en cours");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -262,7 +244,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Utilisateur.afficheEnchereRemporte(con, utilisateurCourant);
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Enchères remportées");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
@@ -272,7 +254,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alCategorie = Utilisateur.afficheEnchereRemporteEnCours(con, utilisateurCourant);
                 //System.out.println(alCategorie);
-                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie);
+                this.affichageEnchere.fenetreAffichageEnchere(this.alCategorie, "Enchères remportées en cours");
             } catch (Exception ex) {
                 throw new Error(ex);
             }

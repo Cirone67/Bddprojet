@@ -45,7 +45,7 @@ public class AfficherEnchere extends TableView {
 
     }
 
-    public void fenetreAffichageEnchere(ArrayList alEnchere) {
+    public void fenetreAffichageEnchere(ArrayList alEnchere, String sCategorie) {
         TableView tvEncheres = new TableView();
         tvEncheres.setEditable(true);
         ArrayList<String> lTest = new ArrayList<>();
@@ -109,6 +109,7 @@ public class AfficherEnchere extends TableView {
         sAffichageEnchere = new Stage();
         Scene sTemp = new Scene(vbAfficherEnchere);
         sAffichageEnchere.setScene(sTemp);
+        sAffichageEnchere.setTitle(sCategorie);
         sAffichageEnchere.show();
 
     }    

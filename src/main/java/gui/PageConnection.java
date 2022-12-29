@@ -340,6 +340,7 @@ public class PageConnection extends BorderPane {
 //                    inStage.setMaximized(true);
                     inStage.setTitle("INS'Enchères");
                     inStage.setScene(sPageAccueil);
+                    inStage.setResizable(true);
                     inStage.show();
                 }
             } catch (Exception ex) {

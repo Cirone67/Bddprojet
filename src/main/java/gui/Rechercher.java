@@ -33,7 +33,7 @@ public class Rechercher {
         
         try ( Connection con = defautConnect()) {
                 alRechercheDecomposee = Article.ChercheArticle(con, alRechercheBasique);
-                aeFenetreAffichage.fenetreAffichageEnchere(alRechercheDecomposee);
+                aeFenetreAffichage.fenetreAffichageEnchere(alRechercheDecomposee, "Recherche");
             } catch (Exception ex) {
                 throw new Error(ex);
             }
