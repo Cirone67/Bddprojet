@@ -84,6 +84,7 @@ public class AfficherEnchere extends TableView {
             Affichage item = (Affichage) tvEncheres.getItems().get(row);
             TableColumn tableColumn = tablePosition.getTableColumn();
             iIDArticleSelectionne = (int) tableColumn.getCellObservableValue(item).getValue();
+            
             System.out.println(iIDArticleSelectionne);
         });
        
@@ -112,5 +113,5 @@ public class AfficherEnchere extends TableView {
         sAffichageEnchere.setTitle(sCategorie);
         sAffichageEnchere.show();
 
-    }    
+    }
 }
