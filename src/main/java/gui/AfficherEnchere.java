@@ -71,7 +71,7 @@ public class AfficherEnchere extends TableView {
         columnDescLongue.setCellValueFactory(new PropertyValueFactory<>("descriptionLongue"));
         columnModeEnvoi.setCellValueFactory(new PropertyValueFactory<>("expedition"));
         columnPhoto.setCellValueFactory(new PropertyValueFactory<>("image"));    
-        columIdArticle.setVisible(false);
+        columIdArticle.setVisible(true);
         columnPrix.setEditable(true);
         columnPrix.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
