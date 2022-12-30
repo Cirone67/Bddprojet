@@ -1,8 +1,10 @@
 package BdD;
 
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 
 /*
@@ -196,14 +200,14 @@ public class Categorie {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Categorie(rs.getInt("idCategorie"),
-                             rs.getString("designation"), rs.getInt("IdSurCategorie")));
+                            rs.getString("designation"), rs.getInt("IdSurCategorie")));
                 }
                 return res;
             }
         }
     }
-    
-   //Trouver une categorie par sa désignation:
+
+    //Trouver une categorie par sa désignation:
 //        public static Categorie Categorieavecdesi(Connection con, String designation) throws SQLException {
 //        try (PreparedStatement pst = con.prepareStatement(
 //                """
@@ -222,7 +226,6 @@ public class Categorie {
 //        }
 //    }
 //Renvoie la liste des enchères dans un groupe de catégorie
-
     public static ArrayList<Article> articleParCategorie(Connection con, ArrayList<String> desiCategorie) throws SQLException {
         ArrayList<Article> res = new ArrayList<>();
         for (int i = 0; i < desiCategorie.size(); i++) {
@@ -264,14 +267,15 @@ public class Categorie {
                 }
             }
 
-        }   
+        }
         return res;
     }
+
     public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, FileNotFoundException, MalformedURLException, IOException {
         ArrayList<Affichage> res = new ArrayList<>();
         //for (int i = 0; i < desiCategorie.size(); i++) {
-            try (PreparedStatement pst = con.prepareStatement(
-                    """
+        try (PreparedStatement pst = con.prepareStatement(
+                """
                select Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
@@ -279,23 +283,23 @@ public class Categorie {
                inner join Categorie on JoinCategorieArticle.idCategorie = Categorie.idCategorie
                where Categorie.designation = ?
                """
-            )) {
+        )) {
 //                System.out.println(desiCategorie);
-                pst.setString(1, desiCategorie);
-                try (ResultSet rs = pst.executeQuery()) {
-                    while (rs.next()) {
+            pst.setString(1, desiCategorie);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
 //                    if(res.size()!= 0){
 //                       int m=0;
 //                    for(int j=0;j<res.size();j++){
 //                      if(res.get(j)){
-                        res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin"),rs.getString("URLPhoto")));
-                    }
+                    res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getString("URLPhoto")));
                 }
+            }
 //                    }else{
 //                      res.add(rs.getInt("idArticle") );  
 //                    }                 
-            }
+        }
 //            if (desiCategorie.isEmpty()) {
 //                try (PreparedStatement pst = con.prepareStatement(
 //                        """
@@ -315,17 +319,38 @@ public class Categorie {
 //        System.out.println("res à Loic");
 
         //Fonction pour trouver l'image sur le net
-        
-        for( int i =0; i<res.size();i++){
-            if(res.get(i).getURLPhoto() != null){
-            System.out.println("photo");
-            //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
-            Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
-            ImageView imageView = new ImageView(image);
-            System.out.println(imageView);
-            res.set(i, new Affichage(res.get(i).getIdArticle(),res.get(i).getDesignation(),res.get(i).getDescriptionCourte(),res.get(i).getDescriptionLongue(),res.get(i).getExpedition(),res.get(i).getPrix(),res.get(i).getDateDebut(),res.get(i).getDateFin(),imageView));
+        for (int i = 0; i < res.size(); i++) {
+            if (res.get(i).getURLPhoto() != null) {
+                System.out.println("photo");
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
+                //InputStream stream = new FileInputStream("C:\\Users\\brenc\\Pictures\\3ha_long_1.jpg");
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                BufferedImage image = ImageIO.read(stream);
+                ImageView imageView = new ImageView(convertToFxImage(image));
+                imageView.setX(10);
+                imageView.setY(10);
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                System.out.println(imageView);
+                res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
             }
         }
         return res;
     }
+    
+    private static Image convertToFxImage(BufferedImage image) {
+    WritableImage wr = null;
+    if (image != null) {
+        wr = new WritableImage(image.getWidth(), image.getHeight());
+        PixelWriter pw = wr.getPixelWriter();
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                pw.setArgb(x, y, image.getRGB(x, y));
+            }
+        }
+    }
+
+    return new ImageView(wr).getImage();
+}
 }
