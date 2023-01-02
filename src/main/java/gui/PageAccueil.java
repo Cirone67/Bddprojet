@@ -275,13 +275,12 @@ public class PageAccueil extends BorderPane {
     
     public void rechercherEnchere (String sRecherche) {
         ArrayList<String> alRechercheBasique = new ArrayList<>();
-        alRechercheBasique = Article.decomposeRecherche(sRecherche);
+        alRechercheBasique = this.article.decomposeRecherche(sRecherche);
         
         ArrayList<Affichage> alRechercheDecomposee = new ArrayList<>();
         
         try ( Connection con = defautConnect()) {
                 alRechercheDecomposee = this.article.ChercheArticle(con, alRechercheBasique);
-                System.out.println(alRechercheDecomposee);
                 this.affichageEnchere.fenetreAffichageEnchere(this, alRechercheDecomposee, "Recherche");
             } catch (Exception ex) {
                 throw new Error(ex);
