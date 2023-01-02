@@ -45,7 +45,8 @@ public class AfficherEnchere extends TableView {
 
     }
 
-    public void fenetreAffichageEnchere(ArrayList alEnchere, String sCategorie) {
+    public void fenetreAffichageEnchere(PageAccueil main, ArrayList alEnchere, String sCategorie) {
+        this.vue = main;
         TableView tvEncheres = new TableView();
         tvEncheres.setEditable(true);
         ArrayList<String> lTest = new ArrayList<>();
