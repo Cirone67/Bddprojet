@@ -249,40 +249,40 @@ public class Enchere {
         }
     }
 
-    public static void createEtat(Connection con) throws SQLException {
-        con.setAutoCommit(false);
-        try (PreparedStatement pst = con.prepareStatement(
-                """
-                insert into Etat (idEtat,designation) values (0,ouverte),
-                insert into Etat (idEtat,designation) values (1,ferme)   
-                """)) {
-            pst.executeUpdate();
-            con.commit();
-        } catch (Exception ex) {
-            con.rollback();
-            throw ex;
-        } finally {
-            con.setAutoCommit(true);
-        }
-    }
+//    public static void createEtat(Connection con) throws SQLException {
+//        con.setAutoCommit(false);
+//        try (PreparedStatement pst = con.prepareStatement(
+//                """
+//                insert into Etat (idEtat,designation) values (0,ouverte),
+//                insert into Etat (idEtat,designation) values (1,ferme)   
+//                """)) {
+//            pst.executeUpdate();
+//            con.commit();
+//        } catch (Exception ex) {
+//            con.rollback();
+//            throw ex;
+//        } finally {
+//            con.setAutoCommit(true);
+//        }
+//    }
 
     // Fonction qui associe le statut 
-    public static int idStatuConnectToDesignation(Connection con, String designation) throws SQLException {
-        int res;
-        try (PreparedStatement pst = con.prepareStatement(
-                """
-               select idEtat from Etat where designation = ?
-               """
-        )) {
-            pst.setString(1, designation);
-            try (ResultSet rs = pst.executeQuery()) {
-                //while (rs.next()) {
-                res = rs.getInt("idEtat");
-                //} 
-                return res;
-            }
-        }
-    }
+//    public static int idStatuConnectToDesignation(Connection con, String designation) throws SQLException {
+//        int res;
+//        try (PreparedStatement pst = con.prepareStatement(
+//                """
+//               select idEtat from Etat where designation = ?
+//               """
+//        )) {
+//            pst.setString(1, designation);
+//            try (ResultSet rs = pst.executeQuery()) {
+//                //while (rs.next()) {
+//                res = rs.getInt("idEtat");
+//                //} 
+//                return res;
+//            }
+//        }
+//    }
 
     public static class EnchereExisteDejaException extends Exception {
     }
@@ -396,13 +396,7 @@ public class Enchere {
          
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    System.out.println("1");
-                    System.out.println(LocalDate.now());
-                   
-                    System.out.println("1");
                     Enchere nouvelle = new Enchere(rs.getInt("idArticle"), rs.getDouble("prixIni"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"), rs.getInt("acheteur"));
-                     System.out.println(nouvelle.getDateFin());
-                     System.out.println(nouvelle.getDateDebut());
                      if ((java.sql.Date.valueOf(LocalDate.now()).before(nouvelle.getDateFin()) || (java.sql.Date.valueOf(LocalDate.now()).equals(nouvelle.getDateFin())) )&& (java.sql.Date.valueOf(LocalDate.now()).after(nouvelle.getDateDebut()))|| (java.sql.Date.valueOf(LocalDate.now()).equals(nouvelle.getDateDebut()))) {
                         System.out.println("2");
                         if (prixPropose > nouvelle.getPrix() && prixPropose > nouvelle.getPrixIni()) {

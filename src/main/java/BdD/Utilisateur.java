@@ -309,52 +309,52 @@ public class Utilisateur {
     }
 
     //Effacer dans PGSQL-----------------------   
-    public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
-        try (Statement st = con.createStatement()) {
-            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
-            // puis les tables
-            // suppression des liens
-            try {
-                st.executeUpdate(
-                        """
-                    alter table aime
-                        drop constraint fk_aime_u1
-                             """);
-                System.out.println("constraint fk_aime_u1 dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the constraint was not created
-            }
-            try {
-                st.executeUpdate(
-                        """
-                    alter table aime
-                        drop constraint fk_aime_u2
-                    """);
-                System.out.println("constraint fk_aime_u2 dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the constraint was not created
-            }
-            // je peux maintenant supprimer les tables
-            try {
-                st.executeUpdate(
-                        """
-                    drop table utilisateur1
-                    """);
-                System.out.println("dable aime dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the table was not created
-            }
-            try {
-                st.executeUpdate(
-                        """
-                    drop table utilisateur
-                    """);
-                System.out.println("table utilisateur dropped");
-            } catch (SQLException ex) {
-                // nothing to do : maybe the table was not created
-            }
-        }
-    }
+//    public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
+//        try (Statement st = con.createStatement()) {
+//            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
+//            // puis les tables
+//            // suppression des liens
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    alter table aime
+//                        drop constraint fk_aime_u1
+//                             """);
+//                System.out.println("constraint fk_aime_u1 dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the constraint was not created
+//            }
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    alter table aime
+//                        drop constraint fk_aime_u2
+//                    """);
+//                System.out.println("constraint fk_aime_u2 dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the constraint was not created
+//            }
+//            // je peux maintenant supprimer les tables
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    drop table utilisateur1
+//                    """);
+//                System.out.println("dable aime dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the table was not created
+//            }
+//            try {
+//                st.executeUpdate(
+//                        """
+//                    drop table utilisateur
+//                    """);
+//                System.out.println("table utilisateur dropped");
+//            } catch (SQLException ex) {
+//                // nothing to do : maybe the table was not created
+//            }
+//        }
+//    }
 
 //Affichage__________________________________________________________________________________________
 //Envoie la liste des enchère à Affiche ses enchères en cours
@@ -536,44 +536,44 @@ public class Utilisateur {
         }
     }
     
-
-    public static void main(String[] args) {
-        try (Connection con = defautConnect()) {
-            //          System.out.println("connectÃ© !!!");
-//            Enchere.creeEnchere(con);
-            //          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-             //          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
-            //           Date dateFin = new java.sql.Date(simpleDateFormat.parse("30/10/2022").getTime());
-//            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
-
-            //System.out.println(dateDebut);
-//            Enchere enche =  new Enchere(0,"vendeur",0,0,dateDebut,dateFin,0,"acheteur");
-            //Utilisateur utilisateur = new Utilisateur("loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
-//            System.out.println(java.sql.Date.valueOf(LocalDate.now()));   
-            //           enche.encherir(con,utilisateur,400);
-//            Article.creeTableArticle(con);
-            //Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
-//            Article.createArticle(con, "ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
-//            Article.createArticle(con, "ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
-//            Article.createArticle(con, "Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
-//            ArrayList<String> chercher = new ArrayList<String>();
-//            chercher.add("ticket");
-//            ArrayList<Article> res = Article.ChercheArticle(Article.actulisteTousArticle(con), chercher);
-//            System.out.println(res.get(0).getDesignation());
-//            System.out.println(res.get(1).getDesignation());
-//            System.out.println(res.get(2).getDesignation());
-            //creeTableUtilisateur(con);
-            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
-            //afficheTousLesUtilisateur(con);
-            //deleteSchemaUtilisateur(con);
-            //creeTableUtilisateur(con);
-            // createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
-            // createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
-            //demandeConnection(con,"loic.lol@wanadoo.fr","blabla"));
-            //demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
-        } catch (Exception ex) {
-            throw new Error(ex);
-        }
-    }
+//
+//    public static void main(String[] args) {
+//        try (Connection con = defautConnect()) {
+//            //          System.out.println("connectÃ© !!!");
+////            Enchere.creeEnchere(con);
+//            //          SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//             //          Date dateDebut = new java.sql.Date(simpleDateFormat.parse("25/10/2022").getTime());
+//            //           Date dateFin = new java.sql.Date(simpleDateFormat.parse("30/10/2022").getTime());
+////            Enchere.createEnchere(con, 0, "vendeur", 0, 0,dateDebut,dateFin, 0, "acheteur");
+//
+//            //System.out.println(dateDebut);
+////            Enchere enche =  new Enchere(0,"vendeur",0,0,dateDebut,dateFin,0,"acheteur");
+//            //Utilisateur utilisateur = new Utilisateur("loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
+////            System.out.println(java.sql.Date.valueOf(LocalDate.now()));   
+//            //           enche.encherir(con,utilisateur,400);
+////            Article.creeTableArticle(con);
+//            //Article.createArticle(con, "deisnation", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+////            Article.createArticle(con, "ticket de tram", " deja utiliser mais en bonne etat", "", 0, 0, 0);
+////            Article.createArticle(con, "ticket de bus", "descriptionCourte", "descriptionLongue", 0, 0, 0);
+////            Article.createArticle(con, "Tschirt", "deja utiliser mais en bonne etat", "descriptionLongue", 0, 0, 0);
+////            ArrayList<String> chercher = new ArrayList<String>();
+////            chercher.add("ticket");
+////            ArrayList<Article> res = Article.ChercheArticle(Article.actulisteTousArticle(con), chercher);
+////            System.out.println(res.get(0).getDesignation());
+////            System.out.println(res.get(1).getDesignation());
+////            System.out.println(res.get(2).getDesignation());
+//            //creeTableUtilisateur(con);
+//            //createUtilisateur(con,"loic.lol@wanadoo.fr","12354","FR-67400","loic","lol",0);
+//            //afficheTousLesUtilisateur(con);
+//            //deleteSchemaUtilisateur(con);
+//            //creeTableUtilisateur(con);
+//            // createUtilisateur(con, "loic.lol@wanadoo.fr", "blabla", "FR-67400", "loic", "lol", 0);
+//            // createUtilisateur(con, "joris.bolos@gmail.com", "pass", "FR-67400", "loic", "lol", 0);
+//            //demandeConnection(con,"loic.lol@wanadoo.fr","blabla"));
+//            //demandeConnection(con,"loic.lol@wanadoo.fr", "blabla");
+//        } catch (Exception ex) {
+//            throw new Error(ex);
+//        }
+//    }
 
 }

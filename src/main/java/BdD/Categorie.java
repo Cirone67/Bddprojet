@@ -189,7 +189,7 @@ public class Categorie {
     }
     //Renvoie la liste des catégories:
 
-    public static List<Categorie> tousLesCategorie(Connection con) throws SQLException {
+    public static List<Categorie> tousLesCategories(Connection con) throws SQLException {
         List<Categorie> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
@@ -321,6 +321,7 @@ public class Categorie {
         //Fonction pour trouver l'image sur le net
         for (int i = 0; i < res.size(); i++) {
             if (res.get(i).getURLPhoto() != null) {
+                try{
                 System.out.println("photo");
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
@@ -334,7 +335,10 @@ public class Categorie {
                 imageView.setPreserveRatio(true);
                 System.out.println(imageView);
                 res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
-            }
+                } catch(MalformedURLException ex){     
+                }
+                
+                }
         }
         return res;
     }
