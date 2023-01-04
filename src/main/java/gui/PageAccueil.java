@@ -119,13 +119,14 @@ public class PageAccueil extends BorderPane {
         Background bgSilver = new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, null));
         Background bgLightGrey = new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, null));
 
-//        try ( Connection con = defautConnect()) {
-//            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
-//            String sGain = "" + dGain;
-//            this.lGain = new Label (sGain);
-//        } catch (Exception ex) {
-//            throw new Error(ex);
-//        }
+        try ( Connection con = defautConnect()) {
+            double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
+            String sGain = "" + dGain;
+            this.lGain = new Label (sGain);
+        } catch (Exception ex) {
+            throw new Error(ex);
+        }
+        
         BorderPane bpEntete = new BorderPane();
         HBox hbCategories = new HBox (bMultimedia, bMaisonEtJardin, bJouetsEtJeux, bCultureEtLoisirs, bAutoEtMoto, bReconditionne);
         hbCategories.setSpacing(10);
@@ -142,7 +143,7 @@ public class PageAccueil extends BorderPane {
         bpEntete.setCenter(vbCentre);
         bpEntete.setRight(bEnchere);
         
-        VBox vbUtilisateur = new VBox (bInfoUtilisateur, bAfficheSesEncheres, bAfficheEnchereRemporte, bAfficheEnchereNonRemporteEnCours, bAfficheEnchereRemporteEnCours);
+        VBox vbUtilisateur = new VBox (lGain, bInfoUtilisateur, bAfficheSesEncheres, bAfficheEnchereRemporte, bAfficheEnchereNonRemporteEnCours, bAfficheEnchereRemporteEnCours);
         vbUtilisateur.setSpacing(10);
         vbUtilisateur.setPadding(new Insets (5));
         
