@@ -435,7 +435,7 @@ public class Utilisateur {
                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
-                where Enchere.acheteur = ? and Enchere.dateFin >= ?
+                where Enchere.acheteur = ? and Enchere.dateFin > ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
@@ -455,7 +455,7 @@ public class Utilisateur {
         ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               select distinct Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                inner join Article on Enchere.idArticle = Article.idArticle
                join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle

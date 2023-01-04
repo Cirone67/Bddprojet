@@ -425,4 +425,30 @@ public class Enchere {
             }
         }
     }
-}
+//    
+//       public static void encherir(Connection con, int idUtilisateurConnecter, double prixPropose, int idArticle) throws SQLException {
+//        con.setAutoCommit(false);
+//        try (PreparedStatement pst = con.prepareStatement(
+//                """
+//               update Enchere set prix = ?, acheteur = ?
+//               where Enchere.idArticle = ? and dateDebut<= ? and dateFin < ? and Enchere.prix <=? and Enchere.prixIni <= ?
+//               
+//               
+//               """
+//        )) {
+//            pst.setDouble(1, prixPropose);
+//            pst.setInt(2,idUtilisateurConnecter);
+//            pst.setInt(3, idArticle);
+//            pst.setDate(4,java.sql.Date.valueOf(LocalDate.now()));
+//            pst.setDate(5,java.sql.Date.valueOf(LocalDate.now()));
+//            pst.setDouble(6, prixPropose);
+//            pst.setDouble(7, prixPropose);
+//
+//                            con.setAutoCommit(true);
+//
+//                        }
+//                    }
+//                }
+
+}    
+

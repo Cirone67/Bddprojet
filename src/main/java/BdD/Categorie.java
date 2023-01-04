@@ -325,8 +325,8 @@ public class Categorie {
                 System.out.println("photo");
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
-                //InputStream stream = new FileInputStream("C:\\Users\\brenc\\Pictures\\3ha_long_1.jpg");
-                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                //InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
                 BufferedImage image = ImageIO.read(stream);
                 ImageView imageView = new ImageView(convertToFxImage(image));
                 imageView.setX(10);
@@ -335,9 +335,9 @@ public class Categorie {
                 imageView.setPreserveRatio(true);
                 System.out.println(imageView);
                 res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
-                } catch(MalformedURLException ex){     
+                } catch(MalformedURLException | FileNotFoundException ex){
                 }
-                
+            
                 }
         }
         return res;
