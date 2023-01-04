@@ -181,6 +181,7 @@ public class PageConnection extends BorderPane {
                             sMDPOublie.close();
                         } else {
                             HBox hbErreur = new HBox(this.lErreur);
+                            lErreur.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
                             hbErreur.setAlignment(Pos.CENTER);
 
                             Scene sTempErreur = new Scene(hbErreur);
@@ -302,6 +303,7 @@ public class PageConnection extends BorderPane {
                             sNouvelUtilisateur.close();
                         } else {
                             HBox hbErreur = new HBox(this.lErreur);
+                            lErreur.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 17));
                             hbErreur.setAlignment(Pos.CENTER);
 
                             Scene sTempErreur = new Scene(hbErreur);
