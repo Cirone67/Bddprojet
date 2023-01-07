@@ -325,8 +325,8 @@ public class Categorie {
                 System.out.println("photo");
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
-                InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
-                //InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                //InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
                 BufferedImage image = ImageIO.read(stream);
                 ImageView imageView = new ImageView(convertToFxImage(image));
                 imageView.setX(10);

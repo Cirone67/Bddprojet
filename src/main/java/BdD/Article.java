@@ -138,7 +138,7 @@ public class Article {
                         descriptionCourte varchar(100),
                         descriptionLongue varchar(500),
                         expedition integer not null,
-                        URLPhoto varchar(80),
+                        URLPhoto varchar(500),
                         posseseur integer not null
                     )
                     """);
