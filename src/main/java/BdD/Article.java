@@ -174,7 +174,7 @@ public class Article {
         while (i < desiCategorie.size()) {
             try (PreparedStatement pst = con.prepareStatement(
                     """   
-                    insert into JoinCategorieArticle (idCategorie,idArticle) values ((select idCategorie from Categorie where designation = ?) ,(select idArticle from Article where designation = ?));
+                    insert into JoinCategorieArticle (idCategorie,idArticle) values ((select idCategorie from Categorie where designation = ?) ,(select max(idArticle) from Article where designation = ?));
                 
                 """)) {
                 pst.setString(2, designation);

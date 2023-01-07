@@ -271,7 +271,7 @@ public class Categorie {
         return res;
     }
 
-    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, FileNotFoundException, MalformedURLException, IOException {
+    public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, IOException {
         ArrayList<Affichage> res = new ArrayList<>();
         //for (int i = 0; i < desiCategorie.size(); i++) {
         try (PreparedStatement pst = con.prepareStatement(
@@ -335,7 +335,7 @@ public class Categorie {
                 imageView.setPreserveRatio(true);
                 System.out.println(imageView);
                 res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
-                } catch(MalformedURLException | FileNotFoundException ex){
+                } catch( IOException ex){
                 }
             
                 }
