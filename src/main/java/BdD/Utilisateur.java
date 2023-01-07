@@ -34,7 +34,7 @@ public class Utilisateur {
     private PageConnection pcConnection;
 
 //Constructor-------------------------------------------------
-    public Utilisateur(int idUtilisateur,String email, String mdp, String codePostal, String nom, String prenom, int statut) {
+    public Utilisateur(int idUtilisateur, String email, String mdp, String codePostal, String nom, String prenom, int statut) {
         this.idUtilisateur = idUtilisateur;
         this.email = email;
         this.mdp = mdp;
@@ -272,20 +272,20 @@ public class Utilisateur {
     }
 
     //Lecture dans PGSQL----------------------
-    public  static ArrayList<Utilisateur> afficheTousLesUtilisateur(Connection con) throws SQLException {
+    public static ArrayList<Utilisateur> afficheTousLesUtilisateur(Connection con) throws SQLException {
         ArrayList<Utilisateur> res = new ArrayList<>();
         try (Statement st = con.createStatement()) {
             try (ResultSet tlu = st.executeQuery("select * from utilisateur")) {
                 while (tlu.next()) {
-                      res.add(new Utilisateur(tlu.getInt("idUtilisateur"),tlu.getString("email"),tlu.getString("mdp"), tlu.getString("codePostal"),tlu.getString("nom"),tlu.getString("prenom"),tlu.getInt("statut")));
+                    res.add(new Utilisateur(tlu.getInt("idUtilisateur"), tlu.getString("email"), tlu.getString("mdp"), tlu.getString("codePostal"), tlu.getString("nom"), tlu.getString("prenom"), tlu.getInt("statut")));
                 }
             }
         }
-    return res;
+        return res;
     }
-    
+
     public static Utilisateur afficheInfoUtilisateur(Connection con, int idUtilisateur) throws SQLException {
-        Utilisateur res = new Utilisateur(0,"defaut","defaut","defaut","defaut","defaut",0);
+        Utilisateur res = new Utilisateur(0, "defaut", "defaut", "defaut", "defaut", "defaut", 0);
         try (PreparedStatement pst = con.prepareStatement(
                 """
                 select * from Utilisateur where idUtilisateur = ?
@@ -294,18 +294,18 @@ public class Utilisateur {
             pst.setInt(1, idUtilisateur);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-              res.setCodePostal(rs.getString("codePostal"));
-              res.setEmail(rs.getString("email"));
-              res.setIdUtilisateur(rs.getInt("idUtilisateur"));
-              res.setMdp(rs.getString("mdp"));
-              res.setNom(rs.getString("nom"));
-              res.setPrenom(rs.getString("prenom"));
-              res.setStatut(rs.getInt("statut"));
+                    res.setCodePostal(rs.getString("codePostal"));
+                    res.setEmail(rs.getString("email"));
+                    res.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                    res.setMdp(rs.getString("mdp"));
+                    res.setNom(rs.getString("nom"));
+                    res.setPrenom(rs.getString("prenom"));
+                    res.setStatut(rs.getInt("statut"));
                 }
- }
             }
-        return res; 
-    
+        }
+        return res;
+
     }
 
     //Effacer dans PGSQL-----------------------   
@@ -355,7 +355,6 @@ public class Utilisateur {
 //            }
 //        }
 //    }
-
 //Affichage__________________________________________________________________________________________
 //Envoie la liste des enchère à Affiche ses enchères en cours
     public static ArrayList<Affichage> afficheSesEnchères(Connection con, int idUtilisateur) throws SQLException {
@@ -372,8 +371,8 @@ public class Utilisateur {
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
+                    res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
                 }
                 return res;
             }
@@ -395,8 +394,8 @@ public class Utilisateur {
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
+                    res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
                 }
                 return res;
             }
@@ -419,7 +418,7 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     //if(java.sql.Date.valueOf(LocalDate.now()).after(rs.getDate("dateFin"))){
-                    gain = (rs.getDouble("prix")-rs.getDouble("prixIni")) + gain;
+                    gain = (rs.getDouble("prix") - rs.getDouble("prixIni")) + gain;
                     //} //Si jamais ca marche pas dans sql
                 }
                 return gain;
@@ -442,9 +441,9 @@ public class Utilisateur {
             pst.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
-             }
+                    res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                }
                 return res;
             }
         }
@@ -467,14 +466,34 @@ public class Utilisateur {
             pst.setInt(3, idUtilisateur);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new Affichage(rs.getInt("idArticle"),rs.getString("designation"),
-                                rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getDouble("prix"),rs.getDate("dateDebut"),rs.getDate("dateFin")));
+                    res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
                 }
                 return res;
             }
         }
     }
-    
+
+    //Fonction renvoyant le statut de l'utilisateur
+    public static int statutUtilisateur(Connection con, int idUtilisateurCourant) throws SQLException {
+        int res = 1;
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               select Utilisateur.statut
+               where Utilisateur.idUtilisateur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateurCourant);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    res = rs.getInt("statut");
+                }
+                return res;
+            }
+        }
+    }
+
     //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.
     //-% d'Enchere active
     public static double statEnchereActive(Connection con) throws SQLException {
@@ -535,7 +554,7 @@ public class Utilisateur {
             }
         }
     }
-    
+
 //
 //    public static void main(String[] args) {
 //        try (Connection con = defautConnect()) {
@@ -575,5 +594,4 @@ public class Utilisateur {
 //            throw new Error(ex);
 //        }
 //    }
-
 }
