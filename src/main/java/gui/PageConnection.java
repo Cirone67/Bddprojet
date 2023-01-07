@@ -327,6 +327,8 @@ public class PageConnection extends BorderPane {
             try ( Connection con = defautConnect()) {
                 int res;
                 res = user.demandeConnection(con, tfIdentifiant.getText(), pfMotDePasse.getText());
+                int statut;
+                statut = user.statutUtilisateur(con, res);
                 //int id = 3; // TODO : demandeConnection renvoie l'id ou -1
                 if (res == -1) {
                     HBox hbErreur = new HBox(this.lProblemMDP);
@@ -338,7 +340,7 @@ public class PageConnection extends BorderPane {
                     sErreur.show();
                 } else {
                     this.inStage.close();
-                    sPageAccueil = new Scene(new PageAccueil(inStage, res));
+                    sPageAccueil = new Scene(new PageAccueil(inStage, res, statut));
 //                    inStage.setMaximized(true);
                     inStage.setTitle("INS'Enchères");
                     inStage.setScene(sPageAccueil);

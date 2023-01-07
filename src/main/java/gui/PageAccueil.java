@@ -70,6 +70,8 @@ public class PageAccueil extends BorderPane {
     private Button bAfficheEnchereRemporteEnCours;
     private Button bValiderRecherche;
     private Button bDeconnexion;
+    private Button bGererUtilisateurs;
+    private Button bGererEncheres;
 
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
@@ -81,7 +83,7 @@ public class PageAccueil extends BorderPane {
     private ArrayList<Affichage> alCategorie;
     //private BorderPane bpEntete;
 
-    public PageAccueil(Stage inStage, int utilisateurCourant) {
+    public PageAccueil(Stage inStage, int utilisateurCourant, int statut) {
         this.utilisateurCourant = utilisateurCourant;
         this.inStage = inStage;
         this.controleur = new Controleur(this);
@@ -112,6 +114,8 @@ public class PageAccueil extends BorderPane {
         this.lTextAccueil = new Label("sur ce magnifique site d'enchères de l'INSA Strasbourg");
         this.lTextQuiSertARien = new Label("Fait par les étudiants, pour qui veut");
         this.bDeconnexion = new Button("Deconnexion");
+        this.bGererUtilisateurs = new Button ("Gérer les \nutilisateurs");
+        this.bGererEncheres = new Button ("Gérer les \nenchères");
 
         lBienvenue.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 50));
         lTextAccueil.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 20));
@@ -143,6 +147,8 @@ public class PageAccueil extends BorderPane {
         bAfficheEnchereNonRemporteEnCours.setPrefSize(180, 50);
         bAfficheEnchereRemporteEnCours.setPrefSize(180, 50);
         bDeconnexion.setPrefSize(180, 50);
+        bGererUtilisateurs.setPrefSize(180, 50);
+        bGererEncheres.setPrefSize(180, 50);
 
         Background bgSilver = new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, null));
         Background bgLightGrey = new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, null));
@@ -150,7 +156,7 @@ public class PageAccueil extends BorderPane {
         try ( Connection con = defautConnect()) {
             double dGain = Utilisateur.afficheGain(con, utilisateurCourant);
             String sGain = "" + dGain;
-            this.lGain = new Label(sGain);
+            this.lGain = new Label("Gain : " + sGain + " €");
         } catch (Exception ex) {
             throw new Error(ex);
         }
@@ -173,7 +179,14 @@ public class PageAccueil extends BorderPane {
 
         VBox vbGain = new VBox(lGain);
         vbGain.setAlignment(Pos.CENTER);
-        VBox vbUtilisateur = new VBox(vbGain, bInfoUtilisateur, bAfficheSesEncheres, bAfficheEnchereRemporte, bAfficheEnchereNonRemporteEnCours, bAfficheEnchereRemporteEnCours, bDeconnexion);
+        VBox vbUtilisateur = new VBox(vbGain, bInfoUtilisateur, bAfficheSesEncheres, bAfficheEnchereRemporte, bAfficheEnchereNonRemporteEnCours, 
+                    bAfficheEnchereRemporteEnCours, bDeconnexion);  
+        
+        if (statut == 0) {
+            vbUtilisateur.getChildren().add(bGererUtilisateurs);
+            vbUtilisateur.getChildren().add(bGererEncheres);
+        }
+        
         vbUtilisateur.setSpacing(10);
         vbUtilisateur.setPadding(new Insets(5));
 

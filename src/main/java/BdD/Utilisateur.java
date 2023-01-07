@@ -480,6 +480,7 @@ public class Utilisateur {
         try (PreparedStatement pst = con.prepareStatement(
                 """
                select Utilisateur.statut
+               from Utilisateur
                where Utilisateur.idUtilisateur = ?
                """
         )) {
