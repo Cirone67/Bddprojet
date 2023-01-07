@@ -489,9 +489,10 @@ public class Utilisateur {
                 while (rs.next()) {
                     res = rs.getInt("statut");
                 }
-                return res;
+                
             }
         }
+     return res;
     }
 
     //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.
