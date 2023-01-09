@@ -244,7 +244,7 @@ public class Article {
                """
         )) {
             pst.setString(1, designation);
-            pst.executeUpdate();
+            //pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 //while (rs.next()) {
                 res = rs.getInt("idArticle");

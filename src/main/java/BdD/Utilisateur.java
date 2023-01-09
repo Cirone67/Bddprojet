@@ -272,13 +272,15 @@ public class Utilisateur {
     }
 
     //Lecture dans PGSQL----------------------
-    public static ArrayList<Utilisateur> afficheTousLesUtilisateur(Connection con) throws SQLException {
+    public static ArrayList<Utilisateur> afficheTousLesUtilisateur(Connection con, int idUtilisateurCourant) throws SQLException {
         ArrayList<Utilisateur> res = new ArrayList<>();
         try (Statement st = con.createStatement()) {
             try (ResultSet tlu = st.executeQuery("select * from utilisateur")) {
                 while (tlu.next()) {
+                    if(tlu.getInt("idUtilisateur") !=idUtilisateurCourant ){
                     res.add(new Utilisateur(tlu.getInt("idUtilisateur"), tlu.getString("email"), tlu.getString("mdp"), tlu.getString("codePostal"), tlu.getString("nom"), tlu.getString("prenom"), tlu.getInt("statut")));
-                }
+                    }
+                    }
             }
         }
         return res;
@@ -309,52 +311,73 @@ public class Utilisateur {
     }
 
     //Effacer dans PGSQL-----------------------   
-//    public static void deleteSchemaUtilisateur(Connection con) throws SQLException {
-//        try (Statement st = con.createStatement()) {
-//            // pour Ãªtre sÃ»r de pouvoir supprimer, il faut d'abord supprimer les liens
-//            // puis les tables
-//            // suppression des liens
-//            try {
-//                st.executeUpdate(
-//                        """
-//                    alter table aime
-//                        drop constraint fk_aime_u1
-//                             """);
-//                System.out.println("constraint fk_aime_u1 dropped");
-//            } catch (SQLException ex) {
-//                // nothing to do : maybe the constraint was not created
-//            }
-//            try {
-//                st.executeUpdate(
-//                        """
-//                    alter table aime
-//                        drop constraint fk_aime_u2
-//                    """);
-//                System.out.println("constraint fk_aime_u2 dropped");
-//            } catch (SQLException ex) {
-//                // nothing to do : maybe the constraint was not created
-//            }
-//            // je peux maintenant supprimer les tables
-//            try {
-//                st.executeUpdate(
-//                        """
-//                    drop table utilisateur1
-//                    """);
-//                System.out.println("dable aime dropped");
-//            } catch (SQLException ex) {
-//                // nothing to do : maybe the table was not created
-//            }
-//            try {
-//                st.executeUpdate(
-//                        """
-//                    drop table utilisateur
-//                    """);
-//                System.out.println("table utilisateur dropped");
-//            } catch (SQLException ex) {
-//                // nothing to do : maybe the table was not created
-//            }
-//        }
-//    }
+    public static void deleteUtilisateur(Connection con, int idUtilisateur) throws SQLException {
+        //Supprimer le liste des articles enchéris
+        con.setAutoCommit(false);
+         try (PreparedStatement pst = con.prepareStatement(
+                """
+                DELETE FROM ListPosseseur
+                where idUtilisateur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.executeUpdate();
+        }catch (SQLException ex) {
+            System.out.println("1");
+        }
+        //Supprimer la liste des articles qu'il possèdent qui ont été enchéri (par d'autre utilisateur)
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                DELETE FROM ListPosseseur
+                join Article on ListPosseseur.idArticle = Article.idArticle
+               where Article.posseseur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.executeUpdate();
+        }catch (SQLException ex) {
+            System.out.println("2");
+        }
+        //Supprimer la liste des enchères qu'il possède
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                DELETE FROM Enchere
+               join Article on Enchere.idArticle = Article.idArticle
+               where Article.posseseur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.executeUpdate();
+        }catch (SQLException ex) {
+            System.out.println("3");
+        }
+        //Supprimer la liste des articles qu'il possède
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+               DELETE FROM Articles
+               where Article.posseseur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.executeUpdate();
+        }catch (SQLException ex) {
+            System.out.println("4");
+        }
+        //Supprime l'utilisateur
+        try (PreparedStatement pst = con.prepareStatement(
+                """
+                DELETE FROM Utilisateur
+               where Utilisateur.idUtilisateur = ?
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.executeUpdate();
+        }catch (SQLException ex) {
+            System.out.println("5");
+        }
+      con.setAutoCommit(true);  
+    }
+    
 //Affichage__________________________________________________________________________________________
 //Envoie la liste des enchère à Affiche ses enchères en cours
     public static ArrayList<Affichage> afficheSesEnchères(Connection con, int idUtilisateur) throws SQLException {

@@ -76,11 +76,13 @@ public class PageAccueil extends BorderPane {
     private BorderPane bpEcranPrincipal;
     private CreerEnchere creerEnchere;
     private AfficherEnchere affichageEnchere;
+    private AfficherUtilisateur affichageUtilisateur;
     private InfoUtilisateur infoUtilisateur;
     private Rechercher search;
     private Article article;
 
     private ArrayList<Affichage> alCategorie;
+    private ArrayList<Utilisateur> alUtilisateur;
     //private BorderPane bpEntete;
 
     public PageAccueil(Stage inStage, int utilisateurCourant, int statut) {
@@ -89,6 +91,7 @@ public class PageAccueil extends BorderPane {
         this.controleur = new Controleur(this);
         this.creerEnchere = new CreerEnchere(this);
         this.affichageEnchere = new AfficherEnchere();
+        this.affichageUtilisateur = new AfficherUtilisateur();
         this.infoUtilisateur = new InfoUtilisateur();
         this.search = new Rechercher();
 
@@ -321,6 +324,16 @@ public class PageAccueil extends BorderPane {
             inStage.setResizable(true);
             inStage.show();
 
+        });
+        
+        bGererUtilisateurs.setOnAction((t) -> {
+            try ( Connection con = defautConnect()) {
+                this.alUtilisateur = Utilisateur.afficheTousLesUtilisateur(con, utilisateurCourant);
+                //System.out.println(alCategorie);
+                this.affichageUtilisateur.fenetreAffichageUtilisateur(this, this.alUtilisateur, "Liste des utilisateurs",con);
+            } catch (Exception ex) {
+                throw new Error(ex);
+            }
         });
 
     }
