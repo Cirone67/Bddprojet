@@ -173,7 +173,7 @@ public class PageAccueil extends BorderPane {
         hbRecherche.setSpacing(10);
         hbRecherche.setPadding(new Insets(5));
         hbRecherche.setAlignment(Pos.CENTER);
-        ImageView ivLogoINSA = new ImageView(new Image("file:Image_INSA.png"));
+        ImageView ivLogoINSA = new ImageView(new Image("file:Ins_Enchère_v4.png"));
         VBox vbCentre = new VBox(hbRecherche, hbCategories);
 
         bpEntete.setLeft(ivLogoINSA);
@@ -320,6 +320,7 @@ public class PageAccueil extends BorderPane {
             this.inStage.close();
             sPageConnection = new Scene(new PageConnection(inStage));
             inStage.setTitle("INS'Enchères");
+            inStage.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
             inStage.setScene(sPageConnection);
             inStage.setResizable(true);
             inStage.show();

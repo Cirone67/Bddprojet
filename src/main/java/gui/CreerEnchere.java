@@ -24,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -162,6 +163,7 @@ public class CreerEnchere extends BorderPane {
 
         sEnchere = new Stage();
         sEnchere.setScene(sTemp);
+        sEnchere.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
         sEnchere.setTitle("Créer une enchère");
         sEnchere.setHeight(420);
         sEnchere.setWidth(360);

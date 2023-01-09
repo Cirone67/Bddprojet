@@ -24,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -92,6 +93,7 @@ public class AfficherUtilisateur extends TableView{
         sAffichageEnchere = new Stage();
         Scene sTemp = new Scene(vbAfficherUtilisateur);
         sAffichageEnchere.setScene(sTemp);
+        sAffichageEnchere.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
         sAffichageEnchere.setTitle(sCategorie);
         sAffichageEnchere.show();
 }

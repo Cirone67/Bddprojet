@@ -22,6 +22,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -112,6 +113,7 @@ public class PageConnection extends BorderPane {
         inStage.setResizable(false);
 
         this.inStage.setTitle("Se connecter");
+        this.inStage.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
 
         this.setLeft(gpAffichageConnection);
 
@@ -163,6 +165,7 @@ public class PageConnection extends BorderPane {
                 sMDPOublie = new Stage();
                 sMDPOublie.setScene(sTemp);
                 sMDPOublie.setTitle("Mot de passe oublié ?");
+                sMDPOublie.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                 sMDPOublie.setResizable(false);
                 sMDPOublie.show();
                 
@@ -187,6 +190,7 @@ public class PageConnection extends BorderPane {
                             Scene sTempErreur = new Scene(hbErreur);
                             sErreur = new Stage();
                             sErreur.setTitle("Erreur mot de passe !");
+                            sErreur.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                             sErreur.setScene(sTempErreur);
                             sErreur.show();
                         }
@@ -267,6 +271,7 @@ public class PageConnection extends BorderPane {
                 sNouvelUtilisateur = new Stage();
                 sNouvelUtilisateur.setScene(sTemp);
                 sNouvelUtilisateur.setTitle("Nouvel Utilisateur");
+                sNouvelUtilisateur.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                 sNouvelUtilisateur.setResizable(false);
                 sNouvelUtilisateur.show();
 
@@ -309,6 +314,7 @@ public class PageConnection extends BorderPane {
                             Scene sTempErreur = new Scene(hbErreur);
                             sErreur = new Stage();
                             sErreur.setTitle("Erreur création utilisateur !");
+                            sErreur.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                             sErreur.setScene(sTempErreur);
                             sErreur.show();
                         }
@@ -337,13 +343,15 @@ public class PageConnection extends BorderPane {
                     Scene sTemp = new Scene(hbErreur);
                     sErreur = new Stage();
                     sErreur.setScene(sTemp);
+                    sErreur.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                     sErreur.show();
                 } else {
                     this.inStage.close();
                     sPageAccueil = new Scene(new PageAccueil(inStage, res, statut));
 //                    inStage.setMaximized(true);
-                    inStage.setTitle("INS'Enchères");
+                    inStage.setTitle("INS'Enchère");
                     inStage.setScene(sPageAccueil);
+                    inStage.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
                     inStage.setResizable(true);
                     inStage.show();
                 }

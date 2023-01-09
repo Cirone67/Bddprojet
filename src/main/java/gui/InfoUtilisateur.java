@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -97,6 +98,7 @@ public class InfoUtilisateur {
             sInfosUser = new Stage();
             Scene sTemp = new Scene(gpUser);
             sInfosUser.setScene(sTemp);
+            sInfosUser.getIcons().add(new Image("file:Ins_Enchère_v6.png"));
             sInfosUser.setTitle("Informations utilisateur");
             sInfosUser.show();
 
