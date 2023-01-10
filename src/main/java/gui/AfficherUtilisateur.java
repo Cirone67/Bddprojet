@@ -45,7 +45,7 @@ public class AfficherUtilisateur extends TableView{
     
     
     
-    public void fenetreAffichageUtilisateur(PageAccueil main, ArrayList alUtilisateur, String sCategorie, Connection con) {
+    public void fenetreAffichageUtilisateur(PageAccueil main, ArrayList alUtilisateur, String sCategorie) {
         this.bSupprimer = new Button("Supprimer");
         this.lSelectionner = new Label("Utilisateur selectionné : ");
         this.tfSelectionner = new TextField("Id Utilisateur");
@@ -82,11 +82,11 @@ public class AfficherUtilisateur extends TableView{
         bSupprimer.setOnAction((t) -> {
             String sSelectioner = tfSelectionner.getText();
             
-            try {
+            try ( Connection con = defautConnect()) {
                 System.out.println("dedans");
                 Utilisateur.deleteUtilisateur(con,Integer.parseInt(sSelectioner));
-            } catch (SQLException ex) {
-                
+            } catch (Exception  ex) {
+                throw new Error(ex);
             }
         });
         

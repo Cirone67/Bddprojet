@@ -313,10 +313,12 @@ public class Utilisateur {
     //Effacer dans PGSQL-----------------------   
     public static void deleteUtilisateur(Connection con, int idUtilisateur) throws SQLException {
         //Supprimer le liste des articles enchéris
+        System.out.print("2");
         con.setAutoCommit(false);
+        try {
          try (PreparedStatement pst = con.prepareStatement(
                 """
-                DELETE FROM ListPosseseur
+                delete from ListPosseseur
                 where idUtilisateur = ?
                """
         )) {
@@ -328,54 +330,76 @@ public class Utilisateur {
         //Supprimer la liste des articles qu'il possèdent qui ont été enchéri (par d'autre utilisateur)
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                DELETE FROM ListPosseseur
-                join Article on ListPosseseur.idArticle = Article.idArticle
-               where Article.posseseur = ?
+                delete from ListPosseseur
+                using Article
+               where ListPosseseur.idArticle = Article.idArticle
+               and Article.posseseur = ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
             pst.executeUpdate();
-        }catch (SQLException ex) {
-            System.out.println("2");
         }
         //Supprimer la liste des enchères qu'il possède
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                DELETE FROM Enchere
-               join Article on Enchere.idArticle = Article.idArticle
-               where Article.posseseur = ?
+               delete from Enchere
+               using Article 
+               where Enchere.idArticle = Article.idArticle
+               and Article.posseseur = ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
             pst.executeUpdate();
-        }catch (SQLException ex) {
-            System.out.println("3");
+        }
+        //Modifie l'achteur des articles qu'il avait le plus enchéri
+                try (PreparedStatement pst = con.prepareStatement(
+                """
+                update Enchere set prix = (
+                     select max(ListPosseseur.prix) from ListPosseseur
+                    join Enchere on Enchere.idArticle = ListPosseseur.idArticle
+                     where Enchere.acheteur = ?),
+			   
+              acheteur = (
+                     select idUtilisateur from ListPosseseur
+                      where Enchere.prix = (select max(ListPosseseur.prix) from ListPosseseur
+                     join Enchere on Enchere.idArticle = ListPosseseur.idArticle
+                     where Enchere.acheteur = ?) and Enchere.acheteur = ?)
+
+               """
+        )) {
+            pst.setInt(1, idUtilisateur);
+            pst.setInt(2, idUtilisateur);
+            pst.setInt(3, idUtilisateur);
+            pst.executeUpdate();
         }
         //Supprimer la liste des articles qu'il possède
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               DELETE FROM Articles
+               delete from Article
                where Article.posseseur = ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
             pst.executeUpdate();
-        }catch (SQLException ex) {
-            System.out.println("4");
         }
         //Supprime l'utilisateur
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                DELETE FROM Utilisateur
+               delete from Utilisateur
                where Utilisateur.idUtilisateur = ?
                """
         )) {
             pst.setInt(1, idUtilisateur);
             pst.executeUpdate();
-        }catch (SQLException ex) {
-            System.out.println("5");
         }
-      con.setAutoCommit(true);  
+        con.commit();
+        } catch (SQLException ex) {
+            con.rollback();
+            throw ex;
+        } finally {
+            con.setAutoCommit(true);
+        }
+        System.out.print("c'est fait");
     }
     
 //Affichage__________________________________________________________________________________________

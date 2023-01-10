@@ -331,7 +331,7 @@ public class PageAccueil extends BorderPane {
             try ( Connection con = defautConnect()) {
                 this.alUtilisateur = Utilisateur.afficheTousLesUtilisateur(con, utilisateurCourant);
                 //System.out.println(alCategorie);
-                this.affichageUtilisateur.fenetreAffichageUtilisateur(this, this.alUtilisateur, "Liste des utilisateurs",con);
+                this.affichageUtilisateur.fenetreAffichageUtilisateur(this, this.alUtilisateur, "Liste des utilisateurs");
             } catch (Exception ex) {
                 throw new Error(ex);
             }

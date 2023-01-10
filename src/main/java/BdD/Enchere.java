@@ -73,8 +73,8 @@ public class Enchere {
                     """
                     create table Enchere (
                         idArticle integer not null primary key,
-                        prixIni integer not null,
-                        prix integer,
+                        prixIni real not null,
+                        prix real,
                         dateDebut date not null,
                         dateFin date not null,
                         acheteur integer
@@ -115,7 +115,8 @@ public class Enchere {
                     """
                     create table ListPosseseur (
                         idArticle integer not null,
-                        idUtilisateur integer not null
+                        idUtilisateur integer not null,
+                        prix real not null
                     )
                     """);
             con.commit();
@@ -144,14 +145,15 @@ public class Enchere {
     }
 
     //Pour se souvenir de l'enchérissement (Affichage)
-    public static void UpdateListPosseseur(Connection con, int idArticle, int idUtilisateur) throws SQLException {
+    public static void UpdateListPosseseur(Connection con, int idArticle, int idUtilisateur, double prix) throws SQLException {
         con.setAutoCommit(false);
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                insert into ListPosseseur (idArticle,idUtilisateur) values (?,?)
+                insert into ListPosseseur (idArticle,idUtilisateur,prix) values (?,?,?)
                 """, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, idArticle);
             pst.setInt(2, idUtilisateur);
+            pst.setDouble(3,prix);
             pst.executeUpdate();
             con.commit();
         } catch (Exception ex) {
@@ -416,7 +418,7 @@ public class Enchere {
                                 con.commit();
                             }
                             con.setAutoCommit(true);
-                            UpdateListPosseseur(con, nouvelle.idArticle, nouvelle.acheteur);
+                            UpdateListPosseseur(con, nouvelle.idArticle, nouvelle.acheteur, nouvelle.prix);
 
                         }
                     }
