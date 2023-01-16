@@ -320,7 +320,7 @@ public class Categorie {
 
     //Fonction pour trouver l'image sur le net
         for (int i = 0; i < res.size(); i++) {
-            if (res.get(i).getURLPhoto() != null) {
+            if (res.get(i).getURLPhoto() != null && !(res.get(i).getURLPhoto().isBlank())) {
                 try{
                 System.out.println("photo");
                 //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
