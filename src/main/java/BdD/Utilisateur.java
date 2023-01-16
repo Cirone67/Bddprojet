@@ -2,6 +2,10 @@ package BdD;
 
 //package ProjetBdD.gui;
 import gui.PageConnection;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -12,6 +16,11 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -404,11 +413,11 @@ public class Utilisateur {
     
 //Affichage__________________________________________________________________________________________
 //Envoie la liste des enchère à Affiche ses enchères en cours
-    public static ArrayList<Affichage> afficheSesEnchères(Connection con, int idUtilisateur) throws SQLException {
+    public static ArrayList<Affichage> afficheSesEnchères(Connection con, int idUtilisateur) throws SQLException, IOException {
         ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+                select Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                 from Enchere
                join Article on Enchere.idArticle = Article.idArticle
                where Article.posseseur = ?
@@ -419,9 +428,32 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"),rs.getString("URLPhoto")));
                 }
-                return res;
+                 //Fonction pour trouver l'image sur le net
+        for (int i = 0; i < res.size(); i++) {
+            if (res.get(i).getURLPhoto() != null) {
+                try{
+                System.out.println("photo");
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
+                //InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                BufferedImage image = ImageIO.read(stream);
+                ImageView imageView = new ImageView(convertToFxImage(image));
+                imageView.setX(10);
+                imageView.setY(10);
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                System.out.println(imageView);
+                res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
+                } catch( IOException ex){
+                    throw ex;
+                }
+            
+                }
+        }
+        return res;
             }
         }
     }
@@ -431,7 +463,7 @@ public class Utilisateur {
         ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-                select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+                select Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                 from Enchere
                 join Article on Enchere.idArticle = Article.idArticle
                 where Enchere.acheteur = ? and Enchere.dateFin < ?
@@ -442,9 +474,31 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"),rs.getString("URLPhoto")));
+           }
+                          //Fonction pour trouver l'image sur le net
+        for (int i = 0; i < res.size(); i++) {
+            if (res.get(i).getURLPhoto() != null) {
+                try{
+                System.out.println("photo");
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
+                //InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                BufferedImage image = ImageIO.read(stream);
+                ImageView imageView = new ImageView(convertToFxImage(image));
+                imageView.setX(10);
+                imageView.setY(10);
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                System.out.println(imageView);
+                res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
+                } catch( IOException ex){
                 }
-                return res;
+            
+                }
+        }
+        return res;
             }
         }
     }
@@ -478,7 +532,7 @@ public class Utilisateur {
         ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               select Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                join Article on Enchere.idArticle = Article.idArticle
                 where Enchere.acheteur = ? and Enchere.dateFin > ?
@@ -489,9 +543,31 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"),rs.getString("URLPhoto")));
+                 }
+                          //Fonction pour trouver l'image sur le net
+        for (int i = 0; i < res.size(); i++) {
+            if (res.get(i).getURLPhoto() != null) {
+                try{
+                System.out.println("photo");
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
+                //InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                BufferedImage image = ImageIO.read(stream);
+                ImageView imageView = new ImageView(convertToFxImage(image));
+                imageView.setX(10);
+                imageView.setY(10);
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                System.out.println(imageView);
+                res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
+                } catch( IOException ex){
                 }
-                return res;
+            
+                }
+        }
+        return res;
             }
         }
     }
@@ -501,7 +577,7 @@ public class Utilisateur {
         ArrayList<Affichage> res = new ArrayList<>();
         try (PreparedStatement pst = con.prepareStatement(
                 """
-               select distinct Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
+               select distinct Article.URLPhoto,Enchere.idArticle, Article.designation,Article.descriptionCourte,Article.descriptionLongue,Article.expedition,Enchere.prix,Enchere.dateDebut,Enchere.dateFin
                from Enchere
                inner join Article on Enchere.idArticle = Article.idArticle
                join ListPosseseur on Enchere.idArticle = ListPosseseur.idArticle
@@ -514,9 +590,31 @@ public class Utilisateur {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
+                            rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin"),rs.getString("URLPhoto")));
+                 }
+                          //Fonction pour trouver l'image sur le net
+        for (int i = 0; i < res.size(); i++) {
+            if (res.get(i).getURLPhoto() != null) {
+                try{
+                System.out.println("photo");
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream() ,100,200,false,false);
+                //Image image = new Image(new URL(res.get(i).getURLPhoto()).openStream());
+                //InputStream stream = new FileInputStream(res.get(i).getURLPhoto());
+                InputStream stream = new URL(res.get(i).getURLPhoto()).openStream();
+                BufferedImage image = ImageIO.read(stream);
+                ImageView imageView = new ImageView(convertToFxImage(image));
+                imageView.setX(10);
+                imageView.setY(10);
+                imageView.setFitWidth(200);
+                imageView.setPreserveRatio(true);
+                System.out.println(imageView);
+                res.set(i, new Affichage(res.get(i).getIdArticle(), res.get(i).getDesignation(), res.get(i).getDescriptionCourte(), res.get(i).getDescriptionLongue(), res.get(i).getExpedition(), res.get(i).getPrix(), res.get(i).getDateDebut(), res.get(i).getDateFin(), imageView));
+                } catch( IOException ex){
                 }
-                return res;
+            
+                }
+        }
+        return res;
             }
         }
     }
@@ -604,6 +702,21 @@ public class Utilisateur {
             }
         }
     }
+    
+        private static Image convertToFxImage(BufferedImage image) {
+    WritableImage wr = null;
+    if (image != null) {
+        wr = new WritableImage(image.getWidth(), image.getHeight());
+        PixelWriter pw = wr.getPixelWriter();
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                pw.setArgb(x, y, image.getRGB(x, y));
+            }
+        }
+    }
+
+    return new ImageView(wr).getImage();
+}
 
 // Essai avant l'affichage sur JavaFx
 //    public static void main(String[] args) {
