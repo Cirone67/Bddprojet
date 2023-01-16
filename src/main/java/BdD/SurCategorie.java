@@ -82,14 +82,6 @@ public class SurCategorie {
                         designation varchar(30) not null unique
                     )
                     """);
-//                    try ( Statement st2 = con.createStatement()) {
-//            st.executeUpdate(
-//                    """
-//                    create table SurCategorie_Categorie (
-//                        idSurCategorie integer not null, 
-//                        idCategorie integer not null
-//                    )
-//                    """);
             con.commit();
             con.setAutoCommit(true);
         } catch (SQLException ex) {
@@ -132,6 +124,7 @@ public class SurCategorie {
     }
         public static class idCategorieExisteDejaException extends Exception {
     }
+        
   //Renvoie la liste des Surcatégories:
       public static List<SurCategorie> tousLesSurCategorie(Connection con) throws SQLException {
         List<SurCategorie> res = new ArrayList<>();

@@ -1,11 +1,8 @@
 package BdD;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -110,7 +107,8 @@ public class Categorie {
             con.setAutoCommit(true);
         }
     }
-//Creer Table JoinCategorieArticle
+    
+//Creer Table JoinCategorieArticle-------------------------------------
 
     public static void creeTableJoinCategorieArticle(Connection con)
             throws SQLException {
@@ -165,7 +163,7 @@ public class Categorie {
 
     public static class idCategorieExisteDejaException extends Exception {
     }
-    //Créer un JoinCategorieArticle
+    //Créer un JoinCategorieArticle-----------------------------------
 
     public static void createJoinCategorieArticle(Connection con, int idArticle, int idCategorie)
             throws SQLException {
@@ -187,7 +185,7 @@ public class Categorie {
             con.setAutoCommit(true);
         }
     }
-    //Renvoie la liste des catégories:
+    //Renvoie la liste des catégories:--------------------------
 
     public static List<Categorie> tousLesCategories(Connection con) throws SQLException {
         List<Categorie> res = new ArrayList<>();
@@ -225,7 +223,8 @@ public class Categorie {
 //            }
 //        }
 //    }
-//Renvoie la liste des enchères dans un groupe de catégorie
+    
+//Renvoie la liste des articles dans un groupe de catégorie
     public static ArrayList<Article> articleParCategorie(Connection con, ArrayList<String> desiCategorie) throws SQLException {
         ArrayList<Article> res = new ArrayList<>();
         for (int i = 0; i < desiCategorie.size(); i++) {
@@ -271,6 +270,7 @@ public class Categorie {
         return res;
     }
 
+    //Renvoie liste des éléments (Enchères et Articles)  que l'on veut afficher par Catégorie
     public static ArrayList<Affichage> EnchereEtArticleParCategorie(Connection con, String desiCategorie) throws SQLException, IOException {
         ArrayList<Affichage> res = new ArrayList<>();
         //for (int i = 0; i < desiCategorie.size(); i++) {
@@ -318,7 +318,7 @@ public class Categorie {
 //        }(new FileInputStream(res.get(i).getURLPhoto()) 
 //        System.out.println("res à Loic");
 
-        //Fonction pour trouver l'image sur le net
+    //Fonction pour trouver l'image sur le net
         for (int i = 0; i < res.size(); i++) {
             if (res.get(i).getURLPhoto() != null) {
                 try{

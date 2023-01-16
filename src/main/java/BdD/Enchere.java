@@ -40,8 +40,7 @@ public class Enchere {
         this.acheteur = acheteur;
     }
 
-//Programmation Java
-//Lier à la connection au serveur
+//Lien avec PGSQL------------------------------------------------
     public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(
@@ -60,15 +59,12 @@ public class Enchere {
             return connectGeneralPostGres("localhost", 5432, "postgres", "postgres", "pass");
         }
     }
-    // Creer Table Enchere   
+    // Creer Table Enchere -----------------------------------------------  
 
     public static void creeEnchere(Connection con)
             throws SQLException {
-        // je veux que le schema soit entierement cr�� ou pas du tout
-        // je vais donc g�rer explicitement une transaction
         con.setAutoCommit(false);
         try (Statement st = con.createStatement()) {
-            // creation des tables
             st.executeUpdate(
                     """
                     create table Enchere (
@@ -87,27 +83,18 @@ public class Enchere {
 //                        foreign key (idArticle) references Article(idArticle)
 //                    )
 //                    """);
-            // si j'arrive jusqu'ici, c'est que tout s'est bien pass�
-            // je confirme (commit) la transaction
+
             con.commit();
-            // je retourne dans le mode par d�faut de gestion des transaction :
-            // chaque ordre au SGBD sera consid�r� comme une transaction ind�pendante
             con.setAutoCommit(true);
         } catch (SQLException ex) {
-            // quelque chose s'est mal pass�
-            // j'annule la transaction
             con.rollback();
-            // puis je renvoie l'exeption pour qu'elle puisse �ventuellement
-            // �tre g�r�e (message � l'utilisateur...)
             throw ex;
         } finally {
-            // je reviens � la gestion par d�faut : une transaction pour
-            // chaque ordre SQL
             con.setAutoCommit(true);
         }
     }
 
-    //Créer la table des listes de posseseurs sucessif pour une enchère donnée.
+    //Créer la table des listes de posseseurs successif pour une enchère donnée.
     public static void creeTableListPosseseur(Connection con) throws SQLException {
         con.setAutoCommit(false);
         try (Statement st = con.createStatement()) {
@@ -127,8 +114,8 @@ public class Enchere {
             con.setAutoCommit(true);
         }
     }
+    
     //Permet de vider cette table de facon à alléger
-
     public static void UpdateDeleteListPosseseur(Connection con) throws SQLException {
         con.setAutoCommit(false);
         try (PreparedStatement pst = con.prepareStatement(
@@ -144,7 +131,7 @@ public class Enchere {
         con.setAutoCommit(true);
     }
 
-    //Pour se souvenir de l'enchérissement (Affichage)
+    //Insertion dans la Table ListPosseseur pour se souvenir de l'enchérissement (Affichage)
     public static void UpdateListPosseseur(Connection con, int idArticle, int idUtilisateur, double prix) throws SQLException {
         con.setAutoCommit(false);
         try (PreparedStatement pst = con.prepareStatement(
@@ -164,7 +151,7 @@ public class Enchere {
         }
     }
 
-    // creer une enchère et Article
+    // creer une enchère et l'article associé
     public static void createElement(Connection con, double prixIni, Date dateDebut, Date dateFin, int idUtilisateur, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, String URLPhoto) throws SQLException, Article.idArticleExisteDejaException, EnchereExisteDejaException {
 
         int idArticle = Article.createArticle(con, designation, descriptionCourte, descriptionLongue, expedition, desiCategorie, idUtilisateur, URLPhoto);
@@ -206,6 +193,7 @@ public class Enchere {
         con.setAutoCommit(true);
 //        }
     }
+    
 //    public void demandeNouvelEnchere(Connection con,String desititre, String desietat,Date dateDebut,Date dateFin) throws SQLException, EnchereExisteDejaException {
 //        boolean existe = true;
 //        while (existe) {
@@ -226,7 +214,7 @@ public class Enchere {
 //        }
 //    }
 
-    //Table qui permet d'associer l'etat et sa désignation et (((faire la statistique du nombre d'enchère ouverte ( restreinit à l'admin).))))
+    //Table qui permet d'associer l'etat et sa désignation.
     public static void creeAssocEtat(Connection con)
             throws SQLException {
         // je veux que le schema soit entierement cr�� ou pas du tout

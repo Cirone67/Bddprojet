@@ -543,8 +543,9 @@ public class Utilisateur {
      return res;
     }
 
-    //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.
+    //Si l'utilisateur est un admin, il peut faire des stats: ( ce sont les boutons qui sont affichés ou non.)
     //-% d'Enchere active
+    //TO DO
     public static double statEnchereActive(Connection con) throws SQLException {
         double i = 0;
         double j = 0;
@@ -599,12 +600,12 @@ public class Utilisateur {
                 while (rs.next()) {
                     res = ((rs.getInt("prixIni") - rs.getInt("prix")) / rs.getInt("prixIni")) + res;
                 }
-                return res / (i - 1); //Je pense -1 car il ne faut pas retenir la 1ere ligne du tableau qui est le nom des colonnes
+                return res / (i - 1);
             }
         }
     }
 
-//
+// Essai avant l'affichage sur JavaFx
 //    public static void main(String[] args) {
 //        try (Connection con = defautConnect()) {
 //            //          System.out.println("connectÃ© !!!");

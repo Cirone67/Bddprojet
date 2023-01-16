@@ -12,6 +12,9 @@ import javafx.scene.image.ImageView;
  *
  * @author brenc
  */
+
+//Une classe uniquement pour l'affichage
+
 public class Affichage {
   private int idArticle;
   private String designation;
@@ -24,6 +27,7 @@ public class Affichage {
   private String URLPhoto;
   private ImageView image;
 
+  //Plusieurs constructeur ( ajouter pour afficher des images)
     public Affichage(int idArticle,String designation, String descriptionCourte, String descriptionLongue, int expedition, double prix, Date dateDebut, Date dateFin) {
         this.idArticle= idArticle;
         this.designation = designation;

@@ -63,20 +63,11 @@ public class Main {
          Enchere.createEnchere(con, 1, 100, 100, dateDebut, dateFin, 1);
          Enchere.createEnchere(con, 2, 50, 50, dateDebut, dateFin, 2);
          
-         //Encherir
-         
-         
-         //Rechercher
-         
-         //Voir son gain
-         
-         
             } catch (Exception ex) {
             throw new Error(ex);
             }    
  }
 public static void main(String[] args) {
-
             createTable();
             createExemple();
         }

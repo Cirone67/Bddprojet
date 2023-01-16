@@ -48,9 +48,6 @@ public class Article {
         return designation;
     }
 
-//    public int getIdCategorie() {  
-//        return idCategorie;
-//    }
     public int getIdArticle() {
         return idArticle;
     }
@@ -71,9 +68,6 @@ public class Article {
         return expedition;
     }
 
-//    public int getCategorie() {
-//        return idCategorie;
-//    }
     public int getPosseseur() {
         return posseseur;
     }
@@ -98,12 +92,10 @@ public class Article {
         this.expedition = expedition;
     }
 
-//    public void setCategorie(int categorie) {
-//        this.idCategorie = categorie;
-//    }
     public void setPosseseur(int posseseur) {
         this.posseseur = posseseur;
     }
+    
 //Lien avec PGSQL------------------------------------------------
 
     public static Connection connectGeneralPostGres(String host, int port, String database, String user, String pass) throws ClassNotFoundException, SQLException {
@@ -152,7 +144,7 @@ public class Article {
         }
     }
 //Créer une Article------------------------------------
-
+//Deamnde en entrée la liste des désignations des catégories de l'article
     public static int createArticle(Connection con, String designation, String descriptionCourte, String descriptionLongue, int expedition, ArrayList<String> desiCategorie, int posseseur, String URLPhoto)
             throws SQLException, idArticleExisteDejaException {
         con.setAutoCommit(false);
@@ -171,6 +163,7 @@ public class Article {
             con.commit();
         }
         int i = 0;
+        //Un Article appartient à plusieurs catégories d'où:
         while (i < desiCategorie.size()) {
             try (PreparedStatement pst = con.prepareStatement(
                     """   
@@ -215,19 +208,10 @@ public class Article {
         )) {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-//                  for (int i = 0;i<=res.size();i++){
-//                      for(int j = 0; j<=i;j++)
-//                    if(i!= 0){
-//                    if(rs.getInt("idArticle") !=res.get(j).idArticle ){
+
                     res.add(new Article(rs.getInt("idArticle"), rs.getString("designation"),
                             rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getString("URLPhoto"), rs.getInt("posseseur")));
-//                    }
-//                    }
-//                    if(i==0){
-//                     res.add(new Article(rs.getInt("idArticle"),rs.getString("designation"),
-//                            rs.getString("descriptionCourte"),rs.getString("descriptionLongue"), rs.getInt("expedition"),rs.getInt("idCategorie"),rs.getInt("posseseur")));   
-//                    }
-//                    }
+
                 }
                 return res;
             }
@@ -244,7 +228,6 @@ public class Article {
                """
         )) {
             pst.setString(1, designation);
-            //pst.executeUpdate();
             try (ResultSet rs = pst.executeQuery()) {
                 //while (rs.next()) {
                 res = rs.getInt("idArticle");
@@ -254,6 +237,8 @@ public class Article {
         }
     }
 
+    
+    
     //Décompose une phrase en liste de mot
     public static ArrayList<String> decomposeRecherche(String recherche) {
         ArrayList<String> res = new ArrayList<>();
@@ -263,8 +248,8 @@ public class Article {
         }
         return res;
     }
+    
     //  cherche Article à afficher
-
     public static ArrayList<Affichage> ChercheArticle(Connection con, ArrayList<String> chercher) throws SQLException {
         ArrayList<Affichage> res = new ArrayList<>();
         for (int j = 0; j < chercher.size(); j++) {
@@ -299,8 +284,6 @@ public class Article {
                         }
 
                     }
-                    // res.add(new Affichage(rs.getInt("idArticle"), rs.getString("designation"),
-                    //        rs.getString("descriptionCourte"), rs.getString("descriptionLongue"), rs.getInt("expedition"), rs.getDouble("prix"), rs.getDate("dateDebut"), rs.getDate("dateFin")));
                 }
 
             }
